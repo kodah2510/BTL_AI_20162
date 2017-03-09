@@ -1,5 +1,6 @@
 function preload()
 {
+	//testing github
 	blackRookSprite 	= loadImage("ChessSprite/blackRook.png");
 	blackKnightSprite 	= loadImage("ChessSprite/blackKnight.png");
 	blackBishopSprite 	= loadImage("ChessSprite/blackBishop.png");
