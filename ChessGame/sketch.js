@@ -1,3 +1,5 @@
+//Minh's comment
+
 function preload()
 {
 	//testing github
