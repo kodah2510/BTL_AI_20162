@@ -44,18 +44,13 @@ function Recorder()
 	}
 	this.updateAttackMap = function(prevCol,prevRow,clickedCol,clickedRow)
 	{
-		
 		//add the move to moveRecord
 		//recalculate the moveMap and attackMap
+		
 		
 	}
 	this.calculateBlackAttackMap = function(value,col,row)
 	{
-		//only concern about the start point and destination of each move
-		//start with something simple like when a rook moved which grid could change
-		//
-		//the attack value is equal to the moveMap value
-		//use push for each element
 		switch(value)
 		{
 			case -1://Rook

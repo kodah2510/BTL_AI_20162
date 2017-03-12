@@ -68,19 +68,25 @@ function makeAMove()
 			if(prevChessman != null)
 			{
 				//checking whether the move is valid or not
+				/*
 				if(validator.validateMove(prevCol,prevRow,clickedCol,clickedRow))
 				{
 					recorder.updateMoveRecord(prevCol,prevRow,clickedCol,clickedRow);
 					controller.moveTheChessman(prevCol,prevRow,clickedCol,clickedRow);
+					recorder.updateAttackMap();
+					recorder.updateMoveMap();
 					prevChessman = null;
 					prevCol = -1;
 					prevRow = -1;
 				}
+				*/
 			}
 		}
 		//player clicked opponent's piece
 		else if(recorder.moveMap[clickedCol][clickedRow]*playerSide < 0)
 		{
+			
+			/*
 			if(validator.validateMove(prevChessman,prevCol,prevRow,clickedCol,clickedRow))
 			{
 				//grid[clickedCol][clickedRow].chessman = prevChessman.copy();
@@ -90,6 +96,7 @@ function makeAMove()
 				prevCol = -1;
 				prevRow = -1;
 			}
+			*/
 		}
 		//player clicked his piece
 		else if(recorder.moveMap[clickedCol][clickedRow]*playerSide > 0)
@@ -100,7 +107,7 @@ function makeAMove()
 			prevRow = clickedRow;
 		}
 	}
-	recorder.updateAttackMap();
+
 	//isPlayerTurn = false;
 	//update the game
 	//UpdateTheGame();
