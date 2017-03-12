@@ -1,4 +1,3 @@
-var grid = [];
 var w,h;
 
 var blackRookSprite;
@@ -15,24 +14,14 @@ var whiteBishopSprite;
 var whiteQueenSprite;
 var whiteKingSprite;
 
-var blackRook; 
-var blackKnight;
-var blackBishop;
-var blackQueen;
-var whitePawn;
-var blackKing;
-var blackPawn;
-var whiteRook;
-var whiteKnight;
-var whiteBishop;
-var whiteQueen;
-var whiteKing;
 
 var prevChessman;
 var prevCol;
 var prevRow;
 //player can switch side
-var isPlayerChoseBlack = false;
+var playerSide = 1;;
 var isPlayerTurn = true;
 
-var recorder;
+var controller = new Controller();
+var recorder = new Recorder();
+var validator = new Validator();

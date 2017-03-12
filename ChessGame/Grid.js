@@ -2,7 +2,7 @@ function Grid(col,row)
 {
 	this.col = col;
 	this.row = row;
-	this.chessman;
+	this.sprite;
 	
 	this.show = function()
 	{
@@ -19,9 +19,9 @@ function Grid(col,row)
 			rect(this.col*w,this.row*h,w,h);
 		}
 		
-		if(this.chessman != null)
+		if(this.sprite != null)
 		{
-			this.chessman.show(this.col,this.row);
+			image(this.sprite,this.col*w,this.row*h,w,h);
 		}
 	}
 }
