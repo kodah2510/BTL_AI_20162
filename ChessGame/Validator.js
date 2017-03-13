@@ -7,7 +7,7 @@ function Validator()
 		var result = (value < 0) ? recorder.blackAttackMap[clickedCol][clickedRow].indexOf(value):recorder.whiteAttackMap[clickedCol][clickedRow].indexOf(value);
 		//second condition the move cannot make the king in danger
 		//bishop rook queen
-		
+		return result;
 		
 	}
 	//predict the checking condition

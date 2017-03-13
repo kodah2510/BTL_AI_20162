@@ -28,7 +28,7 @@ function Controller()
 	this.placeTheChessman = function(sprite,col,row,value)
 	{
 		this.grid[col][row].sprite = sprite;
-		recorder.updateMoveMap(value,col,row);
+		recorder.updateMoveMap(value,null,null,col,row);
 	}
 	this.createGameBoard = function()
 	{
@@ -108,7 +108,7 @@ function Controller()
 		var prevChessmanSprite = this.grid[prevCol][prevRow].sprite;
 		this.grid[clickedCol][clickedRow].sprite = prevChessmanSprite;
 		this.grid[prevCol][prevRow].sprite = null;
-		recorder.updateMoveMap(moveMap[prevCol][prevRow],clickedCol,clickedRow);	
+		recorder.updateMoveMap(recorder.moveMap[prevCol][prevRow],prevCol,prevRow,clickedCol,clickedRow);	
 	}
 	
 }
