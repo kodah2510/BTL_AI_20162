@@ -33,7 +33,7 @@ function Recorder()
 		//this.calculateWhiteAttackMap();
 	}
 	
-	this.initializeAttackMap = function()
+	this.calculateAttackMap = function()
 	{
 		for(var i = 0;i < 8;i++)
 		{
@@ -59,7 +59,7 @@ function Recorder()
 				this.blackAttackMap[i][j] = [];
 			}
 		}
-		this.initializeAttackMap();
+		this.calculateAttackMap();
 	}
 	
 	this.calculateBlackAttackMap = function(value,col,row)
@@ -119,7 +119,7 @@ function Recorder()
 	}
 	this.updateMoveRecord = function(prevCol,prevRow,clickedCol,clickedRow)
 	{
-		this.moveRecord.push([this.moveMap[prevCol][prevRow],prevCol*10+prevRow,clickedCol*10+clickedRow]);
+		this.moveRecord.push([this.moveMap[clickedCol][clickedRow],prevCol*10+prevRow,clickedCol*10+clickedRow]);
 	}
 	this.calculateAttackMapForRook = function(value,col,row,attackMap)
 	{
@@ -128,12 +128,12 @@ function Recorder()
 			if(col == 0) break;
 			if(this.moveMap[i - 1][row] <= 0)
 			{
-				if(attackMap[i - 1][row].indexOf(value) != -1)
+				if(attackMap[i - 1][row].indexOf(value) == -1)
 					attackMap[i - 1][row].push(value);
 			}
 			else
 			{
-				if(attackMap[i - 1][row].indexOf(value) != -1)
+				if(attackMap[i - 1][row].indexOf(value) == -1)
 					attackMap[i - 1][row].push(value);
 				break;
 			}
@@ -143,12 +143,12 @@ function Recorder()
 			if(col == 7) break;
 			if(this.moveMap[i + 1][row] <= 0)
 			{
-				if(attackMap[i + 1][row].indexOf(value) != -1)
+				if(attackMap[i + 1][row].indexOf(value) == -1)
 					attackMap[i + 1][row].push(value);
 			}
 			else
 			{
-				if(attackMap[i + 1][row].indexOf(value) != -1)
+				if(attackMap[i + 1][row].indexOf(value) == -1)
 					attackMap[i + 1][row].push(value);
 				break;
 			}
@@ -158,12 +158,12 @@ function Recorder()
 			if(row == 0) break;
 			if(this.moveMap[col][i - 1] <= 0)
 			{
-				if(attackMap[col][i - 1].indexOf(value) != -1)
+				if(attackMap[col][i - 1].indexOf(value) == -1)
 					attackMap[col][i - 1].push(value);
 			}
 			else
 			{
-				if(attackMap[col][i - 1].indexOf(value) != -1)
+				if(attackMap[col][i - 1].indexOf(value) == -1)
 					attackMap[col][i - 1].push(value);
 				break;
 			}
@@ -173,13 +173,13 @@ function Recorder()
 			if(row == 7) break;
 			if(this.moveMap[col][i + 1] <= 0)
 			{
-				if(attackMap[col][i + 1].indexOf(value) != -1)
-					atackMap[col][i + 1].push(value);
+				if(attackMap[col][i + 1].indexOf(value) == -1)
+					attackMap[col][i + 1].push(value);
 			}
 			else
 			{
-				if(attackMap[col][i + 1].indexOf(value) != -1)
-					atackMap[col][i + 1].push(value);
+				if(attackMap[col][i + 1].indexOf(value) == -1)
+					attackMap[col][i + 1].push(value);
 				break;
 			}
 		}
@@ -189,42 +189,42 @@ function Recorder()
 	{
 		if(col + 1 <= 7 && row - 2 >= 0)
 		{
-			if(attackMap[col + 1][row - 2].indexOf(value) != -1)
+			if(attackMap[col + 1][row - 2].indexOf(value) == -1)
 				attackMap[col + 1][row - 2].push(value);
 		}
 		if(col - 1 >= 0 && row - 2 >= 0)
 		{
-			if(attackMap[col - 1][row - 2].indexOf(value) != -1)
+			if(attackMap[col - 1][row - 2].indexOf(value) == -1)
 				attackMap[col - 1][row - 2].push(value);
 		}
 		if(col + 1 <= 7 && row + 2 <= 7)
 		{
-			if(attackMap[col + 1][row + 2].indexOf(value) != -1)
+			if(attackMap[col + 1][row + 2].indexOf(value) == -1)
 				attackMap[col + 1][row + 2].push(value);
 		}
 		if(col - 1 >= 0 && row + 2 <= 7)
 		{
-			if(attackMap[col - 1][row + 2].indexOf(value) != -1)
+			if(attackMap[col - 1][row + 2].indexOf(value) == -1)
 				attackMap[col - 1][row + 2].push(value);
 		}
 		if(col + 2 <= 7 && row - 1 >= 0)
 		{
-			if(attackMap[col + 2][row - 1].indexOf(value) != -1)
+			if(attackMap[col + 2][row - 1].indexOf(value) == -1)
 				attackMap[col + 2][row - 1].push(value);
 		}
 		if(col - 2 >= 0 && row - 1 >= 0)
 		{
-			if(attackMap[col - 2][row - 1].indexOf(value) != -1)
+			if(attackMap[col - 2][row - 1].indexOf(value) == -1)
 				attackMap[col - 2][row - 1].push(value);
 		}
 		if(col + 2 <= 7 && row + 1 <= 7)
 		{
-			if(attackMap[col + 2][row + 1].indexOf(value) != -1)
+			if(attackMap[col + 2][row + 1].indexOf(value) == -1)
 				attackMap[col + 2][row + 1].push(value);
 		}
 		if(col - 2 >= 0 && row - 2 >= 0)
 		{
-			if(attackMap[col - 2][row + 1].indexOf(value) != -1)
+			if(attackMap[col - 2][row + 1].indexOf(value) == -1)
 				attackMap[col - 2][row + 1].push(value);
 		}
 	}
@@ -237,12 +237,12 @@ function Recorder()
 			if(col == 0) break;
 			if(this.moveMap[i][i - tlbrValue] <= 0)	
 			{
-				if(attackMap[i][i - tlbrValue].indexOf(value) != -1)
+				if(attackMap[i][i - tlbrValue].indexOf(value) == -1)
 					attackMap[i][i - tlbrValue].push(value);
 			}
 			else
 			{
-				if(attackMap[i][i - tlbrValue].indexOf(value) != -1)
+				if(attackMap[i][i - tlbrValue].indexOf(value) == -1)
 					attackMap[i][i - tlbrValue].push(value);
 				break;
 			}		
@@ -252,12 +252,12 @@ function Recorder()
 			if(col == 0) break;
 			if(this.moveMap[i][trblValue - i] <= 0)
 			{
-				if(attackMap[i][trblValue - i].indexOf(value) != -1)
+				if(attackMap[i][trblValue - i].indexOf(value) == -1)
 					attackMap[i][trblValue - i].push(value);
 			}
 			else
 			{
-				if(attackMap[i][trblValue - i].indexOf(value) != -1)
+				if(attackMap[i][trblValue - i].indexOf(value) == -1)
 					attackMap[i][trblValue - i].push(value);
 				break;
 			}
@@ -267,12 +267,12 @@ function Recorder()
 			if(col == 7) break;
 			if(this.moveMap[i][i - tlbrValue] <= 0)
 			{
-				if(attackMap[i][i - tlbrValue].indexOf(value) != -1)
+				if(attackMap[i][i - tlbrValue].indexOf(value) == -1)
 					attackMap[i][i - tlbrValue].push(value);
 			}
 			else
 			{
-				if(attackMap[i][i - tlbrValue].indexOf(value) != -1)
+				if(attackMap[i][i - tlbrValue].indexOf(value) == -1)
 					attackMap[i][i - tlbrValue].push(value);
 				break;
 			}
@@ -282,12 +282,12 @@ function Recorder()
 			if(col == 7) break;
 			if(this.moveMap[i][i - tlbrValue] <= 0)
 			{
-				if(attackMap[i][trblValue - i].indexOf(value) != -1)
+				if(attackMap[i][trblValue - i].indexOf(value) == -1)
 					attackMap[i][trblValue - i].push(value);
 			}
 			else
 			{
-				if(attackMap[i][trblValue - i].indexOf(value) != -1)
+				if(attackMap[i][trblValue - i].indexOf(value) == -1)
 					attackMap[i][trblValue - i].push(value);
 				break;
 			}
@@ -306,35 +306,35 @@ function Recorder()
 		{
 			if(row == 0)// right down bottom right
 			{
-				if(attackMap[col + 1][row].indexOf(value) != -1)//right
+				if(attackMap[col + 1][row].indexOf(value) == -1)//right
 					attackMap[col + 1][row].push(value);
-				if(attackMap[col + 1][row + 1].indexOf(value) != -1)//bottom right
+				if(attackMap[col + 1][row + 1].indexOf(value) == -1)//bottom right
 					attackMap[col + 1][row + 1].push(value);
-				if(attackMap[col][row + 1].indexOf(value) != -1)//down
+				if(attackMap[col][row + 1].indexOf(value) == -1)//down
 					attackMap[col][row + 1].push(value);
 				return;
 			}
 			if(row == 7)// up top right right
 			{
-				if(attackMap[col][row - 1].indexOf(value) != -1)//up
+				if(attackMap[col][row - 1].indexOf(value) == -1)//up
 					attackMap[col][row - 1].push(value);
-				if(attackMap[col + 1][row - 1].indexOf(value) != -1)//top right
+				if(attackMap[col + 1][row - 1].indexOf(value) == -1)//top right
 					attackMap[col + 1][row - 1].push(value);
-				if(attackMap[col + 1][row].indexOf(value) != -1)//right
+				if(attackMap[col + 1][row].indexOf(value) == -1)//right
 					attackMap[col + 1][row].push(value);
 				return;
 			}
 			else// up top-right right bottom-right down
 			{
-				if(attackMap[col][row - 1].indexOf(value) != -1)//up
+				if(attackMap[col][row - 1].indexOf(value) == -1)//up
 					attackMap[col][row - 1].push(value);
-				if(attackMap[col + 1][row - 1].indexOf(value) != -1)//top right
+				if(attackMap[col + 1][row - 1].indexOf(value) == -1)//top right
 					attackMap[col + 1][row - 1].push(value);
-				if(attackMap[col + 1][row].indexOf(value) != -1)//right
+				if(attackMap[col + 1][row].indexOf(value) == -1)//right
 					attackMap[col + 1][row].push(value);
-				if(attackMap[col + 1][row + 1].indexOf(value) != -1)//bottom right
+				if(attackMap[col + 1][row + 1].indexOf(value) == -1)//bottom right
 					attackMap[col + 1][row + 1].push(value);
-				if(attackMap[col][row + 1].indexOf(value) != -1)//down
+				if(attackMap[col][row + 1].indexOf(value) == -1)//down
 					attackMap[col][row + 1].push(value);
 				return;
 			}
@@ -343,36 +343,36 @@ function Recorder()
 		{
 			if(row == 0)// down bottom left left
 			{
-				if(attackMap[col][row + 1].indexOf(value) != -1)//down
+				if(attackMap[col][row + 1].indexOf(value) == -1)//down
 					attackMap[col][row + 1].push(value);
-				if(attackMap[col - 1][row + 1].indexOf(value) != -1)//bottom left
+				if(attackMap[col - 1][row + 1].indexOf(value) == -1)//bottom left
 					attackMap[col - 1][row + 1].push(value);
-				if(attackMap[col - 1][row].indexOf(value) != -1)//left
+				if(attackMap[col - 1][row].indexOf(value) == -1)//left
 					attackMap[col - 1][row].push(value);
 				return;
 			}
 			if(row == 7)// up top left left
 			{
-				if(attackMap[col][row - 1].indexOf(value) != -1)//up
+				if(attackMap[col][row - 1].indexOf(value) == -1)//up
 					attackMap[col][row - 1].push(value);
-				if(attackMap[col - 1][row - 1].indexOf(value) != -1)//top left
+				if(attackMap[col - 1][row - 1].indexOf(value) == -1)//top left
 					attackMap[col - 1][row - 1].push(value);
-				if(attackMap[col - 1][row].indexOf(value) != -1)//left
+				if(attackMap[col - 1][row].indexOf(value) == -1)//left
 					attackMap[col - 1][row].push(value);
 				return;
 				
 			}
 			else//up top left left bottom left down
 			{
-				if(attackMap[col][row - 1].indexOf(value) != -1)//up
+				if(attackMap[col][row - 1].indexOf(value) == -1)//up
 					attackMap[col][row - 1].push(value);
-				if(attackMap[col - 1][row - 1].indexOf(value) != -1)//top left
+				if(attackMap[col - 1][row - 1].indexOf(value) == -1)//top left
 					attackMap[col - 1][row - 1].push(value);
-				if(attackMap[col - 1][row].indexOf(value) != -1)//left
+				if(attackMap[col - 1][row].indexOf(value) == -1)//left
 					attackMap[col - 1][row].push(value);
-				if(attackMap[col - 1][row + 1].indexOf(value) != -1)//bottom left
+				if(attackMap[col - 1][row + 1].indexOf(value) == -1)//bottom left
 					attackMap[col - 1][row + 1].push(value);
-				if(attackMap[col][row + 1].indexOf(value) != -1)//down
+				if(attackMap[col][row + 1].indexOf(value) == -1)//down
 					attackMap[col][row + 1].push(value);
 				return;
 			}
@@ -381,49 +381,49 @@ function Recorder()
 		{
 			if(row == 0)//left bottom left down bottom right right
 			{
-				if(attackMap[col - 1][row].indexOf(value) != -1)//left
+				if(attackMap[col - 1][row].indexOf(value) == -1)//left
 					attackMap[col - 1][row].push(value);
-				if(attackMap[col - 1][row + 1].indexOf(value) != -1)//bottom left
+				if(attackMap[col - 1][row + 1].indexOf(value) == -1)//bottom left
 					attackMap[col - 1][row + 1].push(value);
-				if(attackMap[col][row + 1].indexOf(value) != -1)//down
+				if(attackMap[col][row + 1].indexOf(value) == -1)//down
 					attackMap[col][row + 1].push(value);
-				if(attackMap[col + 1][row + 1].indexOf(value) != -1)//bottom right
+				if(attackMap[col + 1][row + 1].indexOf(value) == -1)//bottom right
 					attackMap[col + 1][row + 1].push(value);
-				if(attackMap[col + 1][row].indexOf(value) != -1)//right
+				if(attackMap[col + 1][row].indexOf(value) == -1)//right
 					attackMap[col + 1][row].push(value);
 				return;
 			}
 			else if(row == 7)// left top left up top right right
 			{
-				if(attackMap[col - 1][row].indexOf(value) != -1)//left
+				if(attackMap[col - 1][row].indexOf(value) == -1)//left
 					attackMap[col - 1][row].push(value);
-				if(attackMap[col - 1][row - 1].indexOf(value) != -1)//top left
+				if(attackMap[col - 1][row - 1].indexOf(value) == -1)//top left
 					attackMap[col - 1][row - 1].push(value);
-				if(attackMap[col][row - 1].indexOf(value) != -1)//up
+				if(attackMap[col][row - 1].indexOf(value) == -1)//up
 					attackMap[col][row - 1].push(value);
-				if(attackMap[col + 1][row - 1].indexOf(value) != -1)//top right
+				if(attackMap[col + 1][row - 1].indexOf(value) == -1)//top right
 					attackMap[col + 1][row - 1].push(value);
-				if(attackMap[col + 1][row].indexOf(value) != -1)//right
+				if(attackMap[col + 1][row].indexOf(value) == -1)//right
 					attackMap[col + 1][row].push(value);
 				return;
 			}
 			else
 			{
-				if(attackMap[col][row - 1].indexOf(value) != -1)//up
+				if(attackMap[col][row - 1].indexOf(value) == -1)//up
 					attackMap[col][row - 1].push(value);
-				if(attackMap[col][row + 1].indexOf(value) != -1)//down
+				if(attackMap[col][row + 1].indexOf(value) == -1)//down
 					attackMap[col][row + 1].push(value);
-				if(attackMap[col + 1][row].indexOf(value) != -1)//right
+				if(attackMap[col + 1][row].indexOf(value) == -1)//right
 					attackMap[col + 1][row].push(value);
-				if(attackMap[col - 1][row].indexOf(value) != -1)//left
+				if(attackMap[col - 1][row].indexOf(value) == -1)//left
 					attackMap[col - 1][row].push(value);
-				if(attackMap[col + 1][row + 1].indexOf(value) != -1)//bottom right
+				if(attackMap[col + 1][row + 1].indexOf(value) == -1)//bottom right
 					attackMap[col + 1][row + 1].push(value);
-				if(attackMap[col - 1][row - 1].indexOf(value) != -1)//top left
+				if(attackMap[col - 1][row - 1].indexOf(value) == -1)//top left
 					attackMap[col - 1][row - 1].push(value);
-				if(attackMap[col + 1][row - 1].indexOf(value) != -1)//top right
+				if(attackMap[col + 1][row - 1].indexOf(value) == -1)//top right
 					attackMap[col + 1][row - 1].push(value);
-				if(attackMap[col - 1][row + 1].indexOf(value) != -1)//bottom left
+				if(attackMap[col - 1][row + 1].indexOf(value) == -1)//bottom left
 					attackMap[col - 1][row + 1].push(value);
 				return;
 			}
@@ -438,16 +438,24 @@ function Recorder()
 			if(row == 7) return;
 			if(col == 0)
 			{
-				
+				if(attackMap[col + 1][row + 1].indexOf(value) == -1)
+					attackMap[col + 1][row + 1].push(value);
+				return;
 			}
 			if(col == 7)
 			{
-				
+				if(attackMap[col - 1][row + 1].indexOf(value) == -1)
+					attackMap[col - 1][row + 1].push(value);
+				return;
 			}
-			if(attackMap[col - 1][row + 1].indexOf(value) != -1)
-				attackMap[col - 1][row + 1].push(value);
-			if(attackMap[col + 1][row + 1].indexOf(value) != -1)
-				attackMap[col + 1][row + 1].push(value);
+			else
+			{
+				if(attackMap[col - 1][row + 1].indexOf(value) == -1)
+					attackMap[col - 1][row + 1].push(value);
+				if(attackMap[col + 1][row + 1].indexOf(value) == -1)
+					attackMap[col + 1][row + 1].push(value);
+				return;
+			}
 		}
 		else
 		{
@@ -456,16 +464,25 @@ function Recorder()
 			if(row == 0) return;
 			if(col == 0)
 			{
-				
+				if(attackMap[col + 1][row - 1].indexOf(value) == -1)
+					attackMap[col + 1][row - 1].push(value);
+				return;
 			}
 			if(col == 7)
 			{
-				
+				if(attackMap[col - 1][row - 1].indexOf(value) == -1)
+					attackMap[col - 1][row - 1].push(value);
+				return;
 			}
-			if(attackMap[col - 1][row - 1].indexOf(value) != -1)
-				attackMap[col - 1][row - 1].push(value);
-			if(attackMap[col + 1][row - 1].indexOf(value) != -1)
-				attackMap[col + 1][row - 1].push(value);
+			else
+			{
+				if(attackMap[col - 1][row - 1].indexOf(value) == -1)
+					attackMap[col - 1][row - 1].push(value);
+				if(attackMap[col + 1][row - 1].indexOf(value) == -1)
+					attackMap[col + 1][row - 1].push(value);
+				return;
+			}	
+			
 		}
 	}
 }

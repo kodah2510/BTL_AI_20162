@@ -3,6 +3,7 @@
 //whiteSide 1
 //blackSide -1
 //Example blackRook = -1 whiteQueen = 4 blackKing = -5
+
 function preload()
 {
 	//testing github
@@ -34,12 +35,21 @@ function setup()
 	controller.init();
 	recorder.init();
 	
-	controller.placeTheChessman(whiteRookSprite,3,6,1);
+	controller.placeTheChessman(whiteRookSprite,0,0,1);
+	controller.placeTheChessman(blackRookSprite,3,1,-1);
+	controller.placeTheChessman(whiteKingSprite,3,7,5);
+	/*
 	controller.placeTheChessman(whiteKingSprite,3,7,5);
 	controller.placeTheChessman(blackRookSprite,3,1,-1);
+	controller.placeTheChessman(whiteBishopSprite,floor(random(0,7)),floor(random(0,7)),3);
+	controller.placeTheChessman(whiteQueenSprite,floor(random(0,7)),floor(random(0,7)),4);
+	controller.placeTheChessman(whiteKnightSprite,floor(random(0,7)),floor(random(0,7)),2);
+	controller.placeTheChessman(whitePawnSprite,floor(random(0,7)),floor(random(0,7)),6);
+	*/
 	
 	//initialize game board
 	//playerSide = controller.createGameBoard();
+	recorder.updateAttackMap();
 	myCanvas.mouseClicked(makeAMove);
 	
 }
@@ -68,12 +78,9 @@ function makeAMove()
 			if(prevChessman != null)
 			{
 				//checking whether the move is valid or not
-				
 				if(validator.validateMove(prevCol,prevRow,clickedCol,clickedRow))
 				{
-					recorder.updateMoveRecord(prevCol,prevRow,clickedCol,clickedRow);
 					controller.moveTheChessman(prevCol,prevRow,clickedCol,clickedRow);
-					recorder.updateAttackMap();
 					prevChessman = null;
 					prevCol = -1;
 					prevRow = -1;
@@ -84,10 +91,10 @@ function makeAMove()
 		//player clicked opponent's piece
 		else if(recorder.moveMap[clickedCol][clickedRow]*playerSide < 0)
 		{
-			if(validator.validateMove(prevChessman,prevCol,prevRow,clickedCol,clickedRow))
+			if(validator.validateMove(prevCol,prevRow,clickedCol,clickedRow))
 			{
-				//grid[clickedCol][clickedRow].chessman = prevChessman.copy();
-				recorder.updateMoveRecord();
+				//procedure 
+				//move the piece --> update move map --> update move record --> update attack map
 				controller.moveTheChessman(prevCol,prevRow,clickedCol,clickedRow);
 				prevChessman = null;
 				prevCol = -1;
@@ -103,6 +110,7 @@ function makeAMove()
 			prevRow = clickedRow;
 		}
 	}
+	redraw();
 
 	//isPlayerTurn = false;
 	//update the game
