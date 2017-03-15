@@ -35,9 +35,14 @@ function setup()
 	controller.init();
 	recorder.init();
 	
-	controller.placeTheChessman(whiteRookSprite,0,0,1);
-	controller.placeTheChessman(blackRookSprite,3,1,-1);
-	controller.placeTheChessman(whiteKingSprite,3,7,5);
+	controller.placeTheChessman(whiteRookSprite,0,0,WHITE_ROOK_VALUE);
+	controller.placeTheChessman(blackRookSprite,3,1,BLACK_ROOK_VALUE);
+	controller.placeTheChessman(whiteKingSprite,3,7,WHITE_KING_VALUE);
+	controller.placeTheChessman(whiteBishopSprite,4,7,WHITE_BISHOP_VALUE);
+	controller.placeTheChessman(whiteQueenSprite,7,4,WHITE_QUEEN_VALUE);
+	controller.placeTheChessman(whitePawnSprite,5,6,WHITE_PAWN_VALUE);
+	controller.placeTheChessman(whitePawnSprite,2,6,WHITE_PAWN_VALUE);
+	controller.placeTheChessman(whiteKnightSprite,3,2,WHITE_KNIGHT_VALUE);
 	/*
 	controller.placeTheChessman(whiteKingSprite,3,7,5);
 	controller.placeTheChessman(blackRookSprite,3,1,-1);
@@ -78,6 +83,22 @@ function makeAMove()
 			if(prevChessman != null)
 			{
 				//checking whether the move is valid or not
+				//need to fix this one
+				var result = validator.validateMove(prevCol,prevRow,clickedCol,clickedRow);
+				switch(result)
+				{
+					case 1:
+						controller.capture();
+						break;
+					case 2:
+						controller.castling();
+						break;
+					case 0:
+						controller.moveTheChessman();
+						break;
+					case -1:
+						break;
+				}
 				if(validator.validateMove(prevCol,prevRow,clickedCol,clickedRow))
 				{
 					controller.moveTheChessman(prevCol,prevRow,clickedCol,clickedRow);
@@ -91,6 +112,18 @@ function makeAMove()
 		//player clicked opponent's piece
 		else if(recorder.moveMap[clickedCol][clickedRow]*playerSide < 0)
 		{
+			var result = validator.validateMove(prevCol,prevRow,clickedCol,clickedRow);
+			switch(result)
+			{
+				case 0:
+					controller.moveTheChessman();
+					break;
+				case -1:
+					break;
+				case 1:
+					controller.capture();
+					break;
+			}
 			if(validator.validateMove(prevCol,prevRow,clickedCol,clickedRow))
 			{
 				//procedure 

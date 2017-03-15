@@ -38,82 +38,94 @@ function Controller()
 		var playersConfirmation = confirm("White or Black (OK/CANCEL)");
 		if(!playersConfirmation)
 		{
-			this.placeTheChessman(blackRook,1,3);
-			/*
-			placeTheChessman(blackKnight,1,7);
-			placeTheChessman(blackBishop,2,7);
-			placeTheChessman(blackQueen,3,7);
-			placeTheChessman(blackKing,4,7);
-			placeTheChessman(blackBishop,5,7);
-			placeTheChessman(blackKnight,6,7);
-			placeTheChessman(blackRook,7,7);
+			this.placeTheChessman(blackRookSprite,1,3,BLACK_ROOK_VALUE);
+			this.placeTheChessman(blackKnightSprite,1,7,BLACK_KNIGHT_VALUE);
+			this.placeTheChessman(blackBishopSprite,2,7,BLACK_BISHOP_VALUE);
+			this.placeTheChessman(blackQueenSprite,3,7,BLACK_QUEEN_VALUE);
+			this.placeTheChessman(blackKingSprite,4,7,BLACK_KING_VALUE);
+			this.placeTheChessman(blackBishopSprite,5,7,BLACK_BISHOP_VALUE);
+			this.placeTheChessman(blackKnightSprite,6,7,BLACK_KNIGHT_VALUE);
+			this.placeTheChessman(blackRookSprite,7,7,BLACK_ROOK_VALUE);
 			
 			for(var i = 0; i < 8; i++)
 			{
-				placeTheChessman(blackPawn,i,6);
+				this.placeTheChessman(blackPawnSprite,i,6,BLACK_PAWN_VALUE);
 			}
-			*/
-			this.placeTheChessman(whiteKing,7,3)
-			this.placeTheChessman(whiteRook,6,3);
-			/*
-			placeTheChessman(whiteKnight,1,0);
-			placeTheChessman(whiteBishop,2,0);
-			placeTheChessman(whiteQueen,3,0);
-			placeTheChessman(whiteKing,4,0);
-			placeTheChessman(whiteBishop,5,0);
-			placeTheChessman(whiteKnight,6,0);
-			placeTheChessman(whiteRook,7,0);
+			this.placeTheChessman(whiteRookSprite,6,3,WHITE_KNIGHT_VALUE);
+			this.placeTheChessman(whiteKnightSprite,1,0,WHITE_KNIGHT_VALUE);
+			this.placeTheChessman(whiteBishopSprite,2,0,WHITE_BISHOP_VALUE);
+			this.placeTheChessman(whiteQueenSprite,3,0,WHITE_QUEEN_VALUE);
+			this.placeTheChessman(whiteKingSprite,4,0,WHITE_KING_VALUE);
+			this.placeTheChessman(whiteBishopSprite,5,0,WHITE_BISHOP_VALUE);
+			this.placeTheChessman(whiteKnightSprite,6,0,WHITE_KNIGHT_VALUE);
+			this.placeTheChessman(whiteRookSprite,7,0,WHITE_ROOK_VALUE);
 			
 			for(var i = 0; i < 8; i++)
 			{
-				placeTheChessman(whitePawn,i,1);
+				this.placeTheChessman(whitePawnSprite,i,1,WHITE_PAWN_VALUE);
 			}
-			*/
 			return -1;  
 		}
 		else
 		{
-			this.placeTheChessman(whiteRook,0,7,1);
-			/*
-			placeTheChessman(whiteKnight,1,7);
-			placeTheChessman(whiteBishop,2,7);
-			placeTheChessman(whiteQueen,3,7);
-			placeTheChessman(whiteKing,4,7);
-			placeTheChessman(whiteBishop,5,7);
-			placeTheChessman(whiteKnight,6,7);
-			placeTheChessman(whiteRook,7,7);
+			this.placeTheChessman(whiteRookSprite,0,7,WHITE_ROOK_VALUE);
+			this.placeTheChessman(whiteKnightSprite,1,7,WHITE_ROOK_VALUE);
+			this.placeTheChessman(whiteBishopSprite,2,7,WHITE_ROOK_VALUE);
+			this.placeTheChessman(whiteQueenSprite,3,7,WHITE_ROOK_VALUE);
+			this.placeTheChessman(whiteKingSprite,4,7,WHITE_ROOK_VALUE);
+			this.placeTheChessman(whiteBishopSprite,5,7,WHITE_ROOK_VALUE);
+			this.placeTheChessman(whiteKnightSprite,6,7,WHITE_ROOK_VALUE);
+			this.placeTheChessman(whiteRookSprite,7,7,WHITE_ROOK_VALUE);
 			
 			for(var i = 0; i < 8; i++)
 			{
-				placeTheChessman(whitePawn,i,6);
-			}*/
-			
-			this.placeTheChessman(blackRook,0,0,-1);
-			/*
-			placeTheChessman(blackKnight,1,0);
-			placeTheChessman(blackBishop,2,0);
-			placeTheChessman(blackQueen,3,0);
-			placeTheChessman(blackKing,4,0);
-			placeTheChessman(blackBishop,5,0);
-			placeTheChessman(blackKnight,6,0);
-			placeTheChessman(blackRook,7,0);
-			
-			for(var i = 0; i < 8; i++)
-			{
-				placeTheChessman(blackPawn,i,1);
+				this.placeTheChessman(whitePawnSprite,i,6,WHITE_PAWN_VALUE);
 			}
-			*/
+			
+			this.placeTheChessman(blackRookSprite,0,0,BLACK_ROOK_VALUE);
+			this.placeTheChessman(blackKnightSprite,1,0,BLACK_KNIGHT_VALUE);
+			this.placeTheChessman(blackBishopSprite,2,0,BLACK_BISHOP_VALUE);
+			this.placeTheChessman(blackQueenSprite,3,0,BLACK_QUEEN_VALUE);
+			this.placeTheChessman(blackKingSprite,4,0,BLACK_KING_VALUE);
+			this.placeTheChessman(blackBishopSprite,5,0,BLACK_BISHOP_VALUE);
+			this.placeTheChessman(blackKnightSprite,6,0,BLACK_KNIGHT_VALUE);
+			this.placeTheChessman(blackRookSprite,7,0,BLACK_ROOK_VALUE);
+			
+			for(var i = 0; i < 8; i++)
+			{
+				this.placeTheChessman(blackPawnSprite,i,1,BLACK_PAWN_VALUE);
+			}
 			return 1;
 		}
 	}
 	this.moveTheChessman = function(prevCol,prevRow,clickedCol,clickedRow)
 	{
+		//swap the sprite 
 		var prevChessmanSprite = this.grid[prevCol][prevRow].sprite;
 		this.grid[clickedCol][clickedRow].sprite = prevChessmanSprite;
 		this.grid[prevCol][prevRow].sprite = null;
+		//update game state
 		recorder.updateMoveMap(recorder.moveMap[prevCol][prevRow],prevCol,prevRow,clickedCol,clickedRow);
 		recorder.updateMoveRecord(prevCol,prevRow,clickedCol,clickedRow);
 		recorder.updateAttackMap();		
+	}
+	//proceed castling if it's valid
+	this.castling = function()
+	{
+		//move the king to ...
+		
+		//move the rook...
+		
+		//update the game state
+	}
+	//when the pawn reach at the end of the board 
+	this.capture = function()
+	{
+		//show the window for player to choose which piece to capture
+		
+		//replace sprite
+		
+		//update game state
 	}
 	
 }
