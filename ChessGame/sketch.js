@@ -34,14 +34,17 @@ function setup()
 	controller.init();
 	recorder.init();
 	
-	controller.placeTheChessman(whiteRookSprite,0,0,WHITE_ROOK_VALUE);
-	controller.placeTheChessman(blackRookSprite,3,1,BLACK_ROOK_VALUE);
-	controller.placeTheChessman(whiteKingSprite,3,7,WHITE_KING_VALUE);
-	controller.placeTheChessman(whiteBishopSprite,4,7,WHITE_BISHOP_VALUE);
-	controller.placeTheChessman(whiteQueenSprite,7,4,WHITE_QUEEN_VALUE);
-	controller.placeTheChessman(whitePawnSprite,5,6,WHITE_PAWN_VALUE);
-	controller.placeTheChessman(whitePawnSprite,2,6,WHITE_PAWN_VALUE);
-	controller.placeTheChessman(whiteKnightSprite,3,2,WHITE_KNIGHT_VALUE);
+	//controller.placeTheChessman(whiteRookSprite,0,0,ROOK_VALUE*WHITE_SIDE);
+	//controller.placeTheChessman(whiteKingSprite,3,7,KING_VALUE*WHITE_SIDE);
+	//controller.placeTheChessman(whiteBishopSprite,4,7,BISHOP_VALUE*WHITE_SIDE);
+	controller.placeTheChessman(whiteQueenSprite,4,1,QUEEN_VALUE*WHITE_SIDE);
+	//controller.placeTheChessman(whitePawnSprite,5,6,PAWN_VALUE*WHITE_SIDE);
+	//controller.placeTheChessman(whitePawnSprite,2,6,PAWN_VALUE*WHITE_SIDE);
+	//controller.placeTheChessman(whiteKnightSprite,3,2,KNIGHT_VALUE*WHITE_SIDE);
+	
+	//controller.placeTheChessman(blackRookSprite,6,4,ROOK_VALUE*BLACK_SIDE);
+	controller.placeTheChessman(blackKnightSprite,2,3,KNIGHT_VALUE*BLACK_SIDE);
+	controller.placeTheChessman(blackKingSprite,4,2,KING_VALUE*BLACK_SIDE);
 	/*
 	controller.placeTheChessman(whiteKingSprite,3,7,5);
 	controller.placeTheChessman(blackRookSprite,3,1,-1);
@@ -77,42 +80,39 @@ function makeAMove()
 	if(isPlayerTurn)
 	{
 		//player clicked empty grid
-		if(controller.grid[clickedCol][clickedRow].sprite == null)
+		if(prevCol != null && controller.grid[clickedCol][clickedRow].sprite == null)
 		{
 			//Player move the piece
-			if(prevCol != -1)
+			//checking whether the move is valid or not
+			//need to fix this one
+			var result = validator.validateMove(prevCol,prevRow,clickedCol,clickedRow);
+			switch(result)
 			{
-				//checking whether the move is valid or not
-				//need to fix this one
-				var result = validator.validateMove(prevCol,prevRow,clickedCol,clickedRow);
-				switch(result)
-				{
-					case 1:
-						controller.capture();
-						break;
-					case 2:
-						controller.castling();
-						break;
-					case 0:
-						controller.moveTheChessman(prevCol,prevRow,clickedCol,clickedRow);
-						prevCol = -1;
-						prevRow = -1;
-						break;
-					case -1:
-						break;
-				}
+				case 1: 
+					controller.capture();
+					break;
+				case 2:
+					controller.castling();
+					break;
+				case 0:
+					controller.moveTheChessman(prevCol,prevRow,clickedCol,clickedRow);
+					prevCol = null;
+					prevRow = null;
+					break;
+				case -1:
+					break;
 			}
 		}
 		//player clicked opponent's piece
-		else if(recorder.moveMap[clickedCol][clickedRow]*playerSide < 0)
+		else if(prevCol != null && recorder.moveMap[clickedCol][clickedRow]*playerSide < 0)
 		{
 			var result = validator.validateMove(prevCol,prevRow,clickedCol,clickedRow);
 			switch(result)
 			{
 				case 0:
-					controller.moveTheChessman(prevCol,prevRow,clickedCol,clickRow);
-					prevCol = -1;
-					prevRow = -1;
+					controller.moveTheChessman(prevCol,prevRow,clickedCol,clickedRow);
+					prevCol = null;
+					prevRow = null;
 					break;
 				case -1:
 					break;
@@ -131,7 +131,7 @@ function makeAMove()
 	}
 	redraw();
 	var t1 = performance.now();
-	console.log(t1-t0);
+	console.log("makeAmove: " + (t1-t0));
 	//isPlayerTurn = false;
 	//update the game
 	//UpdateTheGame();

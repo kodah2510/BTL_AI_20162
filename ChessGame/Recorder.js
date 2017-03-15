@@ -125,42 +125,30 @@ function Recorder()
 	{
 		if(col != 0)
 		{
-			for(var i = col;i > 0 && this.moveMap[i - 1][row]*side > 0;i--)
+			for(var i = col;i > 0 && this.moveMap[i - 1][row]*side <= 0;i--)
 			{
-				if(this.moveMap[i - 1][row]*side <= 0 && attackMap[i - 1][row].indexOf(value) == -1)
-				{
-					attackMap[i - 1][row].push(value);
-				}
+				if(attackMap[i - 1][row].indexOf(value) == -1) attackMap[i - 1][row].push(value);
 			}
 		}
 		if(col != 7)
 		{
-			for(var i = col;i < 7 this.moveMap[i + 1][row]*side > 0;i++)
+			for(var i = col;i < 7 && this.moveMap[i + 1][row]*side <= 0;i++)
 			{
-				if(this.moveMap[i + 1][row] <= 0 && attackMap[i + 1][row].indexOf(value) == -1)
-				{
-					attackMap[i + 1][row].push(value);
-				}
+				if(attackMap[i + 1][row].indexOf(value) == -1) attackMap[i + 1][row].push(value);
 			}
 		}
 		if(row != 0)
 		{
-			for(var i = row;i > 0 && this.moveMap[col][i - 1]*side > 0;i--)
+			for(var i = row;i > 0 && this.moveMap[col][i - 1]*side <= 0;i--)
 			{
-				if(this.moveMap[col][i - 1] <= 0 && attackMap[col][i - 1].indexOf(value) == -1)
-				{
-					attackMap[col][i - 1].push(value);
-				}
+				if(attackMap[col][i - 1].indexOf(value) == -1) attackMap[col][i - 1].push(value);
 			}
 		}
 		if(row != 7)
 		{
-			for(var i = row;i < 7 && this.moveMap[col][i + 1]*side > 0;i++)
+			for(var i = row;i < 7 && this.moveMap[col][i + 1]*side <= 0;i++)
 			{
-				if(this.moveMap[col][i + 1] <= 0 && attackMap[col][i + 1].indexOf(value) == -1)
-				{
-					attackMap[col][i + 1].push(value);
-				}
+				if(attackMap[col][i + 1].indexOf(value) == -1) attackMap[col][i + 1].push(value);
 			}
 		}
 	}
@@ -195,52 +183,39 @@ function Recorder()
 		{
 			attackMap[col + 2][row + 1].push(value);
 		}
-		if(col - 2 >= 0 && row - 2 >= 0 && this.moveMap[col + 2][row - 1]*side <= 0 && attackMap[col + 2][row - 1].indexOf(value) == -1)
+		if(col - 2 >= 0 && row - 2 >= 0 && this.moveMap[col - 2][row - 2]*side <= 0 && attackMap[col - 2][row - 2].indexOf(value) == -1)
 		{
-			attackMap[col - 2][row + 1].push(value);
+			attackMap[col - 2][row - 2].push(value);
 		}
 	}
 	this.calculateAttackMapForBishop = function(value,col,row,attackMap,side)
 	{
-		var tlbrValue = col - row;//top-right ->> bottom-left
-		var trblValue = col + row;//top-left ->> bottom-right
+		var tlbrValue = col - row;//top-left ->> bottom-right
+		var trblValue = col + row;//top-right ->> bottom-left
 		if(col != 0)
 		{
-			for(var i = col;i >= 0 && this.moveMap[i][i - tlbrValue]*playerSide > 0;i--)
+			for(var i = col - 1;i >= 0 && this.moveMap[i][i - tlbrValue]*side <= 0;i--)
 			{
 				var currentRow = i - tlbrValue;
-				if(this.moveMap[i][currentRow] <= 0 && attackMap[i][currentRow].indexOf(value) == -1)	
-				{
-						attackMap[i][currentRow].push(value);
-				}
+				if(attackMap[i][currentRow].indexOf(value) == -1) attackMap[i][currentRow].push(value);	
 			}
-			for(var i = col;i >= 0 && this.moveMap[i][trblValue - i]*side > 0;i--)
+			for(var i = col - 1;i >= 0 && this.moveMap[i][trblValue - i]*side <= 0;i--)
 			{
 				var currentRow = trblValue - i;
-				if(this.moveMap[i][currentRow] == 0 && attackMap[i][currentRow].indexOf(value) == -1)
-				{
-						attackMap[i][currentRow].push(value);
-				}
-			
+				if(attackMap[i][currentRow].indexOf(value) == -1) attackMap[i][currentRow].push(value);
 			}
 		}
 		if(col != 7)
 		{
-			for(var i = col;i < 8 && this.moveMap[i][i - tlbrValue]*side > 0;i++)
+			for(var i = col + 1;i < 8 && this.moveMap[i][i - tlbrValue]*side <= 0;i++)
 			{
 				var currentRow = i - tlbrValue;
-				if(this.moveMap[i][currentRow] == 0 && attackMap[i][currentRow].indexOf(value) == -1)
-				{
-						attackMap[i][currentRow].push(value);
-				}
+				if(attackMap[i][currentRow].indexOf(value) == -1) attackMap[i][currentRow].push(value);
 			}
-			for(var i = col;i < 8 && this.moveMap[i][trblValue - i]*side > 0;i++)
+			for(var i = col + 1;i < 8 && this.moveMap[i][trblValue - i]*side <= 0;i++)
 			{
 				var currentRow = trblValue - i;
-				if(this.moveMap[i][currentRow] == 0 && attackMap[i][currentRow].indexOf(value) == -1)
-				{
-						attackMap[i][currentRow].push(value);
-				}
+				if(attackMap[i][currentRow].indexOf(value) == -1) attackMap[i][currentRow].push(value);
 			}
 		}
 		
