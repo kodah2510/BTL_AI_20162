@@ -13,7 +13,6 @@ function preload()
 	blackQueenSprite 	= loadImage("ChessSprite/blackQueen.png");
 	blackKingSprite 	= loadImage("ChessSprite/blackKing.png");
 	blackPawnSprite 	= loadImage("ChessSprite/blackPawn.png");
-
 	whitePawnSprite 	= loadImage("ChessSprite/whitePawn.png");
 	whiteRookSprite 	= loadImage("ChessSprite/whiteRook.png");
 	whiteKnightSprite 	= loadImage("ChessSprite/whiteKnight.png");
@@ -68,6 +67,7 @@ function draw()
 //player make a move
 function makeAMove()
 {
+	var t0 = performance.now();
 	var clickedCol;
 	var clickedRow;
 	
@@ -80,7 +80,7 @@ function makeAMove()
 		if(controller.grid[clickedCol][clickedRow].sprite == null)
 		{
 			//Player move the piece
-			if(prevChessman != null)
+			if(prevCol != -1)
 			{
 				//checking whether the move is valid or not
 				//need to fix this one
@@ -94,19 +94,13 @@ function makeAMove()
 						controller.castling();
 						break;
 					case 0:
-						controller.moveTheChessman();
+						controller.moveTheChessman(prevCol,prevRow,clickedCol,clickedRow);
+						prevCol = -1;
+						prevRow = -1;
 						break;
 					case -1:
 						break;
 				}
-				if(validator.validateMove(prevCol,prevRow,clickedCol,clickedRow))
-				{
-					controller.moveTheChessman(prevCol,prevRow,clickedCol,clickedRow);
-					prevChessman = null;
-					prevCol = -1;
-					prevRow = -1;
-				}
-				
 			}
 		}
 		//player clicked opponent's piece
@@ -116,7 +110,9 @@ function makeAMove()
 			switch(result)
 			{
 				case 0:
-					controller.moveTheChessman();
+					controller.moveTheChessman(prevCol,prevRow,clickedCol,clickRow);
+					prevCol = -1;
+					prevRow = -1;
 					break;
 				case -1:
 					break;
@@ -124,27 +120,18 @@ function makeAMove()
 					controller.capture();
 					break;
 			}
-			if(validator.validateMove(prevCol,prevRow,clickedCol,clickedRow))
-			{
-				//procedure 
-				//move the piece --> update move map --> update move record --> update attack map
-				controller.moveTheChessman(prevCol,prevRow,clickedCol,clickedRow);
-				prevChessman = null;
-				prevCol = -1;
-				prevRow = -1;
-			}
 		}
 		//player clicked his piece
 		else if(recorder.moveMap[clickedCol][clickedRow]*playerSide > 0)
 		{
 			//prevChessman = grid[clickedCol][clickedRow].chessman.copy();
-			prevChessman = controller.grid[clickedCol][clickedRow].sprite;
 			prevCol = clickedCol;
 			prevRow = clickedRow;
 		}
 	}
 	redraw();
-
+	var t1 = performance.now();
+	console.log(t1-t0);
 	//isPlayerTurn = false;
 	//update the game
 	//UpdateTheGame();
@@ -153,5 +140,3 @@ function makeAMove()
 	//update the game
 	//UpdateTheGame();
 }
-
-
