@@ -66,22 +66,22 @@ function Recorder()
 	{
 		switch(value)
 		{
-			case -1://Rook
+			case -ROOK_VALUE ://Rook
 				this.calculateAttackMapForRook(value,col,row,this.blackAttackMap,side);
 				break;
-			case -2://Knight
+			case -KNIGHT_VALUE ://Knight
 				this.calculateAttackMapForKnight(value,col,row,this.blackAttackMap,side);
 				break;
-			case -3://Bishop
+			case -BISHOP_VALUE ://Bishop
 				this.calculateAttackMapForBishop(value,col,row,this.blackAttackMap,side)
 				break;
-			case -4://Queen
+			case -QUEEN_VALUE ://Queen
 				this.calculateAttackMapForQueen(value,col,row,this.blackAttackMap,side);
 				break;
-			case -5://King
+			case -KING_VALUE ://King
 				this.calculateAttackMapForKing(value,col,row,this.blackAttackMap,side);
 				break;
-			case -6://Pawn
+			case -PAWN_VALUE ://Pawn
 				this.calculateAttackMapForPawn(value,col,row,this.blackAttackMap);
 				break;
 		}
@@ -91,22 +91,22 @@ function Recorder()
 	{
 		switch(value)
 		{
-			case 1://Rook
+			case ROOK_VALUE: //Rook
 				this.calculateAttackMapForRook(value,col,row,this.whiteAttackMap,side);
 				break;
-			case 2://Knight
+			case KNIGHT_VALUE ://Knight
 				this.calculateAttackMapForKnight(value,col,row,this.whiteAttackMap,side);
 				break;
-			case 3://Bishop
+			case BISHOP_VALUE ://Bishop
 				this.calculateAttackMapForBishop(value,col,row,this.whiteAttackMap,side);
 				break;
-			case 4://Queen
+			case QUEEN_VALUE ://Queen
 				this.calculateAttackMapForQueen(value,col,row,this.whiteAttackMap,side);
 				break;
-			case 5://King
+			case KING_VALUE ://King
 				this.calculateAttackMapForKing(value,col,row,this.whiteAttackMap,side);
 				break;
-			case 6://Pawn
+			case PAWN_VALUE ://Pawn
 				this.calculateAttackMapForPawn(value,col,row,this.whiteAttackMap);
 				break;
 		}
@@ -123,6 +123,8 @@ function Recorder()
 	}
 	this.calculateAttackMapForRook = function(value,col,row,attackMap,side)
 	{
+		//need to fix this one 
+		//only the attack range is limited at the first opponent piece it met 
 		if(col != 0)
 		{
 			for(var i = col;i > 0 && this.moveMap[i - 1][row]*side <= 0;i--)

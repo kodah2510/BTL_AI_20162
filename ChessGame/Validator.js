@@ -1,9 +1,7 @@
-
 function Validator()
 {
 	this.validateMove = function(prevCol,prevRow,clickedCol,clickedRow)
 	{
-		if(!this.detectCheck(prevCol,prevRow,clickedCol,clickedRow)) return INVALID_MOVE; 
 		//first condition the move follow the rule
 		var value = recorder.moveMap[prevCol][prevRow];
 		if(Math.abs(value) == PAWN_VALUE)//pawn is a little bit different it move straight but attack diagonally
@@ -70,43 +68,63 @@ function Validator()
 	this.detectCheck = function(prevCol,prevRow,clickedCol,clickedRow)
 	{
 		var pieceValue = recorder.moveMap[prevCol][prevRow];
-		var moveMapCopy = recorder.moveMap;
 		var kingPostion; 
-		//create a temporary attackMap
 		var tempAttackMap = [];
+		var isValid;
+		recorder.moveMap[prevCol][prevRow] = 0;
+		//create tempAttackMap
 		for(var i = 0; i < 8; i++)
 		{
 			tempAttackMap[i] = new Array(8);
 		}
-		for(var i = 0; i < 8; i++)
+		for(var i = 0; i < 8;i++)
 		{
-			for(var j = 0; j < 8; j++)
+			for(var j = 0;j < 8; j++)
 			{
 				tempAttackMap[i][j] = [];
 			}
 		}
-		//find the king position
-		(pieceValue > 0)? kingPostion = recorder.findThePiece(KING_VALUE): kingPostion = recorder.findThePiece(KING_VALUE*BLACK_SIDE); 
-		console.log(kingPostion);
-		//delete the previous position
-		moveMapCopy[prevCol][prevRow] = 0;
-		//update the attack map
-		for(var i = 0; i < 8; i++)
+		if(pieceValue > 0)
 		{
-			for(var j = 0;j < 8; j++)
+			kingPostion = recorder.findThePiece(KING_VALUE);
+			for(var i = 0; i < 8; i++)
 			{
-				if(moveMapCopy[i][j] == ROOK_VALUE)
-					recorder.calculateAttackMapForRook(ROOK_VALUE,i,j,tempAttackMap,1);
-				else if(moveMapCopy[i][j] == BISHOP_VALUE)
-					recorder.calculateAttackMapForBishop(BISHOP_VALUE,i,j,tempAttackMap,1);
-				else if(moveMapCopy[i][j] == QUEEN_VALUE)
-					recorder.calculateAttackMapForRook(ROOK_VALUE,i,j,tempAttackMap,1);
+				for(var j = 0; j < 8; j++)
+				{
+					if(recorder.moveMap[i][j] == -ROOK_VALUE)
+						recorder.calculateAttackMapForRook(ROOK_VALUE,i,j,tempAttackMap,BLACK_SIDE);
+					else if(recorder.moveMap[i][j] == -BISHOP_VALUE)
+						recorder.calculateAttackMapForBishop(-BISHOP_VALUE,i,j,tempAttackMap,BLACK_SIDE);
+					else if(recorder.moveMap[i][j] == -QUEEN_VALUE)
+						recorder.calculateAttackMapForQueen(-QUEEN_VALUE,i,j,tempAttackMap,BLACK_SIDE);
+				}
+			}
+			
+		}
+		else
+		{
+			kingPostion = recorder.findThePiece(-KING_VALUE);
+			tempAttackMap = recorder.whiteAttackMap;
+			for(var i = 0; i < 8; i++)
+			{
+				for(var j = 0; j < 8; j++)
+				{
+					if(recorder.moveMap[i][j] == ROOK_VALUE)
+						recorder.calculateAttackMapForRook(ROOK_VALUE,i,j,tempAttackMap,WHITE_SIDE);
+					else if(recorder.moveMap[i][j] == BISHOP_VALUE)
+						recorder.calculateAttackMapForBishop(BISHOP_VALUE,i,j,tempAttackMap,WHITE_SIDE);
+					else if(recorder.moveMap[i][j] == QUEEN_SIDE)
+						recorder.calculateAttackMapForQueen(QUEEN_VALUE,i,j,tempAttackMap,WHITE_SIDE);
+				}
 			}
 		}
-		console.log(tempAttackMap[)
+		//find the king position 
+		console.log(kingPostion);
+		console.log(tempAttackMap);
+		//delete the previous position
+		//update the attack map
+		recorder.moveMap[prevCol][prevRow] = pieceValue;
 		return (tempAttackMap[kingPostion[0]][kingPostion[1]].length == 0);
-		
-		
 		//rook queen bishop
 		//check whether the king stayed on attacked grid or not 
 		//concentrate on Bishop Rook Queen 

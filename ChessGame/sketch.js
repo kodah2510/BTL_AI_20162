@@ -42,9 +42,9 @@ function setup()
 	//controller.placeTheChessman(whitePawnSprite,2,6,PAWN_VALUE);
 	//controller.placeTheChessman(whiteKnightSprite,3,2,KNIGHT_VALUE);
 	
-	controller.placeTheChessman(blackRookSprite,3,2,ROOK_VALUE*BLACK_SIDE);
-	controller.placeTheChessman(blackKnightSprite,6,4,KNIGHT_VALUE*BLACK_SIDE);
-	controller.placeTheChessman(blackKingSprite,4,2,KING_VALUE*BLACK_SIDE);
+	controller.placeTheChessman(blackRookSprite,3,2,-ROOK_VALUE);
+	controller.placeTheChessman(blackKnightSprite,6,4,-KNIGHT_VALUE);
+	controller.placeTheChessman(blackKingSprite,4,2,-KING_VALUE);
 	/*
 	controller.placeTheChessman(whiteKingSprite,3,7,5);
 	controller.placeTheChessman(blackRookSprite,3,1,-1);
@@ -91,9 +91,12 @@ function makeAMove()
 				case INVALID_MOVE:
 					break;
 				case QUIET_MOVE:
-					controller.moveTheChessman(prevCol,prevRow,clickedCol,clickedRow);
-					prevCol = null;
-					prevRow = null;
+					if(validator.detectCheck(prevCol,prevRow,clickedCol,clickedRow))
+					{
+						controller.moveTheChessman(prevCol,prevRow,clickedCol,clickedRow);
+						prevCol = null;
+						prevRow = null;
+					}
 					break;
 				case CAPTURE_MOVE: 
 					controller.capture();
@@ -118,9 +121,12 @@ function makeAMove()
 				case INVALID_MOVE:
 					break;
 				case QUIET_MOVE:
-					controller.moveTheChessman(prevCol,prevRow,clickedCol,clickedRow);
-					prevCol = null;
-					prevRow = null;
+					if(validator.detectCheck(prevCol,prevRow,clickedCol,clickedRow))
+					{
+						controller.moveTheChessman(prevCol,prevRow,clickedCol,clickedRow);
+						prevCol = null;
+						prevRow = null;
+					}
 					break;
 				case CAPTURE_MOVE:
 					controller.capture();
