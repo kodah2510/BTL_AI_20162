@@ -34,16 +34,16 @@ function setup()
 	controller.init();
 	recorder.init();
 	
-	//controller.placeTheChessman(whiteRookSprite,0,0,ROOK_VALUE*WHITE_SIDE);
-	//controller.placeTheChessman(whiteKingSprite,3,7,KING_VALUE*WHITE_SIDE);
-	//controller.placeTheChessman(whiteBishopSprite,4,7,BISHOP_VALUE*WHITE_SIDE);
-	controller.placeTheChessman(whiteQueenSprite,4,1,QUEEN_VALUE*WHITE_SIDE);
-	//controller.placeTheChessman(whitePawnSprite,5,6,PAWN_VALUE*WHITE_SIDE);
-	//controller.placeTheChessman(whitePawnSprite,2,6,PAWN_VALUE*WHITE_SIDE);
-	//controller.placeTheChessman(whiteKnightSprite,3,2,KNIGHT_VALUE*WHITE_SIDE);
+	controller.placeTheChessman(whiteRookSprite,3,6,ROOK_VALUE);
+	controller.placeTheChessman(whiteKingSprite,3,7,KING_VALUE);
+	//controller.placeTheChessman(whiteBishopSprite,4,7,BISHOP_VALUE);
+	controller.placeTheChessman(whiteQueenSprite,4,1,QUEEN_VALUE);
+	//controller.placeTheChessman(whitePawnSprite,5,6,PAWN_VALUE);
+	//controller.placeTheChessman(whitePawnSprite,2,6,PAWN_VALUE);
+	//controller.placeTheChessman(whiteKnightSprite,3,2,KNIGHT_VALUE);
 	
-	//controller.placeTheChessman(blackRookSprite,6,4,ROOK_VALUE*BLACK_SIDE);
-	controller.placeTheChessman(blackKnightSprite,2,3,KNIGHT_VALUE*BLACK_SIDE);
+	controller.placeTheChessman(blackRookSprite,3,2,ROOK_VALUE*BLACK_SIDE);
+	controller.placeTheChessman(blackKnightSprite,6,4,KNIGHT_VALUE*BLACK_SIDE);
 	controller.placeTheChessman(blackKingSprite,4,2,KING_VALUE*BLACK_SIDE);
 	/*
 	controller.placeTheChessman(whiteKingSprite,3,7,5);
@@ -88,19 +88,25 @@ function makeAMove()
 			var result = validator.validateMove(prevCol,prevRow,clickedCol,clickedRow);
 			switch(result)
 			{
-				case 1: 
-					controller.capture();
+				case INVALID_MOVE:
 					break;
-				case 2:
-					controller.castling();
-					break;
-				case 0:
+				case QUIET_MOVE:
 					controller.moveTheChessman(prevCol,prevRow,clickedCol,clickedRow);
 					prevCol = null;
 					prevRow = null;
 					break;
-				case -1:
+				case CAPTURE_MOVE: 
+					controller.capture();
+					prevCol = null;
+					prevRow = null;
 					break;
+				case CASTLING_MOVE:
+					controller.castling();
+					prevCol = null;
+					prevRow = null;
+					break;
+				
+				
 			}
 		}
 		//player clicked opponent's piece
@@ -109,16 +115,17 @@ function makeAMove()
 			var result = validator.validateMove(prevCol,prevRow,clickedCol,clickedRow);
 			switch(result)
 			{
-				case 0:
+				case INVALID_MOVE:
+					break;
+				case QUIET_MOVE:
 					controller.moveTheChessman(prevCol,prevRow,clickedCol,clickedRow);
 					prevCol = null;
 					prevRow = null;
 					break;
-				case -1:
-					break;
-				case 1:
+				case CAPTURE_MOVE:
 					controller.capture();
 					break;
+				
 			}
 		}
 		//player clicked his piece

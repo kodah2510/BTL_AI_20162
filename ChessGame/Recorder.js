@@ -39,7 +39,7 @@ function Recorder()
 		{
 			for(var j = 0;j < 8;j++)
 			{
-				if(this.moveMap[i][j] != null)
+				if(this.moveMap[i][j] != 0)
 				{
 					(this.moveMap[i][j] < 0)? this.calculateBlackAttackMap(this.moveMap[i][j],i,j,BLACK_SIDE): this.calculateWhiteAttackMap(this.moveMap[i][j],i,j,WHITE_SIDE);
 				}
@@ -407,6 +407,22 @@ function Recorder()
 				}	
 			}
 			
+		}
+	}
+	this.findThePiece = function(value)
+	{
+		var piecePosition = [];
+		for(var i = 0;i < 8;i++)
+		{
+			for(var j = 0;j < 8;j++)
+			{
+				if(this.moveMap[i][j] == value)
+				{
+					piecePosition.push(i);
+					piecePosition.push(j);
+					return piecePosition;
+				}
+			}
 		}
 	}
 }

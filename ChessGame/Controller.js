@@ -35,6 +35,7 @@ function Controller()
 	}
 	this.createGameBoard = function()
 	{
+		/*
 		var playersConfirmation = confirm("White or Black (OK/CANCEL)");
 		if(!playersConfirmation)
 		{
@@ -97,6 +98,7 @@ function Controller()
 			}
 			return 1;
 		}
+		*/
 	}
 	this.moveTheChessman = function(prevCol,prevRow,clickedCol,clickedRow)
 	{
@@ -110,13 +112,30 @@ function Controller()
 		recorder.updateAttackMap();		
 	}
 	//proceed castling if it's valid
-	this.castling = function()
+	this.castling = function(prevCol,prevRow,clickedCol,clickedRow)
 	{
+		var rookCol;
 		//move the king to ...
-		
+		this.moveTheChessman(prevCol,prevRow,clickedCol,clickedRow);
+		recorder.updateMoveMap(recorder.moveMap[prevCol][prevRow],prevCol,prevRow,clickedCol,clickedRow);
+		recorder.updateMoveRecord(prevCol,prevRow,clickedCol,clickedRow);
 		//move the rook...
-		
 		//update the game state
+		if(clickedCol == prevCol - 2)
+		{
+			rookCol = 0
+			this.moveTheChessman(rookCol,prevRow,rookCol + 3,prevRow);
+			recorder.updateMoveMap(recorder.moveMap[rookCol][prevRow],rookCol,prevRow,rookCol + 3,prevRow);
+			recorder.updateMoveRecord(rookCol,prevRow,rookCol + 2,prevRow);
+		}
+		else if(clickedCol == prevCol + 2)
+		{
+			rookCol = 7;
+			this.moveTheChessman(rookCol,prevRow,rookCol - 2,prevRow);
+			recorder.updateMoveMap(recorder.moveMap[rookCol][prevRow],rookCol,prevRow,rookCol - 2,prevRow);
+			recorder.updateMoveRecord(rookCol,prevRow,rookCol - 2,prevRow);
+		}
+		recorder.updateAttackMap();		
 	}
 	//when the pawn reach at the end of the board 
 	this.capture = function()
