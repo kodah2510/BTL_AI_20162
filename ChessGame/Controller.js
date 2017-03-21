@@ -1,36 +1,26 @@
-function Controller()
-{
+function Controller() {
 	this.grid = [];
-	this.init = function()
-	{
-		for(var i = 0;i < 8;i++)
-		{
+	
+	this.init = function() {
+		for (var i = 0; i < 8;i++)
 			this.grid[i] = new Array(8);
-		}
-		for(var i = 0; i < 8; i++)
-		{
-			for(var j = 0;j < 8; j++)
-			{
+		for (var i = 0; i < 8; i++)
+			for (var j = 0;j < 8; j++)
 				this.grid[i][j] = new Grid(i,j);//[col,row]
-			}
-		}
+
 	}
-	this.render = function()
-	{
-		for(var i = 0 ; i < 8; i++)
-		{
-			for(var j = 0; j < 8; j++)
-			{
+
+	this.render = function() {
+		for (var i = 0 ; i < 8; i++)
+			for (var j = 0; j < 8; j++)
 				this.grid[i][j].show();
-			}
-		}
+
 	}
-	this.placeTheChessman = function(sprite,col,row,value)
-	{
-		if(recorder.moveMap[col][row] == 0)
-		{
+
+	this.placeTheChessman = function(sprite, col, row, value) {
+		if(recorder.moveMap[col][row] == 0) {
 			this.grid[col][row].sprite = sprite;
-			recorder.updateMoveMap(value,null,null,col,row);
+			recorder.updateMoveMap(value, null, null, col, row);
 		}
 	}
 	this.createGameBoard = function()
@@ -100,7 +90,7 @@ function Controller()
 		}
 		*/
 	}
-	this.moveTheChessman = function(prevCol,prevRow,clickedCol,clickedRow)
+	this.moveTheChessman = function(prevCol, prevRow, clickedCol, clickedRow)
 	{
 		//swap the sprite 
 		var prevChessmanSprite = this.grid[prevCol][prevRow].sprite;
