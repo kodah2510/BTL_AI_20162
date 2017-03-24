@@ -127,30 +127,64 @@ function Recorder()
 		//only the attack range is limited at the first opponent piece it met 
 		if(col != 0)
 		{
-			for(var i = col;i > 0 && this.moveMap[i - 1][row]*side <= 0;i--)
+			for(var i = col - 1;i >= 0 && this.moveMap[i][row]*side <= 0;i--)
 			{
-				if(attackMap[i - 1][row].indexOf(value) == -1) attackMap[i - 1][row].push(value);
+				if(attackMap[i][row].indexOf(value) == -1)
+				{
+					if( this.moveMap[i][row]*side < 0)
+					{
+						attackMap[i][row].push(value);
+						break;
+					}
+					else attackMap[i][row].push(value);
+				}					
 			}
 		}
 		if(col != 7)
 		{
-			for(var i = col;i < 7 && this.moveMap[i + 1][row]*side <= 0;i++)
+			for(var i = col + 1;i < 8 && this.moveMap[i][row]*side <= 0;i++)
 			{
-				if(attackMap[i + 1][row].indexOf(value) == -1) attackMap[i + 1][row].push(value);
+				if(attackMap[i][row].indexOf(value) == -1)
+				{
+					if(this.moveMap[i][row]*side < 0)
+					{
+						attackMap[i][row].push(value);
+						break;
+					}
+					else attackMap[i][row].push(value);
+				}					
 			}
 		}
 		if(row != 0)
 		{
-			for(var i = row;i > 0 && this.moveMap[col][i - 1]*side <= 0;i--)
+			for(var i = row - 1;i >= 0 && this.moveMap[col][i]*side <= 0;i--)
 			{
-				if(attackMap[col][i - 1].indexOf(value) == -1) attackMap[col][i - 1].push(value);
+				if(attackMap[col][i].indexOf(value) == -1)
+				{
+					if(this.moveMap[col][i]*side < 0)
+					{
+						attackMap[col][i].push(value);
+						break;
+					}
+					else attackMap[col][i].push(value);
+					
+				}					
 			}
 		}
 		if(row != 7)
 		{
-			for(var i = row;i < 7 && this.moveMap[col][i + 1]*side <= 0;i++)
+			for(var i = row + 1;i < 8 && this.moveMap[col][i]*side <= 0;i++)
 			{
-				if(attackMap[col][i + 1].indexOf(value) == -1) attackMap[col][i + 1].push(value);
+				if(attackMap[col][i].indexOf(value) == -1)
+				{
+					if(this.moveMap[col][i]*side < 0)
+					{
+						attackMap[col][i].push(value);
+						break;
+					}
+					else attackMap[col][i].push(value);
+					
+				}
 			}
 		}
 	}
@@ -199,12 +233,28 @@ function Recorder()
 			for(var i = col - 1;i >= 0 && this.moveMap[i][i - tlbrValue]*side <= 0;i--)
 			{
 				var currentRow = i - tlbrValue;
-				if(attackMap[i][currentRow].indexOf(value) == -1) attackMap[i][currentRow].push(value);	
+				if(attackMap[i][currentRow].indexOf(value) == -1)
+				{
+					if(this.moveMap[i][i - tlbrValue]*side < 0)
+					{
+						attackMap[i][currentRow].push(value);	
+						break;
+					}
+					else attackMap[i][currentRow].push(value);	
+				}					
 			}
 			for(var i = col - 1;i >= 0 && this.moveMap[i][trblValue - i]*side <= 0;i--)
 			{
 				var currentRow = trblValue - i;
-				if(attackMap[i][currentRow].indexOf(value) == -1) attackMap[i][currentRow].push(value);
+				if(attackMap[i][currentRow].indexOf(value) == -1)
+				{
+					if(this.moveMap[i][trblValue - i]*side < 0)
+					{
+						attackMap[i][currentRow].push(value);
+						break;
+					}
+					else attackMap[i][currentRow].push(value);
+				}					
 			}
 		}
 		if(col != 7)
@@ -212,12 +262,29 @@ function Recorder()
 			for(var i = col + 1;i < 8 && this.moveMap[i][i - tlbrValue]*side <= 0;i++)
 			{
 				var currentRow = i - tlbrValue;
-				if(attackMap[i][currentRow].indexOf(value) == -1) attackMap[i][currentRow].push(value);
+				if(attackMap[i][currentRow].indexOf(value) == -1)
+				{
+					if(this.moveMap[i][i - tlbrValue]*side < 0)
+					{
+						attackMap[i][currentRow].push(value);
+						break;
+					}
+					else attackMap[i][currentRow].push(value);
+				}					
 			}
 			for(var i = col + 1;i < 8 && this.moveMap[i][trblValue - i]*side <= 0;i++)
 			{
 				var currentRow = trblValue - i;
-				if(attackMap[i][currentRow].indexOf(value) == -1) attackMap[i][currentRow].push(value);
+				if(attackMap[i][currentRow].indexOf(value) == -1)
+				{
+					if(this.moveMap[i][trblValue - i]*side < 0)
+					{
+						attackMap[i][currentRow].push(value);
+						break;
+					}
+					else attackMap[i][currentRow].push(value);
+				
+				}					
 			}
 		}
 		

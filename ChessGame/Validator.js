@@ -42,9 +42,9 @@ function Validator()
 			//what about the computer side ?
 			if(prevCol == 4)
 			{
-				if(clickedRow == prevRow - 2 || clickedRow == prevRow + 2)
+				if(clickedCol == prevCol - 2 || clickedCol == prevCol + 2)
 				{
-					if(this.validateCastling()) return CASTLING_MOVE;
+					if(this.validateCastling(prevCol,prevRow,clickedCol,clickedRow)) return CASTLING_MOVE;
 					return INVALID_MOVE;
 				}
 			}
@@ -72,6 +72,7 @@ function Validator()
 		var tempAttackMap = [];
 		var isValid;
 		recorder.moveMap[prevCol][prevRow] = 0;
+		recorder.moveMap[clickedCol][clickedRow] = pieceValue;
 		//create tempAttackMap
 		for(var i = 0; i < 8; i++)
 		{
@@ -92,7 +93,7 @@ function Validator()
 				for(var j = 0; j < 8; j++)
 				{
 					if(recorder.moveMap[i][j] == -ROOK_VALUE)
-						recorder.calculateAttackMapForRook(ROOK_VALUE,i,j,tempAttackMap,BLACK_SIDE);
+						recorder.calculateAttackMapForRook(-ROOK_VALUE,i,j,tempAttackMap,BLACK_SIDE);
 					else if(recorder.moveMap[i][j] == -BISHOP_VALUE)
 						recorder.calculateAttackMapForBishop(-BISHOP_VALUE,i,j,tempAttackMap,BLACK_SIDE);
 					else if(recorder.moveMap[i][j] == -QUEEN_VALUE)
@@ -104,7 +105,6 @@ function Validator()
 		else
 		{
 			kingPostion = recorder.findThePiece(-KING_VALUE);
-			tempAttackMap = recorder.whiteAttackMap;
 			for(var i = 0; i < 8; i++)
 			{
 				for(var j = 0; j < 8; j++)
@@ -124,6 +124,7 @@ function Validator()
 		//delete the previous position
 		//update the attack map
 		recorder.moveMap[prevCol][prevRow] = pieceValue;
+		recorder.moveMap[clickedCol][clickedRow] = 0;
 		return (tempAttackMap[kingPostion[0]][kingPostion[1]].length == 0);
 		//rook queen bishop
 		//check whether the king stayed on attacked grid or not 

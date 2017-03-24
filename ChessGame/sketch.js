@@ -34,14 +34,17 @@ function setup()
 	controller.init();
 	recorder.init();
 	
-	controller.placeTheChessman(whiteRookSprite,3,6,ROOK_VALUE);
-	controller.placeTheChessman(whiteKingSprite,3,7,KING_VALUE);
+	controller.placeTheChessman(whiteRookSprite,0,7,ROOK_VALUE);
+	controller.placeTheChessman(whiteRookSprite,7,7,ROOK_VALUE);
+	controller.placeTheChessman(whiteKingSprite,4,7,KING_VALUE);
 	//controller.placeTheChessman(whiteBishopSprite,4,7,BISHOP_VALUE);
 	controller.placeTheChessman(whiteQueenSprite,4,1,QUEEN_VALUE);
 	//controller.placeTheChessman(whitePawnSprite,5,6,PAWN_VALUE);
 	//controller.placeTheChessman(whitePawnSprite,2,6,PAWN_VALUE);
+	controller.placeTheChessman(whitePawnSprite,3,6,PAWN_VALUE);
 	//controller.placeTheChessman(whiteKnightSprite,3,2,KNIGHT_VALUE);
 	
+	controller.placeTheChessman(blackRookSprite,2,2,-ROOK_VALUE);
 	controller.placeTheChessman(blackRookSprite,3,2,-ROOK_VALUE);
 	controller.placeTheChessman(blackKnightSprite,6,4,-KNIGHT_VALUE);
 	controller.placeTheChessman(blackKingSprite,4,2,-KING_VALUE);
@@ -104,7 +107,7 @@ function makeAMove()
 					prevRow = null;
 					break;
 				case CASTLING_MOVE:
-					controller.castling();
+					controller.castling(prevCol,prevRow,clickedCol,clickedRow);
 					prevCol = null;
 					prevRow = null;
 					break;
