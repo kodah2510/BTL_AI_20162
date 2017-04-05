@@ -25,25 +25,26 @@ function preload()
 function setup()
 {
 	var myCanvas = createCanvas(480,480);
-
 	myCanvas.id("myCanvas");
 	//colSize rowSize
 	w = width/8;
 	h = height/8;
 	
-	controller.init();
-	recorder.init();
+	controller = new Controller();
+	recorder = new Recorder();
+	validator = new Validator();
+	moveGenerator = new MoveGenerator();
 	
-	controller.placeTheChessman(whiteRookSprite,0,7,ROOK_VALUE);
+	//controller.placeTheChessman(whiteRookSprite,0,7,ROOK_VALUE);
 	controller.placeTheChessman(whiteRookSprite,7,7,ROOK_VALUE);
 	controller.placeTheChessman(whiteKingSprite,4,7,KING_VALUE);
-	//controller.placeTheChessman(whiteBishopSprite,4,7,BISHOP_VALUE);
-	controller.placeTheChessman(whiteQueenSprite,4,1,QUEEN_VALUE);
+	controller.placeTheChessman(whiteBishopSprite,7,1,BISHOP_VALUE);
+	//controller.placeTheChessman(whiteQueenSprite,4,1,QUEEN_VALUE);
 	//controller.placeTheChessman(whitePawnSprite,5,6,PAWN_VALUE);
 	//controller.placeTheChessman(whitePawnSprite,2,6,PAWN_VALUE);
-	controller.placeTheChessman(whitePawnSprite,3,6,PAWN_VALUE);
+	//controller.placeTheChessman(whitePawnSprite,3,6,PAWN_VALUE);
 	//controller.placeTheChessman(whiteKnightSprite,3,2,KNIGHT_VALUE);
-	
+	/*
 	controller.placeTheChessman(blackRookSprite,2,2,-ROOK_VALUE);
 	controller.placeTheChessman(blackRookSprite,3,2,-ROOK_VALUE);
 	controller.placeTheChessman(blackKnightSprite,6,4,-KNIGHT_VALUE);
@@ -61,7 +62,7 @@ function setup()
 	//playerSide = controller.createGameBoard();
 	recorder.updateAttackMap();
 	myCanvas.mouseClicked(makeAMove);
-	
+	noLoop();
 }
 
 function draw()
@@ -69,6 +70,8 @@ function draw()
 	background(51);
 	//display chess board
 	controller.render();
+	//
+	if(!isPlayerTurn) moveGenerator.evaluate(); 
 }
 //player make a move
 function makeAMove()
@@ -93,27 +96,31 @@ function makeAMove()
 			{
 				case INVALID_MOVE:
 					break;
-				case QUIET_MOVE:
+				case VALID_MOVE:
 					if(validator.detectCheck(prevCol,prevRow,clickedCol,clickedRow))
 					{
 						controller.moveTheChessman(prevCol,prevRow,clickedCol,clickedRow);
 						prevCol = null;
 						prevRow = null;
+						isPlayerTurn = false;
 					}
 					break;
+				//special move
 				case CAPTURE_MOVE: 
 					controller.capture();
 					prevCol = null;
 					prevRow = null;
+					isPlayerTurn = false;
 					break;
 				case CASTLING_MOVE:
 					controller.castling(prevCol,prevRow,clickedCol,clickedRow);
 					prevCol = null;
 					prevRow = null;
+					isPlayerTurn = false;
 					break;
-				
-				
 			}
+			//opponent make the next move
+			
 		}
 		//player clicked opponent's piece
 		else if(prevCol != null && recorder.moveMap[clickedCol][clickedRow]*playerSide < 0)
@@ -123,22 +130,29 @@ function makeAMove()
 			{
 				case INVALID_MOVE:
 					break;
-				case QUIET_MOVE:
+				case VALID_MOVE:
+					//player take down opponent piece
+					//pieceCount need to update 
 					if(validator.detectCheck(prevCol,prevRow,clickedCol,clickedRow))
 					{
+						var opponentPieceValue = Math.abs(recorder.moveMap[clickedCol][clickedRow]);
+						recorder.pieceCount[opponentPieceValue][1] -= 1;
 						controller.moveTheChessman(prevCol,prevRow,clickedCol,clickedRow);
 						prevCol = null;
 						prevRow = null;
+						isPlayerTurn = false;
 					}
 					break;
 				case CAPTURE_MOVE:
 					controller.capture();
+					isPlayerTurn = false;
 					break;
 				
 			}
+			
 		}
 		//player clicked his piece
-		else if(recorder.moveMap[clickedCol][clickedRow]*playerSide > 0)
+		else if(recorder.moveMap[clickedCol][clickedRow] * playerSide > 0)
 		{
 			//prevChessman = grid[clickedCol][clickedRow].chessman.copy();
 			prevCol = clickedCol;

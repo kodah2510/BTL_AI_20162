@@ -1,18 +1,16 @@
 function Controller()
 {
 	this.grid = [];
-	this.init = function()
+
+	for(var i = 0;i < 8;i++)
 	{
-		for(var i = 0;i < 8;i++)
+		this.grid[i] = new Array(8);
+	}
+	for(var i = 0; i < 8; i++)
+	{
+		for(var j = 0;j < 8; j++)
 		{
-			this.grid[i] = new Array(8);
-		}
-		for(var i = 0; i < 8; i++)
-		{
-			for(var j = 0;j < 8; j++)
-			{
-				this.grid[i][j] = new Grid(i,j);//[col,row]
-			}
+			this.grid[i][j] = new Grid(i,j);//[col,row]
 		}
 	}
 	this.render = function()
