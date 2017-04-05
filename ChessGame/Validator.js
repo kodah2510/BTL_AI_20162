@@ -23,18 +23,6 @@ function Validator()
 					else if(clickedRow == prevRow - 1) return VALID_MOVE;
 				}
 			}
-			else
-			{
-				if(value < 0)
-				{
-					if(recorder.whiteAttackMap[clickedCol][clickedRow].indexOf(value) != -1) return VALID_MOVE;
-				}
-				else
-				{
-					if(recorder.blackAttackMap[clickedCol][clickedRow].indexOf(value) != -1) return VALID_MOVE;
-				}
-					
-			}
 			//else if(clickedRow == prevRow - 1 && recorder.moveMap[clickedCol][clickedRow] == 0) return 0;
 		}
 		else if(Math.abs(value) == KING_VALUE)
@@ -47,14 +35,6 @@ function Validator()
 					if(this.validateCastling(prevCol,prevRow,clickedCol,clickedRow)) return CASTLING_MOVE;
 					return INVALID_MOVE;
 				}		
-			}
-			if(value > 0)
-			{
-				if(recorder.whiteAttackMap[clickedCol][clickedRow].indexOf(value) != -1) return VALID_MOVE;
-			}
-			else
-			{
-				if(recorder.blackAttackMap[clickedCol][clickedRow].indexOf(value) != -1) return VALID_MOVE;
 			}
 		}
 		if(value < 0)
