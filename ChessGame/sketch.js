@@ -40,8 +40,8 @@ function setup()
 	controller.placeTheChessman(whiteKingSprite,4,7,KING_VALUE);
 	controller.placeTheChessman(whiteBishopSprite,7,1,BISHOP_VALUE);
 	//controller.placeTheChessman(whiteQueenSprite,4,1,QUEEN_VALUE);
-	//controller.placeTheChessman(whitePawnSprite,5,6,PAWN_VALUE);
-	//controller.placeTheChessman(whitePawnSprite,2,6,PAWN_VALUE);
+	controller.placeTheChessman(whitePawnSprite,1,1,PAWN_VALUE);
+	controller.placeTheChessman(blackPawnSprite,3,1,-PAWN_VALUE);
 	//controller.placeTheChessman(whitePawnSprite,3,6,PAWN_VALUE);
 	//controller.placeTheChessman(whiteKnightSprite,3,2,KNIGHT_VALUE);
 	/*
@@ -77,8 +77,6 @@ function draw()
 function makeAMove()
 {
 	var t0 = performance.now();
-	var clickedCol;
-	var clickedRow;
 	
 	clickedCol = floor(mouseX/w);
 	clickedRow = floor(mouseY/h);
@@ -102,21 +100,21 @@ function makeAMove()
 						controller.moveTheChessman(prevCol,prevRow,clickedCol,clickedRow);
 						prevCol = null;
 						prevRow = null;
-						isPlayerTurn = false;
+						//isPlayerTurn = false;
 					}
 					break;
 				//special move
 				case CAPTURE_MOVE: 
-					controller.capture();
+					controller.capture(prevCol,prevRow,clickedCol,clickedRow);
 					prevCol = null;
 					prevRow = null;
-					isPlayerTurn = false;
+					//isPlayerTurn = false;
 					break;
 				case CASTLING_MOVE:
 					controller.castling(prevCol,prevRow,clickedCol,clickedRow);
 					prevCol = null;
 					prevRow = null;
-					isPlayerTurn = false;
+					//isPlayerTurn = false;
 					break;
 			}
 			//opponent make the next move
@@ -147,9 +145,7 @@ function makeAMove()
 					controller.capture();
 					isPlayerTurn = false;
 					break;
-				
 			}
-			
 		}
 		//player clicked his piece
 		else if(recorder.moveMap[clickedCol][clickedRow] * playerSide > 0)

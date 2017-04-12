@@ -1,8 +1,14 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta charset="utf-8"/>
+		<link rel="stylesheet" type="text/css" href=".\..\bootstrap-3.3.7-dist\css\bootstrap.css">
+		<link rel="stylesheet" type="text/css" href=".\StyleSheet\stylesheet.css">
 		<title>BTL AI 20171 </title>
+		<script src=".\jquery-3.2.0.js"></script>
+		<script src=".\..\bootstrap-3.3.7-dist\js\bootstrap.min.js"></script>
+		<!--<script src=".\..\bootstrap-3.3.7-dist\js\npm.js"></script>-->
 		<script src=".\..\p5-zip\p5.js"></script>
 		<script src=".\..\p5-zip\addons\p5.dom.js"></script>
 		<script src=".\Recorder.js"></script>
@@ -13,15 +19,62 @@
 		<script src=".\sketch.js"></script>
 		<script src=".\Variables.js"></script>
 		<script src=".\Grid.js"></script>
-		<link rel="stylesheet" type="text/css" href=".\StyleSheet\stylesheet.css">
+		
 	</head>
-	<body>
-		<form id="form" name="form">
+<body style="background-color: #1f2e2e;">
+	<div class="container">
+	<form id="form" name="form">
 			<!-- <input id="radio" type="radio" name="side" value="BlackSide"><text style="color:white;"> Black Side </text> </input> -->
 			<!-- <input id="radio" type="radio" name="side" value="WhiteSide" checked><text style="color:white;"> White Side </text></input>  -->
-			<input id="button" type="button" name"startButton" value="Start" onclick="startTheGame();"></input>
-			<input id="button" type="button" name"refreshButton" value="Refresh" onclick="location.reload();"></input>
-		</form>
-		<div id="myCanvas"></div>
-	</body>
+		<input id="button" type="button" name"startButton" value="Start" onclick="startTheGame();"></input>
+		<input id="button" type="button" name"refreshButton" value="Refresh" onclick="location.reload();"></input>
+	</form>
+	<div id="myCanvas"></div>
+	<!--<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>-->
+	<div class="modal fade" id="myModal" role="dialog" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Chose your piece</h4>
+				</div>
+				<div id="modalBody" class="modal-body">
+					<div id="blackSide" class="row">
+						<div id="blackRook" class="col-xs-3" align="center">
+							<img src=".\ChessSprite\blackRook.png">
+						</div>
+						<div id="blackKnight" class="col-xs-3" align="center">
+							<img src=".\ChessSprite\blackKnight.png">
+						</div>
+						<div id="blackBishop" class="col-xs-3" align="center">
+							<img src=".\ChessSprite\blackBishop.png">
+						</div>
+						<div id="blackQueen" class="col-xs-3" align="center">
+							<img src=".\ChessSprite\blackQueen.png">
+						</div>
+					</div>
+					
+					<div id="whiteSide" class="row">
+						<div id="whiteRook" class="col-xs-3" align="center">
+							<img id="whiteRookImg" src=".\ChessSprite\whiteRook.png">
+						</div>
+						<div id="whiteKnight" class="col-xs-3" align="center">
+							<img id="whiteKnightImg" src=".\ChessSprite\whiteKnight.png">
+						</div>
+						<div id="whiteBishop" class="col-xs-3" align="center">
+							<img id="whiteBishopImg" src=".\ChessSprite\whiteBishop.png">
+						</div>
+						<div id="whiteQueen" class="col-xs-3" align="center">
+							<img id="whiteQueenImg" src=".\ChessSprite\whiteQueen.png">
+						</div>
+					</div>
+					<script>
+					
+					</script>
+				</div>
+				<div class="modal-footer"></div>
+			</div>
+		</div>	
+	</div>
+</body>
 </html>

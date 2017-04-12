@@ -17,6 +17,8 @@ var whiteBishopSprite;
 var whiteQueenSprite;
 var whiteKingSprite;
 
+var clickedCol = null;
+var clickedRow = null;
 var prevCol = null;
 var prevRow = null;
 //player can switch side
@@ -27,3 +29,5 @@ var controller;
 var recorder;
 var validator;
 var moveGenerator;
+//player chose the piece after the pawn has reach the end of the board
+var capturePiece = 0;

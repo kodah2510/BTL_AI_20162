@@ -26,8 +26,7 @@ function Validator()
 			//else if(clickedRow == prevRow - 1 && recorder.moveMap[clickedCol][clickedRow] == 0) return 0;
 		}
 		else if(Math.abs(value) == KING_VALUE)
-		{
-			//what about the computer side ?			
+		{		
 			if(prevCol == 4)
 			{
 				if(clickedCol == prevCol - 2 || clickedCol == prevCol + 2)

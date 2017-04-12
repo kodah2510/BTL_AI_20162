@@ -136,13 +136,72 @@ function Controller()
 		recorder.updateAttackMap();		
 	}
 	//when the pawn reach at the end of the board 
-	this.capture = function()
+	this.capture = function(prevCol, prevRow, clickedCol, clickedRow)
 	{
 		//show the window for player to choose which piece to capture
 		
 		//replace sprite
 		
-		//update game state
-	}
+		//update game states
+		$('#myModal').modal();
+		(playerSide == WHITE_SIDE) ? $('#blackSide').toggle() : $('#whiteSide').toggle();
+		$('#modalBody').click(function(event)
+		{
+			var pieceValue
+			if($(event.target).is('#whiteRook') 		|| $(event.target).is("#whiteRookImg")) 
+				pieceValue = ROOK_VALUE;
+			else if($(event.target).is('#whiteKnight') 	|| $(event.target).is("#whiteKnightImg")) 
+				pieceValue = KNIGHT_VALUE;
+			else if($(event.target).is('#whiteBishop') 	|| $(event.target).is("#whiteBishopImg")) 
+				pieceValue = BISHOP_VALUE;
+			else if($(event.target).is('#whiteQueen') 	|| $(event.target).is("#whiteQueenImg")) 
+				pieceValue = QUEEN_VALUE;
+			else if($(event.target).is('#blackRook') 	|| $(event.target).is("#blackRookImg")) 
+				pieceValue = -ROOK_VALUE;
+			else if($(event.target).is('#blackKnight') 	|| $(event.target).is("#blackKnightImg")) 
+				pieceValue = -KNIGHT_VALUE;
+			else if($(event.target).is('#blackBishop') 	|| $(event.target).is("#blackBishopImg")) 
+				pieceValue = -BISHOP_VALUE;
+			else if($(event.target).is('#blackQueen') 	|| $(event.target).is("#blackQueenImg")) 
+				pieceValue = -QUEEN_VALUE;
+			
+			$("#myModal").modal('toggle');
+			var newSprite;
+			switch(pieceValue)
+			{
+				case ROOK_VALUE:
+					newSprite = whiteRookSprite;
+					break;
+				case KNIGHT_VALUE:
+					newSprite = whiteKnightSprite;
+					break;
+				case BISHOP_VALUE:
+					newSprite = whiteBishopSprite;
+					break;
+				case QUEEN_VALUE:
+					newSprite = whiteQueenSprite;
+					break;
+				case -ROOK_VALUE:
+					newSprite = blackRookSprite;
+					break;
+				case -KNIGHT_VALUE:
+					newSprite = blackKnightSprite;
+					break;
+				case -BISHOP_VALUE:
+					newSprite = blackBishopSprite;
+					break;
+				case -QUEEN_VALUE:
+					newSprite = blackQueenSprite;
+					break;
+			}
+			recorder.moveMap[prevCol][prevRow] = pieceValue;
+			controller.grid[prevCol][prevRow].sprite = null;
+			controller.grid[prevCol][prevRow].sprite = newSprite;
+			controller.moveTheChessman(prevCol,prevRow,clickedCol,clickedRow);
+			redraw();
+				
+		});
+		
 	
+	}
 }
