@@ -94,6 +94,7 @@ function makeAMove() {
 						prevRow = null;
 						//isPlayerTurn = false;
 					}
+					redraw();
 					break;
 				//special move
 				case CAPTURE_MOVE: 
@@ -101,12 +102,14 @@ function makeAMove() {
 					prevCol = null;
 					prevRow = null;
 					//isPlayerTurn = false;
+					redraw();
 					break;
 				case CASTLING_MOVE:
 					controller.castling(prevCol, prevRow, clickedCol, clickedRow);
 					prevCol = null;
 					prevRow = null;
 					//isPlayerTurn = false;
+					redraw();
 					break;
 			}
 			// Opponent makes the next move
@@ -129,10 +132,12 @@ function makeAMove() {
 						prevRow = null;
 						isPlayerTurn = false;
 					}
+					redraw();
 					break;
 				case CAPTURE_MOVE:
 					controller.capture();
 					isPlayerTurn = false;
+					redraw();
 					break;
 			}
 		}
@@ -143,7 +148,7 @@ function makeAMove() {
 			prevRow = clickedRow;
 		}
 	}
-	redraw();
+	
 	var t1 = performance.now();
 	console.log("makeAmove: " + (t1 - t0));
 	//isPlayerTurn = false;
