@@ -30,4 +30,3 @@ var recorder;
 var validator;
 var moveGenerator;
 //player chose the piece after the pawn has reach the end of the board
-var capturePiece = 0;
