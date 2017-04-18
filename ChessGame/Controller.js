@@ -148,30 +148,14 @@ function Controller() {
 			$("#myModal").modal('toggle');
 			var newSprite;
 			switch (pieceValue) {
-				case ROOK_VALUE:
-					newSprite = whiteRookSprite;
-					break;
-				case KNIGHT_VALUE:
-					newSprite = whiteKnightSprite;
-					break;
-				case BISHOP_VALUE:
-					newSprite = whiteBishopSprite;
-					break;
-				case QUEEN_VALUE:
-					newSprite = whiteQueenSprite;
-					break;
-				case -ROOK_VALUE:
-					newSprite = blackRookSprite;
-					break;
-				case -KNIGHT_VALUE:
-					newSprite = blackKnightSprite;
-					break;
-				case -BISHOP_VALUE:
-					newSprite = blackBishopSprite;
-					break;
-				case -QUEEN_VALUE:
-					newSprite = blackQueenSprite;
-					break;
+				case ROOK_VALUE: 	newSprite = whiteRookSprite; break;
+				case KNIGHT_VALUE: 	newSprite = whiteKnightSprite; break;
+				case BISHOP_VALUE: 	newSprite = whiteBishopSprite; break;
+				case QUEEN_VALUE: 	newSprite = whiteQueenSprite; break;
+				case -ROOK_VALUE: 	newSprite = blackRookSprite; break;
+				case -KNIGHT_VALUE: newSprite = blackKnightSprite; break;
+				case -BISHOP_VALUE: newSprite = blackBishopSprite; break;
+				case -QUEEN_VALUE: 	newSprite = blackQueenSprite; break;
 			}
 			recorder.moveMap[prevCol][prevRow] = pieceValue;
 			controller.grid[prevCol][prevRow].sprite = null;
