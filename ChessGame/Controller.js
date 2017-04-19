@@ -128,21 +128,21 @@ function Controller() {
 		(playerSide == WHITE_SIDE) ? $('#blackSide').toggle() : $('#whiteSide').toggle();
 		$('#modalBody').click(function(event) {
 			var pieceValue
-			if ($(event.target).is('#whiteRook') 		|| $(event.target).is("#whiteRookImg")) 
+			if ($(event.target).is('#whiteRook') 			|| $(event.target).is("#whiteRookImg")) 
 				pieceValue = ROOK_VALUE;
 			else if ($(event.target).is('#whiteKnight') 	|| $(event.target).is("#whiteKnightImg")) 
 				pieceValue = KNIGHT_VALUE;
 			else if ($(event.target).is('#whiteBishop') 	|| $(event.target).is("#whiteBishopImg")) 
 				pieceValue = BISHOP_VALUE;
-			else if ($(event.target).is('#whiteQueen') 	|| $(event.target).is("#whiteQueenImg")) 
+			else if ($(event.target).is('#whiteQueen') 		|| $(event.target).is("#whiteQueenImg")) 
 				pieceValue = QUEEN_VALUE;
-			else if ($(event.target).is('#blackRook') 	|| $(event.target).is("#blackRookImg")) 
+			else if ($(event.target).is('#blackRook') 		|| $(event.target).is("#blackRookImg")) 
 				pieceValue = -ROOK_VALUE;
 			else if ($(event.target).is('#blackKnight') 	|| $(event.target).is("#blackKnightImg")) 
 				pieceValue = -KNIGHT_VALUE;
 			else if ($(event.target).is('#blackBishop') 	|| $(event.target).is("#blackBishopImg")) 
 				pieceValue = -BISHOP_VALUE;
-			else if ($(event.target).is('#blackQueen') 	|| $(event.target).is("#blackQueenImg")) 
+			else if ($(event.target).is('#blackQueen') 		|| $(event.target).is("#blackQueenImg")) 
 				pieceValue = -QUEEN_VALUE;
 			
 			$("#myModal").modal('toggle');
@@ -164,4 +164,5 @@ function Controller() {
 			redraw();
 		});
 	}
+	
 }

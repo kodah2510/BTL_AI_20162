@@ -22,15 +22,32 @@
 		
 	</head>
 <body style="background-color: #1f2e2e;">
-	<div class="container">
+	<!--<div class="container">
 		<form id="form" name="form">
-			<!--<input id="radio" type="radio" name="side" value="BlackSide"><text style="color:white;">Black Side</text></input>
-			<input id="radio" type="radio" name="side" value="WhiteSide" checked><text style="color:white;">White Side </text></input>-->
+			<input id="radio" type="radio" name="side" value="BlackSide"><text style="color:white;">Black Side</text></input>
+			<input id="radio" type="radio" name="side" value="WhiteSide" checked><text style="color:white;">White Side </text></input>
 			<input id="button" type="button" name"startButton" value="Start" onclick="startTheGame();"></input>
 			<input id="button" type="button" name"refreshButton" value="Refresh" onclick="location.reload();"></input>
 		</form>
-	</div>
+	</div>-->
 	<div id="myCanvas"></div>
+	<div class="modal" id="choseSideModal" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Chose your side</h4>
+				</div>
+				<div class="modal-body" id="choseSideModalBody">
+					<div class="row">
+						<div id="choseWhiteSide" class="col-xs-6" align="center">
+							<img id="whiteSideImg" src=".\ChessSprite\whiteKing.png">
+						</div>
+						<div id="choseBlackSide" class="col-xs-6" align="center">
+							<img id="blackSideImg" src=".\ChessSprite\blackKing.png">
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer"></div>
 	<!--<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>-->
 	<div class="modal fade" id="myModal" role="dialog" data-backdrop="static" data-keyboard="false">
 		<div class="modal-dialog">
@@ -42,16 +59,16 @@
 				<div id="modalBody" class="modal-body">
 					<div id="blackSide" class="row">
 						<div id="blackRook" class="col-xs-3" align="center">
-							<img src=".\ChessSprite\blackRook.png">
+							<img id="blackRookImg" src=".\ChessSprite\blackRook.png">
 						</div>
 						<div id="blackKnight" class="col-xs-3" align="center">
-							<img src=".\ChessSprite\blackKnight.png">
+							<img id="blackKnightImg" src=".\ChessSprite\blackKnight.png">
 						</div>
 						<div id="blackBishop" class="col-xs-3" align="center">
-							<img src=".\ChessSprite\blackBishop.png">
+							<img id="blackBishopImg" src=".\ChessSprite\blackBishop.png">
 						</div>
 						<div id="blackQueen" class="col-xs-3" align="center">
-							<img src=".\ChessSprite\blackQueen.png">
+							<img id="blackQueenImg" src=".\ChessSprite\blackQueen.png">
 						</div>
 					</div>
 					

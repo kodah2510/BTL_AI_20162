@@ -23,6 +23,18 @@ function preload() {
 
 function setup() {
 	// Initialising game board
+	//Chosing side
+	$('#choseSideModal').modal();
+	$('#choseSideModalBody').click(function(event) {
+		if ($(event.target).is('#choseWhiteSide') || $(event.target).is('#whiteSideImg'))
+			playerSide = WHITE_SIDE;
+		else playerSide = BLACK_SIDE;
+		$("#choseSideModal").modal('toggle');
+	})
+	while(playerSide == undefined)
+	{
+		if(playerSide != undefined) break;
+	}
 	var myCanvas = createCanvas(480, 480);
 	myCanvas.id("myCanvas");
 	
@@ -130,13 +142,13 @@ function makeAMove() {
 						controller.moveTheChessman(prevCol, prevRow, clickedCol, clickedRow);
 						prevCol = null;
 						prevRow = null;
-						isPlayerTurn = false;
+						//isPlayerTurn = false;
 					}
 					redraw();
 					break;
 				case CAPTURE_MOVE:
 					controller.capture();
-					isPlayerTurn = false;
+					//isPlayerTurn = false;
 					redraw();
 					break;
 			}

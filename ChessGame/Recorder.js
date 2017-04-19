@@ -31,15 +31,10 @@ function Recorder()
 	this.calculateAttackMap = function()
 	{
 		for(var i = 0;i < 8;i++)
-		{
 			for(var j = 0;j < 8;j++)
-			{
 				if(this.moveMap[i][j] != 0)
-				{
-					(this.moveMap[i][j] < 0) ? this.calculateBlackAttackMap(this.moveMap[i][j],i,j,BLACK_SIDE): this.calculateWhiteAttackMap(this.moveMap[i][j],i,j,WHITE_SIDE);
-				}
-			}
-		}
+					(this.moveMap[i][j] < 0) ? this.calculateBlackAttackMap(this.moveMap[i][j],i,j,BLACK_SIDE): 
+					this.calculateWhiteAttackMap(this.moveMap[i][j],i,j,WHITE_SIDE);
 	}	
 	this.updateAttackMap = function()
 	{
@@ -60,24 +55,12 @@ function Recorder()
 	{
 		switch(value)
 		{
-			case -ROOK_VALUE :
-				this.calculateAttackMapForRook(value,col,row,this.blackAttackMap,side);
-				break;
-			case -KNIGHT_VALUE :
-				this.calculateAttackMapForKnight(value,col,row,this.blackAttackMap,side);
-				break;
-			case -BISHOP_VALUE :
-				this.calculateAttackMapForBishop(value,col,row,this.blackAttackMap,side)
-				break;
-			case -QUEEN_VALUE :
-				this.calculateAttackMapForQueen(value,col,row,this.blackAttackMap,side);
-				break;
-			case -KING_VALUE :
-				this.calculateAttackMapForKing(value,col,row,this.blackAttackMap,side);
-				break;
-			case -PAWN_VALUE :
-				this.calculateAttackMapForPawn(value,col,row,this.blackAttackMap);
-				break;
+			case -ROOK_VALUE: 	this.calculateAttackMapForRook(value,col,row,this.blackAttackMap,side); break;
+			case -KNIGHT_VALUE: this.calculateAttackMapForKnight(value,col,row,this.blackAttackMap,side); break;
+			case -BISHOP_VALUE: this.calculateAttackMapForBishop(value,col,row,this.blackAttackMap,side); break;
+			case -QUEEN_VALUE: 	this.calculateAttackMapForQueen(value,col,row,this.blackAttackMap,side); break;
+			case -KING_VALUE: 	this.calculateAttackMapForKing(value,col,row,this.blackAttackMap,side); break;
+			case -PAWN_VALUE: 	this.calculateAttackMapForPawn(value,col,row,this.blackAttackMap); break;
 		}
 	}
 	
@@ -85,24 +68,12 @@ function Recorder()
 	{
 		switch(value)
 		{
-			case ROOK_VALUE:
-				this.calculateAttackMapForRook(value,col,row,this.whiteAttackMap,side);
-				break;
-			case KNIGHT_VALUE :
-				this.calculateAttackMapForKnight(value,col,row,this.whiteAttackMap,side);
-				break;
-			case BISHOP_VALUE :
-				this.calculateAttackMapForBishop(value,col,row,this.whiteAttackMap,side);
-				break;
-			case QUEEN_VALUE :
-				this.calculateAttackMapForQueen(value,col,row,this.whiteAttackMap,side);
-				break;
-			case KING_VALUE :
-				this.calculateAttackMapForKing(value,col,row,this.whiteAttackMap,side);
-				break;
-			case PAWN_VALUE :
-				this.calculateAttackMapForPawn(value,col,row,this.whiteAttackMap);
-				break;
+			case ROOK_VALUE: 	this.calculateAttackMapForRook(value,col,row,this.whiteAttackMap,side); break;
+			case KNIGHT_VALUE: 	this.calculateAttackMapForKnight(value,col,row,this.whiteAttackMap,side); break;
+			case BISHOP_VALUE: 	this.calculateAttackMapForBishop(value,col,row,this.whiteAttackMap,side); break;
+			case QUEEN_VALUE: 	this.calculateAttackMapForQueen(value,col,row,this.whiteAttackMap,side); break;
+			case KING_VALUE: 	this.calculateAttackMapForKing(value,col,row,this.whiteAttackMap,side); break;
+			case PAWN_VALUE: 	this.calculateAttackMapForPawn(value,col,row,this.whiteAttackMap); break;
 		}
 	}
 	this.updateMoveMap = function(value,prevCol,prevRow,clickedCol,clickedRow)

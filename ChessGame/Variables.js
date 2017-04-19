@@ -22,7 +22,7 @@ var clickedRow = null;
 var prevCol = null;
 var prevRow = null;
 //player can switch side
-var playerSide = WHITE_SIDE;
+var playerSide = undefined;
 var isPlayerTurn = true;
 
 var controller;

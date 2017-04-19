@@ -1,6 +1,7 @@
+//Lâm viết cái này nhé 
+//Viết xong là còn phải debug đấy :)) 
 function MoveGenerator()
 {
-
     //isPlayerTurn = true;
     /*
     Material balance
