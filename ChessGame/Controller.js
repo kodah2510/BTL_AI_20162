@@ -164,5 +164,4 @@ function Controller() {
 			redraw();
 		});
 	}
-	
 }

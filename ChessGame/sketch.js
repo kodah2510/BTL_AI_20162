@@ -18,26 +18,16 @@ function preload() {
 	whiteBishopSprite 	= loadImage("ChessSprite/whiteBishop.png");
 	whiteQueenSprite 	= loadImage("ChessSprite/whiteQueen.png");
 	whiteKingSprite 	= loadImage("ChessSprite/whiteKing.png");
-	whitePawnSprite 	= loadImage("ChessSprite/whitePawn.png");	
+	whitePawnSprite 	= loadImage("ChessSprite/whitePawn.png");
+
+	
 }
 
 function setup() {
 	// Initialising game board
-	//Chosing side
-	$('#choseSideModal').modal();
-	$('#choseSideModalBody').click(function(event) {
-		if ($(event.target).is('#choseWhiteSide') || $(event.target).is('#whiteSideImg'))
-			playerSide = WHITE_SIDE;
-		else playerSide = BLACK_SIDE;
-		$("#choseSideModal").modal('toggle');
-	})
-	while(playerSide == undefined)
-	{
-		if(playerSide != undefined) break;
-	}
 	var myCanvas = createCanvas(480, 480);
 	myCanvas.id("myCanvas");
-	
+
 	// Column size and row size
 	w = width / 8;
 	h = height / 8;
@@ -46,6 +36,16 @@ function setup() {
 	recorder = new Recorder();
 	validator = new Validator();
 	moveGenerator = new MoveGenerator();
+
+	//chosing side
+	$('#choseSideModal').modal();
+	$('#choseSideModalBody').click(function(event) {
+		if ($(event.target).is('#choseWhiteSide') || $(event.target).is('#whiteSideImg')) playerSide = WHITE_SIDE;
+		else playerSide = BLACK_SIDE;
+		$("#choseSideModal").modal('toggle');
+		recorder.updateAttackMap();
+		//create board game after player chose a side
+	});	
 	
 	//controller.placeTheChessman(whiteRookSprite, 0, 7, ROOK_VALUE);
 	controller.placeTheChessman(whiteRookSprite, 7, 7, ROOK_VALUE);
@@ -70,7 +70,7 @@ function setup() {
 	
 	// Initialize game board
 	//playerSide = controller.createGameBoard();
-	recorder.updateAttackMap();
+	
 	myCanvas.mouseClicked(makeAMove);
 	noLoop();
 }
@@ -85,7 +85,6 @@ function draw() {
 // When the human player make a move
 function makeAMove() {
 	var t0 = performance.now();
-	
 	clickedCol = floor(mouseX / w);
 	clickedRow = floor(mouseY / h);
 	// Validating the move
@@ -97,13 +96,11 @@ function makeAMove() {
 			// Need to fix this one
 			var result = validator.validateMove(prevCol, prevRow, clickedCol, clickedRow);
 			switch (result) {
-				case INVALID_MOVE:
-					break;
+				case INVALID_MOVE: break;
 				case VALID_MOVE:
 					if (validator.detectCheck(prevCol, prevRow, clickedCol, clickedRow)) {
 						controller.moveTheChessman(prevCol, prevRow, clickedCol, clickedRow);
-						prevCol = null;
-						prevRow = null;
+						prevCol = null; prevRow = null;
 						//isPlayerTurn = false;
 					}
 					redraw();
@@ -111,15 +108,13 @@ function makeAMove() {
 				//special move
 				case CAPTURE_MOVE: 
 					controller.capture(prevCol, prevRow, clickedCol, clickedRow);
-					prevCol = null;
-					prevRow = null;
+					prevCol = null; prevRow = null;
 					//isPlayerTurn = false;
 					redraw();
 					break;
 				case CASTLING_MOVE:
 					controller.castling(prevCol, prevRow, clickedCol, clickedRow);
-					prevCol = null;
-					prevRow = null;
+					prevCol = null; prevRow = null;
 					//isPlayerTurn = false;
 					redraw();
 					break;
