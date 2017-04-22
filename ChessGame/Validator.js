@@ -1,8 +1,7 @@
-function Validator()
-{
-	this.validateMove = function(prevCol, prevRow, clickedCol, clickedRow)
-	{
+function Validator() {
+	this.validateMove = function(prevCol, prevRow, clickedCol, clickedRow) {
 		// First constraint is that the move follows the rule
+		//CHECKED
 		var value = recorder.moveMap[prevCol][prevRow];
 		// Pawn is a little bit different, for it moves straight but attacks diagonally
 		if (Math.abs(value) == PAWN_VALUE) {
@@ -18,19 +17,50 @@ function Validator()
 					else if (clickedRow == prevRow - 1) return VALID_MOVE;
 				}
 			}
-			//else if (clickedRow == prevRow - 1 && recorder.moveMap[clickedCol][clickedRow] == 0) return 0;
+			else {
+				//opponent pawn
+				if(value * playerSide < 0) {
+					if(value > 0) {
+						if(recorder.whiteAttackMap[clickedCol][clickedRow].indexOf(value) != -1) {
+							if(clickedRow == 7) return CAPTURE_MOVE;
+							else return VALID_MOVE;
+						}
+					} else {
+						if(recorder.blackAttackMap[clickedCol][clickedRow].indexOf(value) != -1) {
+							if(clickedRow == 7) return CAPTURE_MOVE;
+							else return VALID_MOVE;
+						}	
+					}
+				} else {
+				//player pawn
+					if(value > 0) {
+						if(recorder.whiteAttackMap[clickedCol][clickedRow].indexOf(value) != -1) {
+							if(clickedRow == 0) return CAPTURE_MOVE;
+							else return VALID_MOVE;
+						}
+					} else {
+						if(recorder.blackAttackMap[clickedCol][clickedRow].indexOf(value) != -1) {
+							if(clickedRow == 0) return CAPTURE_MOVE;
+							else return VALID_MOVE;
+						}
+					}
+				}
+			
+			}
 		}
-		//validate the castling move 
+		//CHECKED
 		else if (Math.abs(value) == KING_VALUE) {
+			//castling
 			if (prevCol == 4) {
 				if (clickedCol == prevCol - 2 || clickedCol == prevCol + 2)	{
 					if (this.validateCastling(prevCol, prevRow, clickedCol, clickedRow)) return CASTLING_MOVE;
 					return INVALID_MOVE;
 				}
 			}
+			
 		}
-		if (value < 0)
-		{
+		//CHECKED
+		if (value < 0) {
 			if (recorder.blackAttackMap[clickedCol][clickedRow].indexOf(value) != -1) return VALID_MOVE;
 		} else {
 			if (recorder.whiteAttackMap[clickedCol][clickedRow].indexOf(value) != -1) return VALID_MOVE;
@@ -39,13 +69,14 @@ function Validator()
 		//bishop rook queen
 		return INVALID_MOVE;
 	}
-	this.detectCheck = function(prevCol, prevRow, clickedCol, clickedRow)
-	{
+	//CHECKED ! 
+	this.detectCheck = function(prevCol, prevRow, clickedCol, clickedRow) {
 		//each move made does put the king in checked situation ?
 		var pieceValue = recorder.moveMap[prevCol][prevRow];
+		if(Math.abs(pieceValue) == KING_VALUE) return true;
 		var previousValueOfDestination = recorder.moveMap[clickedCol][clickedRow];
 		var kingPostion; 
-		var tempAttackMap = [];
+		var tempAttackMap;
 		var isValid;
 		//delete the previous position
 		//update the attack map
@@ -53,68 +84,44 @@ function Validator()
 		recorder.moveMap[clickedCol][clickedRow] = pieceValue;
 		//forgot to reset the value back !!
 		//create tempAttackMap
-		for (var i = 0; i < 8; i++)
-			tempAttackMap[i] = new Array(8);
-		for (var i = 0; i < 8;i++)
-			for (var j = 0;j < 8; j++)
-				tempAttackMap[i][j] = [];
+	
 		if (pieceValue > 0)
 		{
 			//find the king position 
+			tempAttackMap = recorder.blackAttackMap;
 			kingPostion = recorder.findThePiece(KING_VALUE);
-			//dont have to do this way
-			// for (var i = 0; i < 8; i++) {
-			// 	for (var j = 0; j < 8; j++) {
-			// 		if (recorder.moveMap[i][j] == -ROOK_VALUE)
-			// 			recorder.calculateAttackMapForRook(-ROOK_VALUE, i, j, tempAttackMap, BLACK_SIDE);
-			// 		else if (recorder.moveMap[i][j] == -BISHOP_VALUE)
-			// 			recorder.calculateAttackMapForBishop(-BISHOP_VALUE, i, j, tempAttackMap, BLACK_SIDE);
-			// 		else if (recorder.moveMap[i][j] == -QUEEN_VALUE)
-			// 			recorder.calculateAttackMapForQueen(-QUEEN_VALUE, i, j, tempAttackMap, BLACK_SIDE);
-			// 	}
-			// }
+			//console.log(kingPostion);
 			//update the attack map
-			recorder.piecePositions[-ROOK_VALUE].foreach(function(coordinate) {
+			recorder.piecePositions[-ROOK_VALUE].forEach(function(coordinate) {
 				recorder.calculateAttackMapForRook(-ROOK_VALUE, coordinate[0], coordinate[1], tempAttackMap, BLACK_SIDE);
 			});
-			recorder.piecePositions[-BISHOP_VALUE].foreach(function(coordinate) {
-				recorder.calculateAttackMapForRook(-BISHOP_VALUE, coordinate[0], coordinate[1], tempAttackMap, BLACK_SIDE);
+			recorder.piecePositions[-BISHOP_VALUE].forEach(function(coordinate) {
+				recorder.calculateAttackMapForBishop(-BISHOP_VALUE, coordinate[0], coordinate[1], tempAttackMap, BLACK_SIDE);
 			});
-			recorder.piecePositions[-QUEEN_VALUE].foreach(function(coordinate) {
-				recorder.calculateAttackMapForRook(-QUEEN_VALUE, coordinate[0], coordinate[1], tempAttackMap, BLACK_SIDE);
+			recorder.piecePositions[-QUEEN_VALUE].forEach(function(coordinate) {
+				recorder.calculateAttackMapForQueen(-QUEEN_VALUE, coordinate[0], coordinate[1], tempAttackMap, BLACK_SIDE);
 			});
 
 		} else {
-			kingPostion = recorder.findThePiece(-KING_VALUE);
-			// for (var i = 0; i < 8; i++) {
-			// 	for (var j = 0; j < 8; j++) {
-			// 		//rook queen bishop
-			// 		//check whether the king stayed on attacked grid or not 
-			// 		//concentrate on Bishop Rook Queen 
-			// 		if (recorder.moveMap[i][j] == ROOK_VALUE)
-			// 			recorder.calculateAttackMapForRook(ROOK_VALUE, i, j, tempAttackMap, WHITE_SIDE);
-			// 		else if (recorder.moveMap[i][j] == BISHOP_VALUE)
-			// 			recorder.calculateAttackMapForBishop(BISHOP_VALUE, i, j, tempAttackMap, WHITE_SIDE);
-			// 		else if (recorder.moveMap[i][j] == QUEEN_SIDE)
-			// 			recorder.calculateAttackMapForQueen(QUEEN_VALUE, i, j, tempAttackMap, WHITE_SIDE);
-			// 	}
-			// }
-			recorder.piecePositions[ROOK_VALUE].foreach(function(coordinate) {
-				recorder.calculateAttackMapForRook(-ROOK_VALUE, coordinate[0], coordinate[1], tempAttackMap, WHITE_SIDE);
+			tempAttackMap = recorder.whiteAttackMap;
+			kingPostion = recorder.findThsePiece(-KING_VALUE);
+			recorder.piecePositions[ROOK_VALUE].forEach(function(coordinate) {
+				recorder.calculateAttackMapForRook(ROOK_VALUE, coordinate[0], coordinate[1], tempAttackMap, WHITE_SIDE);
 			});
-			recorder.piecePositions[BISHOP_VALUE].foreach(function(coordinate) {
-				recorder.calculateAttackMapForRook(-BISHOP_VALUE, coordinate[0], coordinate[1], tempAttackMap, WHITE_SIDE);
+			recorder.piecePositions[BISHOP_VALUE].forEach(function(coordinate) {
+				recorder.calculateAttackMapForBishop(BISHOP_VALUE, coordinate[0], coordinate[1], tempAttackMap, WHITE_SIDE);
 			});
-			recorder.piecePositions[QUEEN_VALUE].foreach(function(coordinate) {
-				recorder.calculateAttackMapForRook(QUEEN_VALUE, coordinate[0], coordinate[1], tempAttackMap, WHITE_SIDE);
+			recorder.piecePositions[QUEEN_VALUE].forEach(function(coordinate) {
+				recorder.calculateAttackMapForQueen(QUEEN_VALUE, coordinate[0], coordinate[1], tempAttackMap, WHITE_SIDE);
 			});
 		}
-		
+		//console.log(kingPostion[0][0], kingPostion[0][1]);
+		console.log(tempAttackMap);
 		//fix the value back to the previous one
 		recorder.moveMap[prevCol][prevRow] = pieceValue;
 		recorder.moveMap[clickedCol][clickedRow] = previousValueOfDestination;
-		return (tempAttackMap[kingPostion[0]][kingPostion[1]].length == 0);
-		
+		//if the king is stay on the enemy attack map --> invalid
+		return (tempAttackMap[kingPostion[0][0]][kingPostion[0][1]].length == 0);
 	}
 	//Đức viết cái này nhé
 	this.validateCastling = function(prevCol, prevRow, clickedCol, clickedRow) {

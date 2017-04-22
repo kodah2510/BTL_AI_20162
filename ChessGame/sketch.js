@@ -47,27 +47,21 @@ function setup() {
 		//create board game after player chose a side
 	});	
 	
-	//controller.placeTheChessman(whiteRookSprite, 0, 7, ROOK_VALUE);
-	controller.placeTheChessman(whiteRookSprite, 7, 7, ROOK_VALUE);
+	controller.placeTheChessman(whiteRookSprite, 0, 7, ROOK_VALUE);
+	//controller.placeTheChessman(whiteRookSprite, 7, 7, ROOK_VALUE);
 	controller.placeTheChessman(whiteKingSprite, 4, 7, KING_VALUE);
 	controller.placeTheChessman(whiteBishopSprite, 7, 1, BISHOP_VALUE);
 	//controller.placeTheChessman(whiteQueenSprite, 4, 1, QUEEN_VALUE);
 	controller.placeTheChessman(whitePawnSprite, 1, 1, PAWN_VALUE);
-	controller.placeTheChessman(blackPawnSprite, 3, 1, -PAWN_VALUE);
-	/*controller.placeTheChessman(whitePawnSprite, 3, 6, PAWN_VALUE);
+	controller.placeTheChessman(blackPawnSprite, 3, 4, -PAWN_VALUE);
+	controller.placeTheChessman(whitePawnSprite, 3, 6, PAWN_VALUE);
 	controller.placeTheChessman(whiteKnightSprite, 3, 2, KNIGHT_VALUE);
-	controller.placeTheChessman(blackRookSprite, 2, 2, -ROOK_VALUE);
-	controller.placeTheChessman(blackRookSprite, 3, 2, -ROOK_VALUE);
-	controller.placeTheChessman(blackKnightSprite, 6, 4, -KNIGHT_VALUE);
-	controller.placeTheChessman(blackKingSprite, 4, 2, -KING_VALUE);
-	controller.placeTheChessman(whiteKingSprite, 3, 7, 5);
-	controller.placeTheChessman(blackRookSprite, 3, 1, -1);
-	controller.placeTheChessman(whiteBishopSprite, floor(random(0, 7)), floor(random(0, 7)), 3);
-	controller.placeTheChessman(whiteQueenSprite, floor(random(0, 7)), floor(random(0, 7)), 4);
-	controller.placeTheChessman(whiteKnightSprite, floor(random(0, 7)), floor(random(0, 7)), 2);
-	controller.placeTheChessman(whitePawnSprite, floor(random(0, 7)), floor(random(0, 7)), 6);
-	*/
-	
+	controller.placeTheChessman(blackRookSprite, 2, 0, -ROOK_VALUE);
+	//controller.placeTheChessman(blackRookSprite, 0, 5, -ROOK_VALUE);
+	controller.placeTheChessman(blackKnightSprite, 7, 4, -KNIGHT_VALUE);
+	//controller.placeTheChessman(blackKingSprite, 4, 2, -KING_VALUE);
+	controller.placeTheChessman(blackBishopSprite, 0, 1, -BISHOP_VALUE);
+	controller.placeTheChessman(blackQueenSprite, 6, 1, -QUEEN_VALUE);
 	// Initialize game board
 	//playerSide = controller.createGameBoard();
 	
@@ -79,7 +73,7 @@ function draw() {
 	background(51);
 	// Display chess board
 	controller.render();
-	if (!isPlayerTurn) moveGenerator.evaluate(); 
+	if (!isPlayerTurn) moveGenerator.makeAMove(); 
 }
 
 // When the human player make a move
@@ -90,6 +84,7 @@ function makeAMove() {
 	// Validating the move
 	if (isPlayerTurn) {
 		// If player clicked on an empty grid
+		//CHECKED
 		if (prevCol != null && controller.grid[clickedCol][clickedRow].sprite == null) {
 			// Player move the piece
 			// Checking whether the move is valid or not
@@ -98,6 +93,7 @@ function makeAMove() {
 			switch (result) {
 				case INVALID_MOVE: break;
 				case VALID_MOVE:
+				//CHECKED
 					if (validator.detectCheck(prevCol, prevRow, clickedCol, clickedRow)) {
 						controller.moveTheChessman(prevCol, prevRow, clickedCol, clickedRow);
 						prevCol = null; prevRow = null;
@@ -107,12 +103,12 @@ function makeAMove() {
 					break;
 				//special move
 				case CAPTURE_MOVE: 
+					//CHECKED
 					controller.capture(prevCol, prevRow, clickedCol, clickedRow);
-					prevCol = null; prevRow = null;
 					//isPlayerTurn = false;
-					redraw();
 					break;
 				case CASTLING_MOVE:
+				//CHECKED
 					controller.castling(prevCol, prevRow, clickedCol, clickedRow);
 					prevCol = null; prevRow = null;
 					//isPlayerTurn = false;
@@ -126,34 +122,26 @@ function makeAMove() {
 		else if (prevCol != null && recorder.moveMap[clickedCol][clickedRow] * playerSide < 0) {
 			var result = validator.validateMove(prevCol, prevRow, clickedCol, clickedRow);
 			switch (result) {
-				case INVALID_MOVE:
-					break;
+				case INVALID_MOVE: break;
 				case VALID_MOVE:
 					//player take down opponent piece
 					//pieceCount need to update 
 					if (validator.detectCheck(prevCol, prevRow, clickedCol, clickedRow)) {
 						var opponentPieceValue = Math.abs(recorder.moveMap[clickedCol][clickedRow]);
-						recorder.pieceCount[opponentPieceValue][1] -= 1;
 						controller.moveTheChessman(prevCol, prevRow, clickedCol, clickedRow);
-						prevCol = null;
-						prevRow = null;
 						//isPlayerTurn = false;
+						prevCol = null; prevRow = null;
 					}
 					redraw();
 					break;
 				case CAPTURE_MOVE:
-					controller.capture();
+					controller.capture(prevCol, prevRow, clickedCol, clickedRow);
 					//isPlayerTurn = false;
-					redraw();
 					break;
 			}
 		}
 		//player clicked his piece
-		else if (recorder.moveMap[clickedCol][clickedRow] * playerSide > 0) {
-			//prevChessman = grid[clickedCol][clickedRow].chessman.copy();
-			prevCol = clickedCol;
-			prevRow = clickedRow;
-		}
+		else if (recorder.moveMap[clickedCol][clickedRow] * playerSide > 0) {prevCol = clickedCol; prevRow = clickedRow;}
 	}
 	
 	var t1 = performance.now();

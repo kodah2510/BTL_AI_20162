@@ -13,7 +13,7 @@ function Recorder()
 	//pieceCount, piecePositions is for evaluator
 	//the 0 index in pieceCount is for player 1 is for the opponent
 	//					Rook:2, Knight:2, Bishop:3, Queen:1, King:1, Pawn:8
-	this.pieceCount = {1:[2,2],2:[2,2],3:[2,2],4:[1,1],5:[1,1],6:[8,8]};
+	this.pieceCount = {1:[0,0],2:[0,0],3:[0,0],4:[0,0],5:[0,0],6:[0,0]};
 	//need to fix moveMap
 	//new moveMap will only keep the coordinate of each piece
 	this.piecePositions = {"1":[], "2":[], "3":[], "4":[], "5":[], "6":[],
@@ -34,53 +34,44 @@ function Recorder()
 			this.blackAttackMap[i][j] = [];
 		}
 	}
+	this.removePiece = function(value, currentCol, currentRow) {
+		this.moveMap[currentCol][currentRow] = 0;
+		(value > 0) ? this.pieceCount[value][0]-- : this.pieceCount[-value][1]-- ;
+		for(var index in this.piecePositions[value])
+			if(this.piecePositions[value][index][0] == currentCol && this.piecePositions[value][index][1] == currentRow)
+				this.piecePositions[value].splice(index, 1);
+	}
 	//need to fix this one too related to moveMap
 	this.calculateAttackMap = function()
 	{
-		// for(var i = 0;i < 8;i++)
-		// 	for(var j = 0;j < 8;j++)
-		// 		if(this.moveMap[i][j] != 0)
-		// 			(this.moveMap[i][j] < 0) ? this.calculateBlackAttackMap(this.moveMap[i][j],i,j,BLACK_SIDE): 
-		// 			this.calculateWhiteAttackMap(this.moveMap[i][j],i,j,WHITE_SIDE);
 		// attack map now will base on the piece position to process
 		var recorder = this;
 		var pieceValues = Object.keys(this.piecePositions);
+		//for(pieceValue in this.piecePositions) 
 		pieceValues.forEach(function(pieceValue) {
 			if(pieceValue > 0)
 				recorder.piecePositions[pieceValue].forEach(function(coordinate) {
-					recorder.calculateWhiteAttackMap(pieceValue, coordinate[0], coordinate[1]);
+					recorder.calculateWhiteAttackMap(pieceValue, coordinate[0], coordinate[1], WHITE_SIDE);
 				});
 			else
 				recorder.piecePositions[pieceValue].forEach(function(coordinate) {
-					recorder.calculateBlackAttackMap(pieceValue, coordinate[0], coordinate[1]);
+					recorder.calculateBlackAttackMap(pieceValue, coordinate[0], coordinate[1], BLACK_SIDE);
 				});
 		});
-		// for(var i = 0; i < pieceValues.length && this.piecePositions[pieceValues[i]].length != 0; i++)
-		// 	if(pieceValues[i] > 0) 
-		// 		for(var j = 0; j < this.piecePositions[pieceValues[i]].length; j++) 
-		// 			this.calculateWhiteAttackMap(pieceValues[i], this.piecePositions[pieceValues[i]][j][0], this.piecePositions[pieceValues][j][1]);
-		// 	else 
-		// 		for(var j = 0; j < this.piecePositions[pieceValues[i]].length; j++) 
-		// 			this.calculateBlackAttackMap(pieceValue[i], this.piecePositions[pieceValues[i]][j][0], this.piecePositions[pieceValues][j][1]);
 	}
 	//the attack map is updated after every move 	
-	this.updateAttackMap = function()
-	{
+	this.updateAttackMap = function() {
 		//add the move to moveRecord
 		//recalculate the moveMap and attackMap
-		for(var i = 0; i < 8; i++)
-		{
-			for(var j = 0; j < 8;j++)
-			{
+		for(var i = 0; i < 8; i++) {
+			for(var j = 0; j < 8;j++) {
 				this.whiteAttackMap[i][j] = [];
 				this.blackAttackMap[i][j] = [];
 			}
 		}
 		this.calculateAttackMap();
 	}
-
-	this.calculateBlackAttackMap = function(value,col,row,side)
-	{
+	this.calculateBlackAttackMap = function(value,col,row,side) {
 		var pieceValue = parseInt(value);
 		switch(pieceValue)
 		{
@@ -92,9 +83,7 @@ function Recorder()
 			case -PAWN_VALUE: 	this.calculateAttackMapForPawn(pieceValue,col,row,this.blackAttackMap); break;
 		}
 	}
-	
-	this.calculateWhiteAttackMap = function(value,col,row,side)
-	{
+	this.calculateWhiteAttackMap = function(value,col,row,side) {
 		var pieceValue = parseInt(value);
 		switch(pieceValue)
 		{
@@ -110,16 +99,14 @@ function Recorder()
 	this.updateMoveMap = function(value,prevCol,prevRow,clickedCol,clickedRow) {
 		//update the piecePosition first
 		this.updatePiecePositions(value, prevCol, prevRow, clickedCol, clickedRow);
-		if(prevCol != null && prevRow != null)
-			this.moveMap[prevCol][prevRow] = 0;
+		//update the moveMap
+		if(prevCol != null && prevRow != null) this.moveMap[prevCol][prevRow] = 0;
 		this.moveMap[clickedCol][clickedRow] = value;
 	}
 	//update the coordinate of each piece 
 	this.updatePiecePositions = function(value, prevCol, prevRow, clickedCol, clickedRow) {
 		//place the piece
-		if(prevCol == null) {
-			this.piecePositions[value].push([clickedCol, clickedRow]);
-		}
+		if(prevCol == null) this.piecePositions[value].push([clickedCol, clickedRow]);
 		//move the piece
 		else {
 			if(this.moveMap[clickedCol][clickedRow] == 0) {
@@ -134,18 +121,21 @@ function Recorder()
 				//when a piece takes down another
 				//update the position of that piece
 				//delete taken down piece's position
-				var attackPiece = this.moveMap[prevCol][prevRow];
-				var takenDownPiece = this.moveMap[clickedCol][clickedRow];
-				this.piecePositions[takenDownPiece].forEach(function(coordinate) {
-					if(coordinate[0] == clickedCol && coordinate[1] == clickedRow)
-						delete coordinate;
-				});
+				this.removePiece(this.moveMap[clickedCol][clickedRow], clickedCol, clickedRow);
+				//replace with the attack piece
+				this.piecePositions[value].forEach(function(array) {
+					if(array[0] == prevCol && array[1] == prevRow) {
+						array[0] = clickedCol;
+						array[1] = clickedRow;
+					}
+				})
 			}
 		}
 	}
 	this.updateMoveRecord = function(prevCol,prevRow,clickedCol,clickedRow) {
 		this.moveRecord.push([this.moveMap[clickedCol][clickedRow],prevCol*10+prevRow,clickedCol*10+clickedRow]);
 	}
+	//CHECKED
 	this.calculateAttackMapForRook = function(value,col,row,attackMap,side) {
 		//need to fix this one 
 		//only the attack range is limited at the first opponent piece it met 
@@ -212,41 +202,28 @@ function Recorder()
 		}
 	}
 	//fix this one too
+	//CHECKED !
 	this.calculateAttackMapForKnight = function(value,col,row,attackMap,side)
 	{
-		if((col + 1 <= 7 && row - 2 >= 0) && this.moveMap[col + 1][row - 2]*side <= 0 && attackMap[col + 1][row - 2].indexOf(value) == -1 )
-		{
+		if((col + 1 <= 7 && row - 2 >= 0) && attackMap[col + 1][row - 2].indexOf(value) == -1 )
 			attackMap[col + 1][row - 2].push(value);
-		}
-		if((col - 1 >= 0 && row - 2 >= 0) && this.moveMap[col - 1][row - 2]*side <= 0 && attackMap[col - 1][row - 2].indexOf(value) == -1 )
-		{
+		if((col - 1 >= 0 && row - 2 >= 0) && attackMap[col - 1][row - 2].indexOf(value) == -1 )
 			attackMap[col - 1][row - 2].push(value);
-		}
-		if((col + 1 <= 7 && row + 2 <= 7) && this.moveMap[col + 1][row + 2]*side <= 0 && attackMap[col + 1][row + 2].indexOf(value) == -1)
-		{
+		if((col + 1 <= 7 && row + 2 <= 7) && attackMap[col + 1][row + 2].indexOf(value) == -1 )
 			attackMap[col + 1][row + 2].push(value);
-		}
-		if((col - 1 >= 0 && row + 2 <= 7) && this.moveMap[col - 1][row + 2]*side <= 0 && attackMap[col - 1][row + 2].indexOf(value) == -1)
-		{
+		if((col - 1 >= 0 && row + 2 <= 7) && attackMap[col - 1][row + 2].indexOf(value) == -1)
 			attackMap[col - 1][row + 2].push(value);
-		}
-		if((col + 2 <= 7 && row - 1 >= 0) && this.moveMap[col + 2][row - 1]*side <= 0 && attackMap[col + 2][row - 1].indexOf(value) == -1)
-		{
+		if((col + 2 <= 7 && row - 1 >= 0) && attackMap[col + 2][row - 1].indexOf(value) == -1)
 			attackMap[col + 2][row - 1].push(value);
-		}
-		if(col - 2 >= 0 && row - 1 >= 0 && this.moveMap[col - 2][row - 1]*side <= 0 && attackMap[col - 2][row - 1].indexOf(value) == -1)
-		{
+		if(col - 2 >= 0 && row - 1 >= 0 && attackMap[col - 2][row - 1].indexOf(value) == -1)
 			attackMap[col - 2][row - 1].push(value);
-		}
-		if(col + 2 <= 7 && row + 1 <= 7 && this.moveMap[col + 2][row + 1]*side <= 0 && attackMap[col + 2][row + 1].indexOf(value) == -1)
-		{
+		if(col + 2 <= 7 && row + 1 <= 7 && attackMap[col + 2][row + 1].indexOf(value) == -1)
 			attackMap[col + 2][row + 1].push(value);
-		}
-		if(col - 2 >= 0 && row - 2 >= 0 && this.moveMap[col - 2][row - 2]*side <= 0 && attackMap[col - 2][row - 2].indexOf(value) == -1)
-		{
-			attackMap[col - 2][row - 2].push(value);
-		}
+		if(col - 2 >= 0 && row + 1 >= 0 && attackMap[col - 2][row + 1].indexOf(value) == -1)
+			attackMap[col - 2][row + 1].push(value);
 	}
+	//CHECKED
+
 	this.calculateAttackMapForBishop = function(value,col,row,attackMap,side)
 	{
 		var tlbrValue = col - row;//top-left ->> bottom-right
@@ -314,12 +291,14 @@ function Recorder()
 			}
 		}
 	}
+	//CHECKED
 	this.calculateAttackMapForQueen = function(value,col,row,attackMap,side)
 	{
 		this.calculateAttackMapForRook(value,col,row,attackMap,side);
 		this.calculateAttackMapForBishop(value,col,row,attackMap,side);
 	}
 	//wrong at this one
+	//CHECKED
 	this.calculateAttackMapForKing = function(value,col,row,attackMap,side)
 	{
 		//special case
@@ -450,6 +429,7 @@ function Recorder()
 		}
 	}
 	//need to fix this one too 
+	//CHECKED
 	this.calculateAttackMapForPawn = function(value,col,row,attackMap) {
 		if(value * playerSide < 0) {
 			//computer
@@ -484,6 +464,7 @@ function Recorder()
 			}	
 		}
 	}
+	//CHECKED
 	this.findThePiece = function(value) {
 		return this.piecePositions[value];
 	}

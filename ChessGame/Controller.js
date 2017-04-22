@@ -18,6 +18,8 @@ function Controller() {
 	this.placeTheChessman = function(sprite, col, row, value) {
 		if (recorder.moveMap[col][row] == 0) {
 			this.grid[col][row].sprite = sprite;
+			//increase the pieceCount
+			(value > 0) ? recorder.pieceCount[value][0]++ : recorder.pieceCount[-value][1]++;
 			recorder.updateMoveMap(value, null, null, col, row);
 		}
 	}
@@ -96,6 +98,7 @@ function Controller() {
 	}
 
 	// Method that proceeds castling if the move is valid
+	//CHECKED
 	this.castling = function(prevCol, prevRow, clickedCol, clickedRow) {
 		var rookCol;
 		//move the king to ...
@@ -120,6 +123,7 @@ function Controller() {
 	}
 
 	//Promoting a pawn when reaching the end of the board 
+	//CHECKED
 	this.capture = function(prevCol,  prevRow,  clickedCol,  clickedRow) {
 		//show the window for player to choose which piece to capture
 		//replace sprite
@@ -128,23 +132,14 @@ function Controller() {
 		(playerSide == WHITE_SIDE) ? $('#blackSide').toggle() : $('#whiteSide').toggle();
 		$('#modalBody').click(function(event) {
 			var pieceValue
-			if ($(event.target).is('#whiteRook') 			|| $(event.target).is("#whiteRookImg")) 
-				pieceValue = ROOK_VALUE;
-			else if ($(event.target).is('#whiteKnight') 	|| $(event.target).is("#whiteKnightImg")) 
-				pieceValue = KNIGHT_VALUE;
-			else if ($(event.target).is('#whiteBishop') 	|| $(event.target).is("#whiteBishopImg")) 
-				pieceValue = BISHOP_VALUE;
-			else if ($(event.target).is('#whiteQueen') 		|| $(event.target).is("#whiteQueenImg")) 
-				pieceValue = QUEEN_VALUE;
-			else if ($(event.target).is('#blackRook') 		|| $(event.target).is("#blackRookImg")) 
-				pieceValue = -ROOK_VALUE;
-			else if ($(event.target).is('#blackKnight') 	|| $(event.target).is("#blackKnightImg")) 
-				pieceValue = -KNIGHT_VALUE;
-			else if ($(event.target).is('#blackBishop') 	|| $(event.target).is("#blackBishopImg")) 
-				pieceValue = -BISHOP_VALUE;
-			else if ($(event.target).is('#blackQueen') 		|| $(event.target).is("#blackQueenImg")) 
-				pieceValue = -QUEEN_VALUE;
-			
+			if ($(event.target).is('#whiteRook') || $(event.target).is("#whiteRookImg")) pieceValue = ROOK_VALUE;
+			else if ($(event.target).is('#whiteKnight') || $(event.target).is("#whiteKnightImg")) pieceValue = KNIGHT_VALUE;
+			else if ($(event.target).is('#whiteBishop') || $(event.target).is("#whiteBishopImg")) pieceValue = BISHOP_VALUE;
+			else if ($(event.target).is('#whiteQueen') || $(event.target).is("#whiteQueenImg")) pieceValue = QUEEN_VALUE;
+			else if ($(event.target).is('#blackRook') || $(event.target).is("#blackRookImg")) pieceValue = -ROOK_VALUE;
+			else if ($(event.target).is('#blackKnight') || $(event.target).is("#blackKnightImg")) pieceValue = -KNIGHT_VALUE;
+			else if ($(event.target).is('#blackBishop') || $(event.target).is("#blackBishopImg")) pieceValue = -BISHOP_VALUE;
+			else if ($(event.target).is('#blackQueen') || $(event.target).is("#blackQueenImg")) pieceValue = -QUEEN_VALUE;
 			$("#myModal").modal('toggle');
 			var newSprite;
 			switch (pieceValue) {
@@ -157,10 +152,21 @@ function Controller() {
 				case -BISHOP_VALUE: newSprite = blackBishopSprite; break;
 				case -QUEEN_VALUE: 	newSprite = blackQueenSprite; break;
 			}
-			recorder.moveMap[prevCol][prevRow] = pieceValue;
 			controller.grid[prevCol][prevRow].sprite = null;
-			controller.grid[prevCol][prevRow].sprite = newSprite;
-			controller.moveTheChessman(prevCol, prevRow, clickedCol, clickedRow);
+			recorder.removePiece(recorder.moveMap[prevCol][prevRow], prevCol, prevRow);
+			if(recorder.moveMap[clickedCol][clickedRow] != 0) {
+				controller.grid[clickedCol][clickedRow].sprite = null;
+				recorder.removePiece(recorder.moveMap[clickedCol][clickedRow], clickedCol, clickedRow);
+			}
+			controller.placeTheChessman(newSprite,clickedCol, clickedRow, pieceValue);
+			//record capture move is different than nomral move 
+			recorder.moveRecord.push([PAWN_VALUE, pieceValue, clickedCol*10 + clickedRow]);
+			recorder.updateAttackMap();
+			prevCol = null; prevRow = null;
+			//replace the pawn with the new piece
+			//update piecePosition
+			//update pieceCount
+			//update the record too
 			redraw();
 		});
 	}

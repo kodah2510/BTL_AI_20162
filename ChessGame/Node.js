@@ -1,5 +1,5 @@
 function Node() {
-    this.boardState;
+    this.nextMoveRecord = [];
     this.leftMostChild;
-    this.rightSibling;
+    this.rightSibling = [];
 }
