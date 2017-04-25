@@ -51,11 +51,11 @@ function Recorder()
 		pieceValues.forEach(function(pieceValue) {
 			if(pieceValue > 0)
 				recorder.piecePositions[pieceValue].forEach(function(coordinate) {
-					recorder.calculateWhiteAttackMap(pieceValue, coordinate[0], coordinate[1], WHITE_SIDE);
+					recorder.calculateWhiteAttackMap(pieceValue, coordinate[0], coordinate[1]);
 				});
 			else
 				recorder.piecePositions[pieceValue].forEach(function(coordinate) {
-					recorder.calculateBlackAttackMap(pieceValue, coordinate[0], coordinate[1], BLACK_SIDE);
+					recorder.calculateBlackAttackMap(pieceValue, coordinate[0], coordinate[1]);
 				});
 		});
 	}
@@ -71,27 +71,27 @@ function Recorder()
 		}
 		this.calculateAttackMap();
 	}
-	this.calculateBlackAttackMap = function(value,col,row,side) {
+	this.calculateBlackAttackMap = function(value,col,row) {
 		var pieceValue = parseInt(value);
 		switch(pieceValue)
 		{
-			case -ROOK_VALUE: 	this.calculateAttackMapForRook(pieceValue,col,row,this.blackAttackMap,side); break;
-			case -KNIGHT_VALUE: this.calculateAttackMapForKnight(pieceValue,col,row,this.blackAttackMap,side); break;
-			case -BISHOP_VALUE: this.calculateAttackMapForBishop(pieceValue,col,row,this.blackAttackMap,side); break;
-			case -QUEEN_VALUE: 	this.calculateAttackMapForQueen(pieceValue,col,row,this.blackAttackMap,side); break;
-			case -KING_VALUE: 	this.calculateAttackMapForKing(pieceValue,col,row,this.blackAttackMap,side); break;
+			case -ROOK_VALUE: 	this.calculateAttackMapForRook(pieceValue,col,row,this.blackAttackMap); break;
+			case -KNIGHT_VALUE: this.calculateAttackMapForKnight(pieceValue,col,row,this.blackAttackMap); break;
+			case -BISHOP_VALUE: this.calculateAttackMapForBishop(pieceValue,col,row,this.blackAttackMap); break;
+			case -QUEEN_VALUE: 	this.calculateAttackMapForQueen(pieceValue,col,row,this.blackAttackMap); break;
+			case -KING_VALUE: 	this.calculateAttackMapForKing(pieceValue,col,row,this.blackAttackMap); break;
 			case -PAWN_VALUE: 	this.calculateAttackMapForPawn(pieceValue,col,row,this.blackAttackMap); break;
 		}
 	}
-	this.calculateWhiteAttackMap = function(value,col,row,side) {
+	this.calculateWhiteAttackMap = function(value,col,row) {
 		var pieceValue = parseInt(value);
 		switch(pieceValue)
 		{
-			case ROOK_VALUE: 	this.calculateAttackMapForRook(pieceValue,col,row,this.whiteAttackMap,side); break;
-			case KNIGHT_VALUE: 	this.calculateAttackMapForKnight(pieceValue,col,row,this.whiteAttackMap,side); break;
-			case BISHOP_VALUE: 	this.calculateAttackMapForBishop(pieceValue,col,row,this.whiteAttackMap,side); break;
-			case QUEEN_VALUE: 	this.calculateAttackMapForQueen(pieceValue,col,row,this.whiteAttackMap,side); break;
-			case KING_VALUE: 	this.calculateAttackMapForKing(pieceValue,col,row,this.whiteAttackMap,side); break;
+			case ROOK_VALUE: 	this.calculateAttackMapForRook(pieceValue,col,row,this.whiteAttackMap); break;
+			case KNIGHT_VALUE: 	this.calculateAttackMapForKnight(pieceValue,col,row,this.whiteAttackMap); break;
+			case BISHOP_VALUE: 	this.calculateAttackMapForBishop(pieceValue,col,row,this.whiteAttackMap); break;
+			case QUEEN_VALUE: 	this.calculateAttackMapForQueen(pieceValue,col,row,this.whiteAttackMap); break;
+			case KING_VALUE: 	this.calculateAttackMapForKing(pieceValue,col,row,this.whiteAttackMap); break;
 			case PAWN_VALUE: 	this.calculateAttackMapForPawn(pieceValue,col,row,this.whiteAttackMap); break;
 		}
 	}
@@ -136,17 +136,13 @@ function Recorder()
 		this.moveRecord.push([this.moveMap[clickedCol][clickedRow],prevCol*10+prevRow,clickedCol*10+clickedRow]);
 	}
 	//CHECKED
-	this.calculateAttackMapForRook = function(value,col,row,attackMap,side) {
+	this.calculateAttackMapForRook = function(value,col,row,attackMap) {
 		//need to fix this one 
 		//only the attack range is limited at the first opponent piece it met 
-		if(col != 0)
-		{
-			for(var i = col - 1; i >= 0 ; i--)
-			{
-				if(attackMap[i][row].indexOf(value) == -1)
-				{
-					if(this.moveMap[i][row] != 0)
-					{
+		if(col != 0) {
+			for(var i = col - 1; i >= 0 ; i--) {
+				if(attackMap[i][row].indexOf(value) == -1) {
+					if(this.moveMap[i][row] != 0) {
 						attackMap[i][row].push(value);
 						break;
 					}
@@ -154,14 +150,10 @@ function Recorder()
 				}					
 			}
 		}
-		if(col != 7)
-		{
-			for(var i = col + 1;i < 8;i++)
-			{
-				if(attackMap[i][row].indexOf(value) == -1)
-				{
-					if(this.moveMap[i][row] != 0)
-					{
+		if(col != 7) {
+			for(var i = col + 1;i < 8;i++) {
+				if(attackMap[i][row].indexOf(value) == -1) {
+					if(this.moveMap[i][row] != 0) {
 						attackMap[i][row].push(value);
 						break;
 					}
@@ -169,19 +161,14 @@ function Recorder()
 				}					
 			}
 		}
-		if(row != 0)
-		{
-			for(var i = row - 1; i >= 0; i--)
-			{
-				if(attackMap[col][i].indexOf(value) == -1)
-				{
-					if(this.moveMap[col][i] != 0)
-					{
+		if(row != 0) {
+			for(var i = row - 1; i >= 0; i--) {
+				if(attackMap[col][i].indexOf(value) == -1) {
+					if(this.moveMap[col][i] != 0) {
 						attackMap[col][i].push(value);
 						break;
 					}
 					else attackMap[col][i].push(value);
-					
 				}					
 			}
 		}
@@ -203,7 +190,7 @@ function Recorder()
 	}
 	//fix this one too
 	//CHECKED !
-	this.calculateAttackMapForKnight = function(value,col,row,attackMap,side)
+	this.calculateAttackMapForKnight = function(value,col,row,attackMap)
 	{
 		if((col + 1 <= 7 && row - 2 >= 0) && attackMap[col + 1][row - 2].indexOf(value) == -1 )
 			attackMap[col + 1][row - 2].push(value);
@@ -224,7 +211,7 @@ function Recorder()
 	}
 	//CHECKED
 
-	this.calculateAttackMapForBishop = function(value,col,row,attackMap,side)
+	this.calculateAttackMapForBishop = function(value,col,row,attackMap)
 	{
 		var tlbrValue = col - row;//top-left ->> bottom-right
 		var trblValue = col + row;//top-right ->> bottom-left
@@ -292,14 +279,14 @@ function Recorder()
 		}
 	}
 	//CHECKED
-	this.calculateAttackMapForQueen = function(value,col,row,attackMap,side)
+	this.calculateAttackMapForQueen = function(value,col,row,attackMap)
 	{
-		this.calculateAttackMapForRook(value,col,row,attackMap,side);
-		this.calculateAttackMapForBishop(value,col,row,attackMap,side);
+		this.calculateAttackMapForRook(value,col,row,attackMap);
+		this.calculateAttackMapForBishop(value,col,row,attackMap);
 	}
 	//wrong at this one
 	//CHECKED
-	this.calculateAttackMapForKing = function(value,col,row,attackMap,side)
+	this.calculateAttackMapForKing = function(value,col,row,attackMap)
 	{
 		//special case
 		if(col == 0)

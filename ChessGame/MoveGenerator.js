@@ -9,7 +9,7 @@ function MoveGenerator() {
         prevCol = this.nextMoveRecord[1] / 10;
         prevRow = this.nextMoveRecord[1] % 10;
         currentCol = this.nextMoveRecord[2] / 10;
-        currentrow = this.nextMoveRecord[2] % 10;
+        currentRow = this.nextMoveRecord[2] % 10;
         controller.moveTheChessman(prevCol, prevRow, currentCol, currentRow);
     }
 }

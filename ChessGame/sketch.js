@@ -19,8 +19,6 @@ function preload() {
 	whiteQueenSprite 	= loadImage("ChessSprite/whiteQueen.png");
 	whiteKingSprite 	= loadImage("ChessSprite/whiteKing.png");
 	whitePawnSprite 	= loadImage("ChessSprite/whitePawn.png");
-
-	
 }
 
 function setup() {
@@ -36,32 +34,35 @@ function setup() {
 	recorder = new Recorder();
 	validator = new Validator();
 	moveGenerator = new MoveGenerator();
+	
 
 	//chosing side
 	$('#choseSideModal').modal();
 	$('#choseSideModalBody').click(function(event) {
 		if ($(event.target).is('#choseWhiteSide') || $(event.target).is('#whiteSideImg')) playerSide = WHITE_SIDE;
 		else playerSide = BLACK_SIDE;
+		evaluator = new Evaluator();
 		$("#choseSideModal").modal('toggle');
 		recorder.updateAttackMap();
+		
 		//create board game after player chose a side
 	});	
 	
 	controller.placeTheChessman(whiteRookSprite, 0, 7, ROOK_VALUE);
-	//controller.placeTheChessman(whiteRookSprite, 7, 7, ROOK_VALUE);
+	controller.placeTheChessman(whiteRookSprite, 7, 7, ROOK_VALUE);
 	controller.placeTheChessman(whiteKingSprite, 4, 7, KING_VALUE);
-	controller.placeTheChessman(whiteBishopSprite, 7, 1, BISHOP_VALUE);
-	//controller.placeTheChessman(whiteQueenSprite, 4, 1, QUEEN_VALUE);
-	controller.placeTheChessman(whitePawnSprite, 1, 1, PAWN_VALUE);
-	controller.placeTheChessman(blackPawnSprite, 3, 4, -PAWN_VALUE);
-	controller.placeTheChessman(whitePawnSprite, 3, 6, PAWN_VALUE);
-	controller.placeTheChessman(whiteKnightSprite, 3, 2, KNIGHT_VALUE);
-	controller.placeTheChessman(blackRookSprite, 2, 0, -ROOK_VALUE);
-	//controller.placeTheChessman(blackRookSprite, 0, 5, -ROOK_VALUE);
-	controller.placeTheChessman(blackKnightSprite, 7, 4, -KNIGHT_VALUE);
-	//controller.placeTheChessman(blackKingSprite, 4, 2, -KING_VALUE);
-	controller.placeTheChessman(blackBishopSprite, 0, 1, -BISHOP_VALUE);
-	controller.placeTheChessman(blackQueenSprite, 6, 1, -QUEEN_VALUE);
+	//controller.placeTheChessman(whiteBishopSprite, 7, 1, BISHOP_VALUE);
+	controller.placeTheChessman(whiteQueenSprite, 4, 1, QUEEN_VALUE);
+	//controller.placeTheChessman(whitePawnSprite, 1, 1, PAWN_VALUE);
+	//controller.placeTheChessman(blackPawnSprite, 3, 4, -PAWN_VALUE);
+	//controller.placeTheChessman(whitePawnSprite, 3, 6, PAWN_VALUE);
+	//controller.placeTheChessman(whiteKnightSprite, 3, 2, KNIGHT_VALUE);
+	controller.placeTheChessman(blackRookSprite, 4, 0, -ROOK_VALUE);
+	controller.placeTheChessman(blackRookSprite, 0, 5, -ROOK_VALUE);
+	//controller.placeTheChessman(blackKnightSprite, 7, 4, -KNIGHT_VALUE);
+	//controller.placeTheChessman(blackKingSprite, 1, 0, -KING_VALUE);
+	//controller.placeTheChessman(blackBishopSprite, 0, 1, -BISHOP_VALUE);
+	//controller.placeTheChessman(blackQueenSprite, 6, 1, -QUEEN_VALUE);
 	// Initialize game board
 	//playerSide = controller.createGameBoard();
 	
@@ -73,7 +74,23 @@ function draw() {
 	background(51);
 	// Display chess board
 	controller.render();
-	if (!isPlayerTurn) moveGenerator.makeAMove(); 
+	if (!isPlayerTurn) {
+		//TESTING 
+		var tree = new Tree();
+		tree.initializeMoveSet();
+		tree.initialize();
+		tree.traverseDF(tree.rootNode);
+		evaluator.evaluate();
+		//computer's turn
+		//step 1: make game tree
+		//currentState include recorder.piecePositions
+		//gameTree.initialize(currentState);
+		//step 2: prunning
+		//moveGenerator.calculateNextMove();
+		//step 3: chosen the next move
+		//moveGenerator.makeAMove();
+		isPlayerTurn = true;
+	}
 }
 
 // When the human player make a move
@@ -97,7 +114,7 @@ function makeAMove() {
 					if (validator.detectCheck(prevCol, prevRow, clickedCol, clickedRow)) {
 						controller.moveTheChessman(prevCol, prevRow, clickedCol, clickedRow);
 						prevCol = null; prevRow = null;
-						//isPlayerTurn = false;
+						isPlayerTurn = false;
 					}
 					redraw();
 					break;
@@ -143,7 +160,6 @@ function makeAMove() {
 		//player clicked his piece
 		else if (recorder.moveMap[clickedCol][clickedRow] * playerSide > 0) {prevCol = clickedCol; prevRow = clickedRow;}
 	}
-	
 	var t1 = performance.now();
 	console.log("makeAmove: " + (t1 - t0));
 	//isPlayerTurn = false;
