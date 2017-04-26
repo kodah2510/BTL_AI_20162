@@ -36,11 +36,13 @@ function setup() {
 	moveGenerator = new MoveGenerator();
 	
 
-	//chosing side
+	// Choosing side
 	$('#choseSideModal').modal();
 	$('#choseSideModalBody').click(function(event) {
-		if ($(event.target).is('#choseWhiteSide') || $(event.target).is('#whiteSideImg')) playerSide = WHITE_SIDE;
-		else playerSide = BLACK_SIDE;
+		if ($(event.target).is('#choseWhiteSide') || $(event.target).is('#whiteSideImg'))
+			playerSide = WHITE_SIDE;
+		else
+			playerSide = BLACK_SIDE;
 		evaluator = new Evaluator();
 		$("#choseSideModal").modal('toggle');
 		recorder.updateAttackMap();
@@ -74,7 +76,7 @@ function draw() {
 	background(51);
 	// Display chess board
 	controller.render();
-	if (!isPlayerTurn) {
+	/*if (!isPlayerTurn) {
 		//TESTING 
 		var tree = new Tree();
 		tree.initializeMoveSet();
@@ -90,7 +92,7 @@ function draw() {
 		//step 3: chosen the next move
 		//moveGenerator.makeAMove();
 		isPlayerTurn = true;
-	}
+	}*/
 }
 
 // When the human player make a move
@@ -101,24 +103,26 @@ function makeAMove() {
 	// Validating the move
 	if (isPlayerTurn) {
 		// If player clicked on an empty grid
-		//CHECKED
+		// CHECKED
 		if (prevCol != null && controller.grid[clickedCol][clickedRow].sprite == null) {
 			// Player move the piece
 			// Checking whether the move is valid or not
 			// Need to fix this one
 			var result = validator.validateMove(prevCol, prevRow, clickedCol, clickedRow);
 			switch (result) {
-				case INVALID_MOVE: break;
+				case INVALID_MOVE:
+					break;
 				case VALID_MOVE:
 				//CHECKED
 					if (validator.detectCheck(prevCol, prevRow, clickedCol, clickedRow)) {
 						controller.moveTheChessman(prevCol, prevRow, clickedCol, clickedRow);
-						prevCol = null; prevRow = null;
+						prevCol = null;
+						prevRow = null;
 						isPlayerTurn = false;
 					}
 					redraw();
 					break;
-				//special move
+				//special moves
 				case CAPTURE_MOVE: 
 					//CHECKED
 					controller.capture(prevCol, prevRow, clickedCol, clickedRow);
@@ -158,7 +162,10 @@ function makeAMove() {
 			}
 		}
 		//player clicked his piece
-		else if (recorder.moveMap[clickedCol][clickedRow] * playerSide > 0) {prevCol = clickedCol; prevRow = clickedRow;}
+		else if (recorder.moveMap[clickedCol][clickedRow] * playerSide > 0) {
+			prevCol = clickedCol;
+			prevRow = clickedRow;
+		}
 	}
 	var t1 = performance.now();
 	console.log("makeAmove: " + (t1 - t0));
