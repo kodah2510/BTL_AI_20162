@@ -4,5 +4,6 @@ function Node(value) {
     this.value = [];
     this.leftMostChild = null;
     this.rightSiblings = [];
-    if(value != null) this.value = value;
+    if (value != null)
+        this.value = value;
 }

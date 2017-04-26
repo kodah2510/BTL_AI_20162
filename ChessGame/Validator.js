@@ -1,81 +1,99 @@
 function Validator() {
 	this.validateMove = function(prevCol, prevRow, clickedCol, clickedRow) {
 		// First constraint is that the move follows the rule
-		//CHECKED
+		// CHECKED
 		var value = recorder.moveMap[prevCol][prevRow];
 		// Pawn is a little bit different, for it moves straight but attacks diagonally
 		if (Math.abs(value) == PAWN_VALUE) {
 			//opponent
 			if (prevCol == clickedCol) {
 				if (value * playerSide < 0) {
-					if (clickedRow == 7) return CAPTURE_MOVE;
-					if (prevRow == 1 && clickedRow == prevRow + 2) return VALID_MOVE;
-					else if (clickedRow == prevRow + 1 ) return VALID_MOVE;
+					if (clickedRow == 7)
+						return CAPTURE_MOVE;
+					if (prevRow == 1 && clickedRow == prevRow + 2)
+						return VALID_MOVE;
+					else if (clickedRow == prevRow + 1 )
+						return VALID_MOVE;
 				} else {
-					if (clickedRow == 0) return CAPTURE_MOVE;
-					if (prevRow == 6 && clickedRow == prevRow - 2) return VALID_MOVE;
-					else if (clickedRow == prevRow - 1) return VALID_MOVE;
+					if (clickedRow == 0)
+						return CAPTURE_MOVE;
+					if (prevRow == 6 && clickedRow == prevRow - 2)
+						return VALID_MOVE;
+					else if (clickedRow == prevRow - 1)
+						return VALID_MOVE;
 				}
-			}
-			else {
-				//opponent pawn
-				if(value * playerSide < 0) {
-					if(value > 0) {
-						if(recorder.whiteAttackMap[clickedCol][clickedRow].indexOf(value) != -1) {
-							if(clickedRow == 7) return CAPTURE_MOVE;
-							else return VALID_MOVE;
+			} else {
+				// Opponent's pawn
+				if (value * playerSide < 0) {
+					if (value > 0) {
+						if (recorder.whiteAttackMap[clickedCol][clickedRow].indexOf(value) != -1) {
+							if (clickedRow == 7)
+								return CAPTURE_MOVE;
+							else
+								return VALID_MOVE;
 						}
 					} else {
-						if(recorder.blackAttackMap[clickedCol][clickedRow].indexOf(value) != -1) {
-							if(clickedRow == 7) return CAPTURE_MOVE;
-							else return VALID_MOVE;
+						if (recorder.blackAttackMap[clickedCol][clickedRow].indexOf(value) != -1) {
+							if (clickedRow == 7)
+								return CAPTURE_MOVE;
+							else
+								return VALID_MOVE;
 						}	
 					}
 				} else {
-				//player pawn
-					if(value > 0) {
-						if(recorder.whiteAttackMap[clickedCol][clickedRow].indexOf(value) != -1) {
-							if(clickedRow == 0) return CAPTURE_MOVE;
-							else return VALID_MOVE;
+				// Player's pawn
+					if (value > 0) {
+						if (recorder.whiteAttackMap[clickedCol][clickedRow].indexOf(value) != -1) {
+							if (clickedRow == 0)
+								return CAPTURE_MOVE;
+							else
+								return VALID_MOVE;
 						}
 					} else {
-						if(recorder.blackAttackMap[clickedCol][clickedRow].indexOf(value) != -1) {
-							if(clickedRow == 0) return CAPTURE_MOVE;
-							else return VALID_MOVE;
+						if (recorder.blackAttackMap[clickedCol][clickedRow].indexOf(value) != -1) {
+							if (clickedRow == 0)
+								return CAPTURE_MOVE;
+							else
+								return VALID_MOVE;
 						}
 					}
 				}
-			
 			}
 		}
-		//CHECKED
+		// CHECKED
 		else if (Math.abs(value) == KING_VALUE) {
-			//castling
+			// Castling
 			if (prevCol == 4) {
 				if (clickedCol == prevCol - 2 || clickedCol == prevCol + 2)	{
-					if (this.validateCastling(prevCol, prevRow, clickedCol, clickedRow)) return CASTLING_MOVE;
+					if (this.validateCastling(prevCol, prevRow, clickedCol, clickedRow))
+						return CASTLING_MOVE;
 					return INVALID_MOVE;
 				}
 			}
 		}
-		else if(Math.abs(value) == ROOK_VALUE) {
-			if(prevCol != clickedCol && prevRow != clickedRow) return INVALID_MOVE;
+		else if (Math.abs(value) == ROOK_VALUE) {
+			if (prevCol != clickedCol && prevRow != clickedRow)
+				return INVALID_MOVE;
 		}
-		else if(Math.abs(value) == BISHOP_VALUE) {
-			if(prevCol - prevRow != clickedCol - clickedRow || prevCol + prevRow != clickedCol + clickedRow) return INVALID_MOVE;
+		else if (Math.abs(value) == BISHOP_VALUE) {
+			if (prevCol - prevRow != clickedCol - clickedRow || prevCol + prevRow != clickedCol + clickedRow)
+				return INVALID_MOVE;
 		}
-		else if(Math.abs(value) == QUEEN_VALUE) {
-			if(prevCol != clickedCol || prevRow != clickedRow || prevCol - prevRow != clickedCol - clickedRow || prevCol + prevRow != clickedCol + clickedRow ) return INVALiD_MOVE;
+		else if (Math.abs(value) == QUEEN_VALUE) {
+			if (prevCol != clickedCol || prevRow != clickedRow || prevCol - prevRow != clickedCol - clickedRow || prevCol + prevRow != clickedCol + clickedRow )
+				return INVALiD_MOVE;
 		}
 			
-		//CHECKED
+		// CHECKED
 		if (value < 0) {
-			if (recorder.blackAttackMap[clickedCol][clickedRow].indexOf(value) != -1) return VALID_MOVE;
+			if (recorder.blackAttackMap[clickedCol][clickedRow].indexOf(value) != -1)
+				return VALID_MOVE;
 		} else {
-			if (recorder.whiteAttackMap[clickedCol][clickedRow].indexOf(value) != -1) return VALID_MOVE;
+			if (recorder.whiteAttackMap[clickedCol][clickedRow].indexOf(value) != -1)
+				return VALID_MOVE;
 		}
-		//second condition the move cannot make the king in danger
-		//bishop rook queen
+		// The second condition: the move cannot make the king in danger
+		// bishop rook queen
 		return INVALID_MOVE;
 	}
 	//CHECKED ! 
@@ -87,15 +105,17 @@ function Validator() {
 		var tempAttackMap = new Array(8);
 		var isValid;
 
-		for(var i = 0; i < 8; i++)
+		for (var i = 0; i < 8; i++)
 			tempAttackMap[i] = new Array(8);
-		for(var i = 0; i < 8; i++)
-			for(var j = 0; j < 8; j++)
+		for (var i = 0; i < 8; i++)
+			for (var j = 0; j < 8; j++)
 				tempAttackMap[i][j] = [];
 				
-		if(Math.abs(pieceValue) == KING_VALUE) {
-			if (pieceValue > 0) return (recorder.blackAttackMap[clickedCol][clickedRow].length == 0); 
-			else return (recorder.whiteAttackMap[clickedCol][clickedRow].length == 0);
+		if (Math.abs(pieceValue) == KING_VALUE) {
+			if (pieceValue > 0)
+				return (recorder.blackAttackMap[clickedCol][clickedRow].length == 0); 
+			else
+				return (recorder.whiteAttackMap[clickedCol][clickedRow].length == 0);
 		}
 		recorder.moveMap[prevCol][prevRow] = 0;
 		recorder.moveMap[clickedCol][clickedRow] = pieceValue;
@@ -104,8 +124,7 @@ function Validator() {
 		//forgot to reset the value back !!
 		//create tempAttackMap
 		
-		if (pieceValue > 0)
-		{
+		if (pieceValue > 0) {
 			//find the king position 
 			kingPostion = recorder.findThePiece(KING_VALUE);
 			//console.log(kingPostion);

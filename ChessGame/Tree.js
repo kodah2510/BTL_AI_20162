@@ -14,7 +14,7 @@ function Tree(currentState) {
     this.initializeMoveSet = function() {
         var move = [];
         //xét từng quân cờ 
-        for(var pieceValue in recorder.piecePositions) {
+        for (var pieceValue in recorder.piecePositions) {
             //move sẽ có định dạng [VALUE, prevPos, curPos]
             //dưới đây là trường hợp cho bên trắng
             (pieceValue > 0) ? this.addMove(pieceValue, this.whiteMoveSet, recorder.whiteAttackMap) : this.addMove(pieceValue, this.blackMoveSet, recorder.blackAttackMap);
@@ -39,8 +39,7 @@ function Tree(currentState) {
                     move.push(value);
                     move.push(prevCoordinate);
                     if(attackMap[col][row].indexOf(value) != -1) {
-                        switch(Math.abs(value)) 
-                        {
+                        switch (Math.abs(value)) {
                             //kiểm tra thêm các nước đi có thỏa mãn luật chơi không vì có trường hợp 2 quân cờ có cungf giá trị biểu diễn 
                             //nhưng các nước đi lại không đúng luật 
                             case ROOK_VALUE:
@@ -84,7 +83,7 @@ function Tree(currentState) {
         var depth = 1;
         this.rootNode = new Node();
         this.rootNode.leftMostChild = new Node();
-        if(depth % 2 == 0) { // người chơi MAX
+        if (depth % 2 == 0) { // người chơi MAX
             //thưởng viết giúp tao phân này :)) 
             //có this.whiteMoveSet với cả this.blackMoveSet gán làm sao cho đúng với playerSide nhé
             //mỗi một phần tử của this.whiteMoveSet có dạng [PIECE_VALUE, prevCol * 10 + prevRow, clickedCol * 10 + clickedRow]

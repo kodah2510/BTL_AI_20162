@@ -14,10 +14,10 @@ function Evaluator() {
        - 0.5(D-D' + S-S' + I-I')
        + 0.1(M-M') + ...
  
-KQRBNP = number of kings, queens, rooks, bishops, knights and pawns
-D,S,I = doubled, blocked and isolated pawns
-M = Mobility (the number of legal moves)
-     */
+	KQRBNP = number of kings, queens, rooks, bishops, knights and pawns
+	D,S,I = doubled, blocked and isolated pawns
+	M = Mobility (the number of legal moves)
+    */
     this.whoToMove = null;
 	//về sau phải điều chỉnh lại không phải dựa vào biến isPlayerTurn mà phải tính whoToMove theo độ sâu của cây gameTree.depth
 	(isPlayerTurn) ? this.whoToMove = playerSide : this.whoToMove = -playerSide;
@@ -27,8 +27,7 @@ M = Mobility (the number of legal moves)
     this.pawnWeight = 1;
 	this.kingWeight = 1000;
 
-	this.evaluate =function()
-    {        
+	this.evaluate = function() {        
         //return (this.materialEvaluate() + this.mobilityEvaluate()) * this.whoToMove;
 		//return this.evaluateAttackMap() + this.checkEnemySide() + this.calculatePointAttack() + this.calculatePieceMove();
 		console.log("materialEvaluate:", this.evaluateMaterial());
@@ -37,8 +36,7 @@ M = Mobility (the number of legal moves)
 		console.log("calculatePieceMove", this.calculatePieceMove());
     }
 	//tính toán sự chênh lệch về đội hình dựa trên trọng số và số lượng của từng quân
-    this.evaluateMaterial = function()
-    {
+    this.evaluateMaterial = function() {
         return  this.rookWeight * (recorder.pieceCount[1][0] - recorder.pieceCount[1][1]) +
                 this.knightAndBishopWeight * (recorder.pieceCount[2][0] - recorder.pieceCount[2][1]) +
                 this.knightAndBishopWeight * (recorder.pieceCount[3][0] - recorder.pieceCount[3][1]) +
@@ -67,20 +65,32 @@ M = Mobility (the number of legal moves)
 		}
 		return attackPoint;
 	}
-    this.getPieceWeight = function(pieceVal){
-		switch(pieceVal){
-			case ROOK_VALUE: return this.rookWeight; break;
-			case KNIGHT_VALUE: return this.knightAndBishopWeight; break;
-			case BISHOP_VALUE: return this.knightAndBishopWeight; break;
-			case QUEEN_VALUE: return this.queenWeight; break;
-			case KING_VALUE: return this.kingWeight; break;
-			case PAWN_VALUE: return this.pawnWeight; break;
+    this.getPieceWeight = function(pieceVal) {
+		switch (pieceVal) {
+			case ROOK_VALUE:
+				return this.rookWeight;
+				break;
+			case KNIGHT_VALUE:
+				return this.knightAndBishopWeight;
+				break;
+			case BISHOP_VALUE:
+				return this.knightAndBishopWeight;
+				break;
+			case QUEEN_VALUE:
+				return this.queenWeight;
+				break;
+			case KING_VALUE:
+				return this.kingWeight;
+				break;
+			case PAWN_VALUE:
+				return this.pawnWeight;
+				break;
 		}
 	}
 	//những quân cờ nào có số nước đi dc < 2 thì bị trừ điểm 
 	this.calculatePieceMove = function() {
 		var point = 0;
-		for(var pieceValueIndex = 1; pieceValueIndex <= 6; pieceValueIndex++) {
+		for (var pieceValueIndex = 1; pieceValueIndex <= 6; pieceValueIndex++) {
 			var count = 0;
 			for(var col = 0; col < 8; col++) {
 				for(var row = 0; row < 8; row++)
@@ -88,7 +98,7 @@ M = Mobility (the number of legal moves)
 						if(validator.validateMove(coordinate[0],coordinate[1], col, row) != INVALID_MOVE) count++; 
 					 });
 			}
-			if(count < 2 && pieceValueIndex != 5) point -= this.getPieceWeight(pieceValueIndex);
+			if (count < 2 && pieceValueIndex != 5) point -= this.getPieceWeight(pieceValueIndex);
 		}
 		return point;
 	}
@@ -97,26 +107,26 @@ M = Mobility (the number of legal moves)
 		var side = 0;
 		(isPlayerTurn) ? side = WHITE_SIDE : side = BLACK_SIDE;
 		for(var row = 0 ; row < 8;row ++) {
-			for(var col = 0; col < 8;col ++){
-					if(row < 4){
-						switch(recorder.moveMap[col][row]){
-							case ROOK_VALUE: tmpPoint += (this.rookWeight*side); break;
-							case KNIGHT_VALUE: tmpPoint += (this.knightAndBishopWeight*side); break;
-							case BISHOP_VALUE: tmpPoint += (this.knightAndBishopWeight*side); break;
-							case QUEEN_VALUE: tmpPoint += (this.queenWeight*side); break;
-							case KING_VALUE: break;
-							case PAWN_VALUE: tmpPoint += (this.pawnWeight*side); break;
-						}
-					} else {
-						switch(recorder.moveMap[col][row]){
-							case ROOK_VALUE: tmpPoint -= (this.rookWeight*side); break;
-							case KNIGHT_VALUE: tmpPoint -= (this.knightAndBishopWeight*side); break;
-							case BISHOP_VALUE: tmpPoint -= (this.knightAndBishopWeight*side); break;
-							case QUEEN_VALUE: tmpPoint -= (this.queenWeight*side); break;
-							case KING_VALUE: break;
-							case PAWN_VALUE: tmpPoint -= (this.pawnWeight*side); break;
-						}
+			for(var col = 0; col < 8;col ++) {
+				if(row < 4) {
+					switch (recorder.moveMap[col][row]) {
+						case ROOK_VALUE: tmpPoint += (this.rookWeight*side); break;
+						case KNIGHT_VALUE: tmpPoint += (this.knightAndBishopWeight*side); break;
+						case BISHOP_VALUE: tmpPoint += (this.knightAndBishopWeight*side); break;
+						case QUEEN_VALUE: tmpPoint += (this.queenWeight*side); break;
+						case KING_VALUE: break;
+						case PAWN_VALUE: tmpPoint += (this.pawnWeight*side); break;
 					}
+				} else {
+					switch(recorder.moveMap[col][row]) {
+						case ROOK_VALUE: tmpPoint -= (this.rookWeight*side); break;
+						case KNIGHT_VALUE: tmpPoint -= (this.knightAndBishopWeight*side); break;
+						case BISHOP_VALUE: tmpPoint -= (this.knightAndBishopWeight*side); break;
+						case QUEEN_VALUE: tmpPoint -= (this.queenWeight*side); break;
+						case KING_VALUE: break;
+						case PAWN_VALUE: tmpPoint -= (this.pawnWeight*side); break;
+					}
+				}
 			}
 		}
 		return tmpPoint;
@@ -124,9 +134,9 @@ M = Mobility (the number of legal moves)
 	//
 	this.evaluateAttackMap = function() {
 		var point = 0;
-		for(var x in recorder.piecePositions) {
-			if(this.whoToMove == WHITE_SIDE && x > 0) {
-				switch(parseInt(x)) {
+		for (var x in recorder.piecePositions) {
+			if (this.whoToMove == WHITE_SIDE && x > 0) {
+				switch (parseInt(x)) {
 				case ROOK_VALUE: point += this.calculatePointAttack(this.rookWeight,ROOK_VALUE) - this.calculatePointAttack(this.rookWeight,-ROOK_VALUE);break;
 				case KNIGHT_VALUE: point += this.calculatePointAttack(this.knightAndBishopWeight,KNIGHT_VALUE) - this.calculatePointAttack(this.knightAndBishopWeight,-KNIGHT_VALUE);break;				
 				case BISHOP_VALUE: point += this.calculatePointAttack(this.knightAndBishopWeight,BISHOP_VALUE) - this.calculatePointAttack(this.knightAndBishopWeight,-BISHOP_VALUE);break;
@@ -134,7 +144,7 @@ M = Mobility (the number of legal moves)
 				case PAWN_VALUE: point += this.calculatePointAttack(this.pawnWeight,PAWN_VALUE) - this.calculatePointAttack(this.pawnWeight,-PAWN_VALUE);break;
 				case KING_VALUE: point += this.calculatePointAttack(this.kingWeight,KING_VALUE) - this.calculatePointAttack(this.kingWeight,-KING_VALUE);break;
 				}
-			}else if(this.whoToMove == BLACK_SIDE && x < 0) {
+			} else if(this.whoToMove == BLACK_SIDE && x < 0) {
 				switch(parseInt(x)) {
 				case -ROOK_VALUE: point += this.calculatePointAttack(this.rookWeight,-ROOK_VALUE) - this.calculatePointAttack(this.rookWeight,ROOK_VALUE); break;
 				case -KNIGHT_VALUE: point += this.calculatePointAttack(this.knightAndBishopWeight,-KNIGHT_VALUE) - this.calculatePointAttack(this.knightAndBishopWeight,KNIGHT_VALUE); break;				
@@ -148,4 +158,4 @@ M = Mobility (the number of legal moves)
 		return point;
 	}
 }
-// turnerSide la mau quan cua luot di 
+// turnerSide la mau quan cua luot di
