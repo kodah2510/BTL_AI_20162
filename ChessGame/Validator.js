@@ -130,25 +130,25 @@ function Validator() {
 			//console.log(kingPostion);
 			//update the attack map
 			recorder.piecePositions[-ROOK_VALUE].forEach(function(coordinate) {
-				recorder.calculateAttackMapForRook(-ROOK_VALUE, coordinate[0], coordinate[1], tempAttackMap);
+				recorder.calculateAttackMapForRook(-ROOK_VALUE, coordinate[0], coordinate[1], tempAttackMap, recorder.moveMap);
 			});
 			recorder.piecePositions[-BISHOP_VALUE].forEach(function(coordinate) {
-				recorder.calculateAttackMapForBishop(-BISHOP_VALUE, coordinate[0], coordinate[1], tempAttackMap);
+				recorder.calculateAttackMapForBishop(-BISHOP_VALUE, coordinate[0], coordinate[1], tempAttackMap, recorder.moveMap);
 			});
 			recorder.piecePositions[-QUEEN_VALUE].forEach(function(coordinate) {
-				recorder.calculateAttackMapForQueen(-QUEEN_VALUE, coordinate[0], coordinate[1], tempAttackMap);
+				recorder.calculateAttackMapForQueen(-QUEEN_VALUE, coordinate[0], coordinate[1], tempAttackMap, recorder.moveMap);
 			});
 
 		} else {
 			kingPostion = recorder.findThsePiece(-KING_VALUE);
 			recorder.piecePositions[ROOK_VALUE].forEach(function(coordinate) {
-				recorder.calculateAttackMapForRook(ROOK_VALUE, coordinate[0], coordinate[1], tempAttackMap);
+				recorder.calculateAttackMapForRook(ROOK_VALUE, coordinate[0], coordinate[1], tempAttackMap, recorder.moveMap);
 			});
 			recorder.piecePositions[BISHOP_VALUE].forEach(function(coordinate) {
-				recorder.calculateAttackMapForBishop(BISHOP_VALUE, coordinate[0], coordinate[1], tempAttackMap);
+				recorder.calculateAttackMapForBishop(BISHOP_VALUE, coordinate[0], coordinate[1], tempAttackMap, recorder.moveMap);
 			});
 			recorder.piecePositions[QUEEN_VALUE].forEach(function(coordinate) {
-				recorder.calculateAttackMapForQueen(QUEEN_VALUE, coordinate[0], coordinate[1], tempAttackMap);
+				recorder.calculateAttackMapForQueen(QUEEN_VALUE, coordinate[0], coordinate[1], tempAttackMap, recorder.moveMap);
 			});
 		}
 		//console.log(kingPostion[0][0], kingPostion[0][1]);
