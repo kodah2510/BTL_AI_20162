@@ -21,83 +21,78 @@
 		<script src=".\sketch.js"></script>
 		<script src=".\Variables.js"></script>
 		<script src=".\Grid.js"></script>
-		
 	</head>
-<body style="background-color: #1f2e2e;">
-	<!--<div class="container">
-		<form id="form" name="form">
-			<input id="radio" type="radio" name="side" value="BlackSide"><text style="color:white;">Black Side</text></input>
-			<input id="radio" type="radio" name="side" value="WhiteSide" checked><text style="color:white;">White Side </text></input>
-			<input id="button" type="button" name"startButton" value="Start" onclick="startTheGame();"></input>
-			<input id="button" type="button" name"refreshButton" value="Refresh" onclick="location.reload();"></input>
-		</form>
-	</div>-->
-	<div id="myCanvas"></div>
-	<div class="modal" id="ChooseSideModal" data-backdrop="static" data-keyboard="false">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title">Choose your side</h4>
-				</div>
-				<div class="modal-body" id="ChooseSideModalBody">
-					<div class="row">
-						<div id="ChooseWhiteSide" class="col-xs-6" align="center">
-							<img id="whiteSideImg" src=".\ChessSprite\whiteKing.png">
-						</div>
-						<div id="ChooseBlackSide" class="col-xs-6" align="center">
-							<img id="blackSideImg" src=".\ChessSprite\blackKing.png">
+	<body style="background-color: #1f2e2e;">
+		<!--<div class="container">
+			<form id="form" name="form">
+				<input id="radio" type="radio" name="side" value="BlackSide"><text style="color:white;">Black Side</text></input>
+				<input id="radio" type="radio" name="side" value="WhiteSide" checked><text style="color:white;">White Side </text></input>
+				<input id="button" type="button" name"startButton" value="Start" onclick="startTheGame();"></input>
+				<input id="button" type="button" name"refreshButton" value="Refresh" onclick="location.reload();"></input>
+			</form>
+		</div>-->
+		<div id="myCanvas"></div>
+		<div class="modal" id="ChooseSideModal" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">Choose your side</h4>
+					</div>
+					<div class="modal-body" id="ChooseSideModalBody">
+						<div class="row">
+							<div id="ChooseWhiteSide" class="col-xs-6" align="center">
+								<img id="whiteSideImg" src=".\ChessSprite\whiteKing.png">
+							</div>
+							<div id="ChooseBlackSide" class="col-xs-6" align="center">
+								<img id="blackSideImg" src=".\ChessSprite\blackKing.png">
+							</div>
 						</div>
 					</div>
+					<div class="modal-footer"></div>
 				</div>
-				<div class="modal-footer"></div>
 			</div>
 		</div>
-	</div>
-	<!--<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>-->
-	<div class="modal fade" id="myModal" role="dialog" data-backdrop="static" data-keyboard="false">
-		<div class="modal-dialog">
-			<!-- Modal content-->
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title">Choose your piece</h4>
-				</div>
-				<div id="modalBody" class="modal-body">
-					<div id="blackSide" class="row">
-						<div id="blackRook" class="col-xs-3" align="center">
-							<img id="blackRookImg" src=".\ChessSprite\blackRook.png">
+		<!--<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>-->
+		<div class="modal fade" id="myModal" role="dialog" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog">
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">Choose your piece</h4>
+					</div>
+					<div id="modalBody" class="modal-body">
+						<div id="blackSide" class="row">
+							<div id="blackRook" class="col-xs-3" align="center">
+								<img id="blackRookImg" src=".\ChessSprite\blackRook.png">
+							</div>
+							<div id="blackKnight" class="col-xs-3" align="center">
+								<img id="blackKnightImg" src=".\ChessSprite\blackKnight.png">
+							</div>
+							<div id="blackBishop" class="col-xs-3" align="center">
+								<img id="blackBishopImg" src=".\ChessSprite\blackBishop.png">
+							</div>
+							<div id="blackQueen" class="col-xs-3" align="center">
+								<img id="blackQueenImg" src=".\ChessSprite\blackQueen.png">
+							</div>
 						</div>
-						<div id="blackKnight" class="col-xs-3" align="center">
-							<img id="blackKnightImg" src=".\ChessSprite\blackKnight.png">
-						</div>
-						<div id="blackBishop" class="col-xs-3" align="center">
-							<img id="blackBishopImg" src=".\ChessSprite\blackBishop.png">
-						</div>
-						<div id="blackQueen" class="col-xs-3" align="center">
-							<img id="blackQueenImg" src=".\ChessSprite\blackQueen.png">
+						<div id="whiteSide" class="row">
+							<div id="whiteRook" class="col-xs-3" align="center">
+								<img id="whiteRookImg" src=".\ChessSprite\whiteRook.png">
+							</div>
+							<div id="whiteKnight" class="col-xs-3" align="center">
+								<img id="whiteKnightImg" src=".\ChessSprite\whiteKnight.png">
+							</div>
+							<div id="whiteBishop" class="col-xs-3" align="center">
+								<img id="whiteBishopImg" src=".\ChessSprite\whiteBishop.png">
+							</div>
+							<div id="whiteQueen" class="col-xs-3" align="center">
+								<img id="whiteQueenImg" src=".\ChessSprite\whiteQueen.png">
+							</div>
 						</div>
 					</div>
-					
-					<div id="whiteSide" class="row">
-						<div id="whiteRook" class="col-xs-3" align="center">
-							<img id="whiteRookImg" src=".\ChessSprite\whiteRook.png">
-						</div>
-						<div id="whiteKnight" class="col-xs-3" align="center">
-							<img id="whiteKnightImg" src=".\ChessSprite\whiteKnight.png">
-						</div>
-						<div id="whiteBishop" class="col-xs-3" align="center">
-							<img id="whiteBishopImg" src=".\ChessSprite\whiteBishop.png">
-						</div>
-						<div id="whiteQueen" class="col-xs-3" align="center">
-							<img id="whiteQueenImg" src=".\ChessSprite\whiteQueen.png">
-						</div>
-					</div>
-					<script>
-					
-					</script>
+					<div class="modal-footer"></div>
 				</div>
-				<div class="modal-footer"></div>
-			</div>
-		</div>	
-	</div>
-</body>
+			</div>	
+		</div>
+	</body>
 </html>

@@ -54,7 +54,7 @@ function Recorder() {
 				});
 		});
 	}
-	//the attack map is updated after every move 	
+	// the attack map is updated after every move
 	this.updateAttackMap = function() {
 		//add the move to moveRecord
 		//recalculate the moveMap and attackMap
