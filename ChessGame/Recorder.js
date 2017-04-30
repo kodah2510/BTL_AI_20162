@@ -48,7 +48,6 @@ function Recorder() {
 	this.calculateAttackMap = function(piecePositions, whiteAttackMap, blackAttackMap, moveMap)
 	{
 		// attack map now will base on the piece position to process
-<<<<<<< .mine
 		if(piecePositions == null && whiteAttackMap == null && blackAttackMap == null && moveMap == null)
 		{
 			var recorder = this;
@@ -61,53 +60,6 @@ function Recorder() {
 					this.piecePositions[pieceValues].forEach(function(coordinate){
 						recorder.calculateAttackMapForAPiece(pieceValues, coordinate[0], coordinate[1], this.blackAttackMap, this.moveMap);
 					});
-||||||| .r49
-		var recorder = this;
-		var pieceValues = Object.keys(this.piecePositions);
-		//for (pieceValue in this.piecePositions) 
-		pieceValues.forEach(function(pieceValue) {
-			if (pieceValue > 0)
-				recorder.piecePositions[pieceValue].forEach(function(coordinate) {
-					recorder.calculateWhiteAttackMap(pieceValue, coordinate[0], coordinate[1]);
-				});
-			else
-				recorder.piecePositions[pieceValue].forEach(function(coordinate) {
-					recorder.calculateBlackAttackMap(pieceValue, coordinate[0], coordinate[1]);
-				});
-		});
-	}
-	//the attack map is updated after every move 	
-	this.updateAttackMap = function() {
-		//add the move to moveRecord
-		//recalculate the moveMap and attackMap
-		for (var i = 0; i < 8; i++) {
-			for (var j = 0; j < 8; j++) {
-				this.whiteAttackMap[i][j] = [];
-				this.blackAttackMap[i][j] = [];
-=======
-		var recorder = this;
-		var pieceValues = Object.keys(this.piecePositions);
-		//for (pieceValue in this.piecePositions) 
-		pieceValues.forEach(function(pieceValue) {
-			if (pieceValue > 0)
-				recorder.piecePositions[pieceValue].forEach(function(coordinate) {
-					recorder.calculateWhiteAttackMap(pieceValue, coordinate[0], coordinate[1]);
-				});
-			else
-				recorder.piecePositions[pieceValue].forEach(function(coordinate) {
-					recorder.calculateBlackAttackMap(pieceValue, coordinate[0], coordinate[1]);
-				});
-		});
-	}
-	// the attack map is updated after every move
-	this.updateAttackMap = function() {
-		//add the move to moveRecord
-		//recalculate the moveMap and attackMap
-		for (var i = 0; i < 8; i++) {
-			for (var j = 0; j < 8; j++) {
-				this.whiteAttackMap[i][j] = [];
-				this.blackAttackMap[i][j] = [];
->>>>>>> .r54
 			}
 		}
 		else {
@@ -240,28 +192,10 @@ function Recorder() {
 				}					
 			}
 		}
-<<<<<<< .mine
 		if(col != 7) {
 			for(var i = col + 1;i < 8;i++) {
 				if(attackMap[i][row].indexOf(value) == -1) {
 					if(moveMap[i][row] != 0) { attackMap[i][row].push(value); break;}
-||||||| .r49
-		if (col != 7) {
-			for (var i = col + 1;i < 8;i++) {
-				if (attackMap[i][row].indexOf(value) == -1) {
-					if (this.moveMap[i][row] != 0) {
-						attackMap[i][row].push(value);
-						break;
-					}
-=======
-		if (col != 7) {
-			for (var i = col + 1; i < 8; i++) {
-				if (attackMap[i][row].indexOf(value) == -1) {
-					if (this.moveMap[i][row] != 0) {
-						attackMap[i][row].push(value);
-						break;
-					}
->>>>>>> .r54
 					else attackMap[i][row].push(value);
 				}					
 			}
@@ -310,50 +244,16 @@ function Recorder() {
 	this.calculateAttackMapForBishop = function(value,col,row,attackMap,moveMap) {
 		var tlbrValue = col - row;//top-left ->> bottom-right
 		var trblValue = col + row;//top-right ->> bottom-left
-<<<<<<< .mine
 		if (col != 0) {
 			for (var i = col - 1;i >= 0 && i - tlbrValue >= 0;i--) {
-||||||| .r49
-		if (col != 0)
-		{
-			for (var i = col - 1;i >= 0 && i - tlbrValue >= 0;i--)
-			{
-=======
-		if (col != 0) {
-			for (var i = col - 1; i >= 0 && i - tlbrValue >= 0; i--) {
->>>>>>> .r54
 				//top-left
 				currentRow = i - tlbrValue;
-<<<<<<< .mine
 				if (attackMap[i][currentRow].indexOf(value) == -1) {
 					if(moveMap[i][currentRow] != 0) {attackMap[i][currentRow].push(value);break;}
-||||||| .r49
-				if (attackMap[i][currentRow].indexOf(value) == -1)
-				{
-					if (this.moveMap[i][currentRow] != 0)
-					{
-						attackMap[i][currentRow].push(value);	
-						break;
-					}
-=======
-				if (attackMap[i][currentRow].indexOf(value) == -1) {
-					if (this.moveMap[i][currentRow] != 0) {
-						attackMap[i][currentRow].push(value);	
-						break;
-					}
->>>>>>> .r54
 					else attackMap[i][currentRow].push(value);	
 				}					
 			}
-<<<<<<< .mine
 			for (var i = col - 1;i >= 0 && trblValue - i <= 7;i--) {
-||||||| .r49
-			for (var i = col - 1;i >= 0 && trblValue - i <= 7;i--)
-			{
-=======
-			for (var i = col - 1; i >= 0 && trblValue - i <= 7; i--)
-			{
->>>>>>> .r54
 				//bottom-left
 				currentRow = trblValue - i;
 				if (attackMap[i][currentRow].indexOf(value) == -1) {
@@ -366,24 +266,8 @@ function Recorder() {
 			for (var i = col + 1; i < 8 && i - tlbrValue <= 7 ; i++) {
 				//bottom-right
 				currentRow = i - tlbrValue;
-<<<<<<< .mine
 				if (attackMap[i][currentRow].indexOf(value) == -1) {
 					if(moveMap[i][currentRow] != 0) { attackMap[i][currentRow].push(value); break;}
-||||||| .r49
-				if (attackMap[i][currentRow].indexOf(value) == -1)
-				{
-					if (this.moveMap[i][currentRow] != 0)
-					{
-						attackMap[i][currentRow].push(value);
-						break;
-					}
-=======
-				if (attackMap[i][currentRow].indexOf(value) == -1) {
-					if (this.moveMap[i][currentRow] != 0) {
-						attackMap[i][currentRow].push(value);
-						break;
-					}
->>>>>>> .r54
 					else attackMap[i][currentRow].push(value);
 				}					
 			}
@@ -407,154 +291,38 @@ function Recorder() {
 	//CHECKED
 	this.calculateAttackMapForKing = function(value, col, row, attackMap) {
 		//special case
-<<<<<<< .mine
+
 		if (col == 0) {
 			if (row == 0) {// right down bottom right 
 				attackMap[col + 1][row].push(value); //right
 				attackMap[col + 1][row + 1].push(value); //bottom right
 				attackMap[col][row + 1].push(value); //down
-||||||| .r49
-		if (col == 0)
-		{
-			if (row == 0)// right down bottom right
-			{
-				//right
-				attackMap[col + 1][row].push(value);
-				//bottom right
-				attackMap[col + 1][row + 1].push(value);
-				//down
-				attackMap[col][row + 1].push(value);
-				return;
-=======
-		if (col == 0) {
-			if (row == 0) { // right down bottom right
-				//right
-				attackMap[col + 1][row].push(value);
-				//bottom right
-				attackMap[col + 1][row + 1].push(value);
-				//down
-				attackMap[col][row + 1].push(value);
-				return;
->>>>>>> .r54
 			}
-<<<<<<< .mine
 			if (row == 7) {// up top right right 
 				attackMap[col][row - 1].push(value); //up
 				attackMap[col + 1][row - 1].push(value); //top right
 				attackMap[col + 1][row].push(value); //right
-||||||| .r49
-			if (row == 7)// up top right right
-			{
-				//up
-				attackMap[col][row - 1].push(value);
-				//top right
-				attackMap[col + 1][row - 1].push(value);
-				//right
-				attackMap[col + 1][row].push(value);
-				return;
-=======
-			if (row == 7) { // up top right right
-				//up
-				attackMap[col][row - 1].push(value);
-				//top right
-				attackMap[col + 1][row - 1].push(value);
-				//right
-				attackMap[col + 1][row].push(value);
-				return;
->>>>>>> .r54
 			}
-<<<<<<< .mine
 			else {// up top-right right bottom-right down
 				attackMap[col][row - 1].push(value); //up
 				attackMap[col + 1][row - 1].push(value); //top right
 				attackMap[col + 1][row].push(value); //right
 				attackMap[col + 1][row + 1].push(value); //bottom right
 				attackMap[col][row + 1].push(value); //down
-||||||| .r49
-			else// up top-right right bottom-right down
-			{
-				//up
-				attackMap[col][row - 1].push(value);
-				//top right
-				attackMap[col + 1][row - 1].push(value);
-				//right
-				attackMap[col + 1][row].push(value);
-				//bottom right
-				attackMap[col + 1][row + 1].push(value);
-				//down
-				attackMap[col][row + 1].push(value);
-				return;
-=======
-			else { // up top-right right bottom-right down
-				//up
-				attackMap[col][row - 1].push(value);
-				//top right
-				attackMap[col + 1][row - 1].push(value);
-				//right
-				attackMap[col + 1][row].push(value);
-				//bottom right
-				attackMap[col + 1][row + 1].push(value);
-				//down
-				attackMap[col][row + 1].push(value);
-				return;
->>>>>>> .r54
 			}
 		}
-<<<<<<< .mine
 		if (col == 7){
 			if (row == 0){// down bottom left left
 				attackMap[col][row + 1].push(value);//down
 				attackMap[col - 1][row + 1].push(value); //bottom left
 				attackMap[col - 1][row].push(value); //left 
-||||||| .r49
-		if (col == 7)
-		{
-			if (row == 0)// down bottom left left
-			{
-				//down
-				attackMap[col][row + 1].push(value);
-				//bottom left
-				attackMap[col - 1][row + 1].push(value);
-				//left 
-				attackMap[col - 1][row].push(value);
-				return;
-=======
-		if (col == 7) {
-			if (row == 0) { // down bottom left left
-				//down
-				attackMap[col][row + 1].push(value);
-				//bottom left
-				attackMap[col - 1][row + 1].push(value);
-				//left 
-				attackMap[col - 1][row].push(value);
-				return;
->>>>>>> .r54
 			}
-<<<<<<< .mine
-			if (row == 7){// up top left left
+			if (row == 7)
+			{// up top left left
 				attackMap[col][row - 1].push(value); //up
 				attackMap[col - 1][row - 1].push(value); //top left
 				attackMap[col - 1][row].push(value); //left		
-||||||| .r49
-			if (row == 7)// up top left left
-			{
-				//up
-				attackMap[col][row - 1].push(value);
-				//top left
-				attackMap[col - 1][row - 1].push(value);
-				//left
-				attackMap[col - 1][row].push(value);
-				return;
-=======
-			if (row == 7) { // up top left left
-				//up
-				attackMap[col][row - 1].push(value);
-				//top left
-				attackMap[col - 1][row - 1].push(value);
-				//left
-				attackMap[col - 1][row].push(value);
-				return;
->>>>>>> .r54
+
 			}
 			else { //up top left left bottom left down
 				attackMap[col][row - 1].push(value); //up

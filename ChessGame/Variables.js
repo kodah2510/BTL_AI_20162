@@ -32,10 +32,6 @@ var validator;
 var moveGenerator;
 var evaluator;
 //player chose the piece after the pawn has reach the end of the board
-<<<<<<< .mine
 var isChecked;
 //game tree
-var tree;||||||| .r49
-var isChecked;=======
-var isChecked;
->>>>>>> .r54
+var tree;
