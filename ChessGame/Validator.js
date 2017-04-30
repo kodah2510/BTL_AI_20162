@@ -9,14 +9,14 @@ function Validator() {
 			if (prevCol == clickedCol) {
 				if (value * playerSide < 0) {
 					if (clickedRow == 7)
-						return CAPTURE_MOVE;
+						return PROMOTE_MOVE;
 					if (prevRow == 1 && clickedRow == prevRow + 2)
 						return VALID_MOVE;
 					else if (clickedRow == prevRow + 1 )
 						return VALID_MOVE;
 				} else {
 					if (clickedRow == 0)
-						return CAPTURE_MOVE;
+						return PROMOTE_MOVE;
 					if (prevRow == 6 && clickedRow == prevRow - 2)
 						return VALID_MOVE;
 					else if (clickedRow == prevRow - 1)
@@ -28,14 +28,14 @@ function Validator() {
 					if (value > 0) {
 						if (recorder.whiteAttackMap[clickedCol][clickedRow].indexOf(value) != -1) {
 							if (clickedRow == 7)
-								return CAPTURE_MOVE;
+								return PROMOTE_MOVE;
 							else
 								return VALID_MOVE;
 						}
 					} else {
 						if (recorder.blackAttackMap[clickedCol][clickedRow].indexOf(value) != -1) {
 							if (clickedRow == 7)
-								return CAPTURE_MOVE;
+								return PROMOTE_MOVE;
 							else
 								return VALID_MOVE;
 						}	
@@ -45,14 +45,14 @@ function Validator() {
 					if (value > 0) {
 						if (recorder.whiteAttackMap[clickedCol][clickedRow].indexOf(value) != -1) {
 							if (clickedRow == 0)
-								return CAPTURE_MOVE;
+								return PROMOTE_MOVE;
 							else
 								return VALID_MOVE;
 						}
 					} else {
 						if (recorder.blackAttackMap[clickedCol][clickedRow].indexOf(value) != -1) {
 							if (clickedRow == 0)
-								return CAPTURE_MOVE;
+								return PROMOTE_MOVE;
 							else
 								return VALID_MOVE;
 						}
@@ -80,7 +80,8 @@ function Validator() {
 				return INVALID_MOVE;
 		}
 		else if (Math.abs(value) == QUEEN_VALUE) {
-			if (prevCol != clickedCol || prevRow != clickedRow || prevCol - prevRow != clickedCol - clickedRow || prevCol + prevRow != clickedCol + clickedRow )
+			if (prevCol != clickedCol || prevRow != clickedRow || 
+				prevCol - prevRow != clickedCol - clickedRow || prevCol + prevRow != clickedCol + clickedRow )
 				return INVALiD_MOVE;
 		}
 			
@@ -140,7 +141,7 @@ function Validator() {
 			});
 
 		} else {
-			kingPostion = recorder.findThsePiece(-KING_VALUE);
+			kingPostion = recorder.findThePiece(-KING_VALUE);
 			recorder.piecePositions[ROOK_VALUE].forEach(function(coordinate) {
 				recorder.calculateAttackMapForRook(ROOK_VALUE, coordinate[0], coordinate[1], tempAttackMap, recorder.moveMap);
 			});
@@ -160,26 +161,48 @@ function Validator() {
 		return (tempAttackMap[kingPostion[0][0]][kingPostion[0][1]].length == 0);
 	}
 	//Đức viết cái này nhé
-	this.validateCastling = function(prevCol, prevRow, clickedCol, clickedRow) {
-		//if king has moved ?
-		//search in the moveRecord for the king's move history
-		var value = recorder.moveMap[prevCol][prevRow];
-		var attackMap;
-		(value > 0) ? attackMap = recorder.blackAttackMap: attackMap = recorder.whiteAttackMap;
-		for (var record in recorder.moveRecord)
-			if (record[0] == KING_VALUE || record[0] == ROOK_VALUE)
-				return false;
-		//the squares between king and rook are attacked by any pieces ?
-		if (clickedCol == prevCol - 2) {
-			//queen-side castling
-			for (var i = prevCol; i >= 0; i--)
-				if (attackMap[i][prevRow].length != 0) return false;
-		} else if (clickedCol == prevCol + 2) {
-			//king-side castling
-			for (var i = prevCol; i < 8 ; i++)
-				if (attackMap[i][prevRow].length != 0) return false;
+	this.validateCastling = function(prevCol, prevRow, clickedCol, clickedRow, moveMap, attackMap, moveRecord) {
+		if(moveMap == null && attackMap == null && moveRecord == null) {
+			//Vua đã di chuyển hay chưa
+			//tìm kiếm trong moveRecord giá trị của Vua
+			var value = recorder.moveMap[prevCol][prevRow];
+			var attackMap;
+			(value > 0) ? attackMap = recorder.blackAttackMap: attackMap = recorder.whiteAttackMap;
+			for (var record in recorder.moveRecord)
+				if (record[0] == KING_VALUE || record[0] == ROOK_VALUE)
+					return false;
+			//Các ô giữa vua và xe có bị tấn công bới quân nào ko 
+			if (clickedCol == prevCol - 2) {
+				//queen-side castling
+				for (var i = prevCol; i >= 0; i--)
+					if (attackMap[i][prevRow].length != 0 || recorder.moveMap[i][prevRow] != 0) return false;
+			} else if (clickedCol == prevCol + 2) {
+				//king-side castling
+				for (var i = prevCol; i < 8 ; i++)
+					if (attackMap[i][prevRow].length != 0 || recorder.moveMap[i][prevRow] != 0) return false;
+			}
+			return true;
 		}
-		return true;
+		else {
+			//Vua đã di chuyển hay chưa
+			//tìm kiếm trong moveRecord giá trị của Vua
+			var value = moveMap[prevCol][prevRow];
+			for (var record in moveRecord)
+				if (record[0] == KING_VALUE || record[0] == ROOK_VALUE)
+					return false;
+			//Các ô giữa vua và xe có bị tấn công bới quân nào ko 
+			if (clickedCol == prevCol - 2) {
+				//queen-side castling
+				for (var i = prevCol; i >= 0; i--)
+					if (attackMap[i][prevRow].length != 0 || moveMap[i][prevRow] != 0) return false;
+			} else if (clickedCol == prevCol + 2) {
+				//king-side castling
+				for (var i = prevCol; i < 8 ; i++)
+					if (attackMap[i][prevRow].length != 0 || moveMap[i][prevRow] != 0) return false;
+			}
+			return true;
+		}
+		
 	}
 	//call only when the king is checked
 	this.validateCheckmate = function()

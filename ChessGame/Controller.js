@@ -184,7 +184,7 @@ function Controller() {
 			}
 			controller.placeTheChessman(newSprite,clickedCol, clickedRow, pieceValue);
 			//record capture move is different than nomral move 
-			recorder.moveRecord.push([PAWN_VALUE, pieceValue, clickedCol*10 + clickedRow]);
+			recorder.moveRecord.push([pieceValue, -PROMOTE_MOVE ,clickedCol*10 + clickedRow]);
 			recorder.updateAttackMap();
 			prevCol = null; prevRow = null;
 			//replace the pawn with the new piece

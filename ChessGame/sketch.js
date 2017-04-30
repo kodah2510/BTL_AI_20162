@@ -49,24 +49,30 @@ function setup() {
 		
 		//create board game after player Choose a side
 	});	
-	
-	controller.placeTheChessman(whiteRookSprite, 0, 7, ROOK_VALUE);
-	controller.placeTheChessman(whiteRookSprite, 7, 7, ROOK_VALUE);
+	controller.placeTheChessman(whitePawnSprite, 0, 1, PAWN_VALUE);
+	controller.placeTheChessman(whitePawnSprite, 1, 1, PAWN_VALUE);
+	controller.placeTheChessman(whitePawnSprite, 2, 1, PAWN_VALUE);
 	controller.placeTheChessman(whiteKingSprite, 4, 7, KING_VALUE);
-	//controller.placeTheChessman(whiteBishopSprite, 7, 1, BISHOP_VALUE);
-	controller.placeTheChessman(whiteQueenSprite, 4, 1, QUEEN_VALUE);
-	//controller.placeTheChessman(whitePawnSprite, 1, 1, PAWN_VALUE);
-	//controller.placeTheChessman(blackPawnSprite, 3, 4, -PAWN_VALUE);
-	//controller.placeTheChessman(whitePawnSprite, 3, 6, PAWN_VALUE);
-	//controller.placeTheChessman(whiteKnightSprite, 3, 2, KNIGHT_VALUE);
-	controller.placeTheChessman(blackRookSprite, 4, 0, -ROOK_VALUE);
-	controller.placeTheChessman(blackRookSprite, 0, 5, -ROOK_VALUE);
-	//controller.placeTheChessman(blackKnightSprite, 7, 4, -KNIGHT_VALUE);
-	//controller.placeTheChessman(blackKingSprite, 1, 0, -KING_VALUE);
-	//controller.placeTheChessman(blackBishopSprite, 0, 1, -BISHOP_VALUE);
-	//controller.placeTheChessman(blackQueenSprite, 6, 1, -QUEEN_VALUE);
+
+	controller.placeTheChessman(blackKingSprite, 4, 0, -KING_VALUE);
+	controller.placeTheChessman(blackRookSprite, 7, 0, -ROOK_VALUE);
+	// controller.placeTheChessman(whiteRookSprite, 0, 7, ROOK_VALUE);
+	// controller.placeTheChessman(whiteRookSprite, 7, 7, ROOK_VALUE);
+	// controller.placeTheChessman(whiteKingSprite, 4, 7, KING_VALUE);
+	// controller.placeTheChessman(whiteBishopSprite, 7, 1, BISHOP_VALUE);
+	// controller.placeTheChessman(whiteQueenSprite, 4, 1, QUEEN_VALUE);
+	// controller.placeTheChessman(whitePawnSprite, 1, 1, PAWN_VALUE);
+	// controller.placeTheChessman(blackPawnSprite, 3, 4, -PAWN_VALUE);
+	// controller.placeTheChessman(whitePawnSprite, 3, 6, PAWN_VALUE);
+	// controller.placeTheChessman(whiteKnightSprite, 3, 2, KNIGHT_VALUE);
+	// controller.placeTheChessman(blackRookSprite, 4, 0, -ROOK_VALUE);
+	// controller.placeTheChessman(blackRookSprite, 0, 5, -ROOK_VALUE);
+	// controller.placeTheChessman(blackKnightSprite, 7, 4, -KNIGHT_VALUE);
+	// controller.placeTheChessman(blackKingSprite, 1, 0, -KING_VALUE);
+	// controller.placeTheChessman(blackBishopSprite, 0, 1, -BISHOP_VALUE);
+	// controller.placeTheChessman(blackQueenSprite, 6, 1, -QUEEN_VALUE);
 	// Initialize game board
-	//playerSide = controller.createGameBoard();
+	// playerSide = controller.createGameBoard();
 	
 	myCanvas.mouseClicked(makeAMove);
 	noLoop();
@@ -76,23 +82,29 @@ function draw() {
 	background(51);
 	// Display chess board
 	controller.render();
-	/*if (!isPlayerTurn) {
+	if (!isPlayerTurn) {
 		//TESTING 
-		var tree = new Tree();
-		tree.initializeMoveSet();
-		tree.initialize();
-		tree.traverseDF(tree.rootNode);
-		evaluator.evaluate();
+		tree = new Tree(	recorder.moveMap, 
+							recorder.whiteAttackMap, recorder.blackAttackMap, 
+							recorder.pieceCount, recorder.piecePositions,
+							recorder.moveRecord);
+		//tree.search();
+		tree.test();
+		// var depth = new Depth(this.moveMap, this.whiteAttackMap,
+		// 						this.blackAttackMap, this.pieceCount, this.piecePositions,
+		// 						this.moveRecord);
+		
+
 		//computer's turn
 		//step 1: make game tree
 		//currentState include recorder.piecePositions
-		//gameTree.initialize(currentState);
+		//gameTree.initialize(currentState);mn
 		//step 2: prunning
 		//moveGenerator.calculateNextMove();
 		//step 3: Choosen the next move
 		//moveGenerator.makeAMove();
 		isPlayerTurn = true;
-	}*/
+	}
 }
 
 // When the human player make a move

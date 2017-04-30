@@ -29,17 +29,62 @@ function Recorder() {
 			this.blackAttackMap[i][j] = [];
 		}
 	}
-	this.removePiece = function(value, currentCol, currentRow) {
-		this.moveMap[currentCol][currentRow] = 0;
-		(value > 0) ? this.pieceCount[value][0]-- : this.pieceCount[-value][1]--;
-		for (var index in this.piecePositions[value])
-			if (this.piecePositions[value][index][0] == currentCol && this.piecePositions[value][index][1] == currentRow)
-				this.piecePositions[value].splice(index, 1);
-	}
+	
 	//need to fix this one too related to moveMap
-	this.calculateAttackMap = function()
+	
+	this.updateAttackMap = function(whiteAttackMap, blackAttackMap, piecePositions, moveMap) {
+		if(whiteAttackMap == null && blackAttackMap == null && piecePositions == null && moveMap == null)
+		{
+			for(var i = 0; i < 8; i++)
+				for(var j = 0; j < 8;j++) {this.whiteAttackMap[i][j] = [];this.blackAttackMap[i][j] = [];}
+			this.calculateAttackMap(this.piecePositions, this.whiteAttackMap, this.blackAttackMap, this.moveMap);
+		}
+		else {
+			for(var i = 0; i < 8; i++)
+				for(var j = 0; j < 8;j++) {whiteAttackMap[i][j] = [];blackAttackMap[i][j] = [];}
+			this.calculateAttackMap(piecePositions, whiteAttackMap, blackAttackMap, moveMap);
+		}	
+	}
+	this.calculateAttackMap = function(piecePositions, whiteAttackMap, blackAttackMap, moveMap)
 	{
 		// attack map now will base on the piece position to process
+<<<<<<< .mine
+		if(piecePositions == null && whiteAttackMap == null && blackAttackMap == null && moveMap == null)
+		{
+			var recorder = this;
+			for(var pieceValues in this.piecePositions) {
+				if(pieceValues > 0) 
+					this.piecePositions[pieceValues].forEach(function(coordinate){
+						recorder.calculateAttackMapForAPiece(pieceValues, coordinate[0], coordinate[1], this.whiteAttackMap, this.moveMap);
+					});
+				else
+					this.piecePositions[pieceValues].forEach(function(coordinate){
+						recorder.calculateAttackMapForAPiece(pieceValues, coordinate[0], coordinate[1], this.blackAttackMap, this.moveMap);
+					});
+||||||| .r49
+		var recorder = this;
+		var pieceValues = Object.keys(this.piecePositions);
+		//for (pieceValue in this.piecePositions) 
+		pieceValues.forEach(function(pieceValue) {
+			if (pieceValue > 0)
+				recorder.piecePositions[pieceValue].forEach(function(coordinate) {
+					recorder.calculateWhiteAttackMap(pieceValue, coordinate[0], coordinate[1]);
+				});
+			else
+				recorder.piecePositions[pieceValue].forEach(function(coordinate) {
+					recorder.calculateBlackAttackMap(pieceValue, coordinate[0], coordinate[1]);
+				});
+		});
+	}
+	//the attack map is updated after every move 	
+	this.updateAttackMap = function() {
+		//add the move to moveRecord
+		//recalculate the moveMap and attackMap
+		for (var i = 0; i < 8; i++) {
+			for (var j = 0; j < 8; j++) {
+				this.whiteAttackMap[i][j] = [];
+				this.blackAttackMap[i][j] = [];
+=======
 		var recorder = this;
 		var pieceValues = Object.keys(this.piecePositions);
 		//for (pieceValue in this.piecePositions) 
@@ -62,87 +107,153 @@ function Recorder() {
 			for (var j = 0; j < 8; j++) {
 				this.whiteAttackMap[i][j] = [];
 				this.blackAttackMap[i][j] = [];
+>>>>>>> .r54
 			}
 		}
-		this.calculateAttackMap();
-	}
-	this.calculateBlackAttackMap = function(value, col, row) {
-		var pieceValue = parseInt(value);
-		switch (pieceValue) {
-			case -ROOK_VALUE: 	this.calculateAttackMapForRook(pieceValue, col, row, this.blackAttackMap); break;
-			case -KNIGHT_VALUE: this.calculateAttackMapForKnight(pieceValue, col, row, this.blackAttackMap); break;
-			case -BISHOP_VALUE: this.calculateAttackMapForBishop(pieceValue, col, row, this.blackAttackMap); break;
-			case -QUEEN_VALUE: 	this.calculateAttackMapForQueen(pieceValue, col, row, this.blackAttackMap); break;
-			case -KING_VALUE: 	this.calculateAttackMapForKing(pieceValue, col, row, this.blackAttackMap); break;
-			case -PAWN_VALUE: 	this.calculateAttackMapForPawn(pieceValue, col, row, this.blackAttackMap); break;
+		else {
+			var recorder = this;
+			for(var pieceValues in piecePositions) {
+				if(pieceValues > 0) 
+					piecePositions[pieceValues].forEach(function(coordinate){
+						recorder.calculateAttackMapForAPiece(pieceValues, coordinate[0], coordinate[1], whiteAttackMap, moveMap);
+					});
+				else
+					piecePositions[pieceValues].forEach(function(coordinate){
+						recorder.calculateAttackMapForAPiece(pieceValues, coordinate[0], coordinate[1], blackAttackMap, moveMap);
+					});
+			}
 		}
 	}
-	this.calculateWhiteAttackMap = function(value, col, row) {
+	this.calculateAttackMapForAPiece = function(value,col,row, attackMap, moveMap) {
 		var pieceValue = parseInt(value);
-		switch (pieceValue)	{
-			case ROOK_VALUE: 	this.calculateAttackMapForRook(pieceValue, col, row, this.whiteAttackMap); break;
-			case KNIGHT_VALUE: 	this.calculateAttackMapForKnight(pieceValue, col, row, this.whiteAttackMap); break;
-			case BISHOP_VALUE: 	this.calculateAttackMapForBishop(pieceValue, col, row, this.whiteAttackMap); break;
-			case QUEEN_VALUE: 	this.calculateAttackMapForQueen(pieceValue, col, row, this.whiteAttackMap); break;
-			case KING_VALUE: 	this.calculateAttackMapForKing(pieceValue, col, row, this.whiteAttackMap); break;
-			case PAWN_VALUE: 	this.calculateAttackMapForPawn(pieceValue, col, row, this.whiteAttackMap); break;
+		switch(Math.abs(pieceValue))
+		{
+			case ROOK_VALUE: this.calculateAttackMapForRook(pieceValue,col,row, attackMap, moveMap); break;
+			case KNIGHT_VALUE: this.calculateAttackMapForKnight(pieceValue,col,row, attackMap); break;
+			case BISHOP_VALUE: this.calculateAttackMapForBishop(pieceValue,col,row,attackMap, moveMap); break;
+			case QUEEN_VALUE: this.calculateAttackMapForQueen(pieceValue,col,row,attackMap, moveMap); break;
+			case KING_VALUE: this.calculateAttackMapForKing(pieceValue,col,row,attackMap); break;
+			case PAWN_VALUE: this.calculateAttackMapForPawn(pieceValue,col,row,attackMap, moveMap); break;
 		}
 	}
-	
-	this.updateMoveMap = function(value, prevCol, prevRow, clickedCol, clickedRow) {
-		//update the piecePosition first
-		this.updatePiecePositions(value, prevCol, prevRow, clickedCol, clickedRow);
-		//update the moveMap
-		if (prevCol != null && prevRow != null)
-			this.moveMap[prevCol][prevRow] = 0;
-		this.moveMap[clickedCol][clickedRow] = value;
+	this.updateMoveMap = function(value, prevCol, prevRow, clickedCol, clickedRow, moveMap, piecePositions) {
+		if(moveMap == null && piecePositions == null) {
+			//update the piecePosition first
+			this.updatePiecePositions(value, prevCol, prevRow, clickedCol, clickedRow);
+			//update the moveMap
+			if (prevCol != null && prevRow != null)
+				this.moveMap[prevCol][prevRow] = 0;
+			this.moveMap[clickedCol][clickedRow] = value;
+		}
+		else {
+			this.updatePiecePositions(value, prevCol, prevRow, clickedCol, clickedRow, moveMap, piecePositions);
+			if (prevCol != null && prevRow != null)
+				moveMap[prevCol][prevRow] = 0;
+			moveMap[clickedCol][clickedRow] = value;
+		}
 	}
 	//update the coordinate of each piece 
-	this.updatePiecePositions = function(value, prevCol, prevRow, clickedCol, clickedRow) {
-		//place the piece
-		if (prevCol == null) this.piecePositions[value].push([clickedCol, clickedRow]);
-		//move the piece
-		else {
-			if (this.moveMap[clickedCol][clickedRow] == 0) {
-				this.piecePositions[value].forEach(function(array) {
-					if (array[0] == prevCol && array[1] == prevRow) {
-						array[0] = clickedCol;
-						array[1] = clickedRow;
-					}
-				})
-			} else {
-				//when a piece takes down another
-				//update the position of that piece
-				//delete taken down piece's position
-				this.removePiece(this.moveMap[clickedCol][clickedRow], clickedCol, clickedRow);
-				//replace with the attack piece
-				this.piecePositions[value].forEach(function(array) {
-					if (array[0] == prevCol && array[1] == prevRow) {
-						array[0] = clickedCol;
-						array[1] = clickedRow;
-					}
-				})
+	this.updatePiecePositions = function(value, prevCol, prevRow, clickedCol, clickedRow, moveMap, piecePositions) {
+		if(moveMap == null && piecePositions == null) {
+			if (prevCol == null) this.piecePositions[value].push([clickedCol, clickedRow]);
+		//move the piece	
+			else {
+				if (this.moveMap[clickedCol][clickedRow] == 0) {
+					this.piecePositions[value].forEach(function(coordinate) {
+						if (coordinate[0] == prevCol && coordinate[1] == prevRow) { coordinate[0] = clickedCol; coordinate[1] = clickedRow;}
+					});
+				} else {
+					//when a piece takes down another
+					//update the position of that piece
+					//delete taken down piece's position
+					this.removePiece(this.moveMap[clickedCol][clickedRow], clickedCol, clickedRow);
+					//replace with the attack piece
+					this.piecePositions[value].forEach(function(coordinate) {
+						if (coordinate[0] == prevCol && coordinate[1] == prevRow) { coordinate[0] = clickedCol; coordinate[1] = clickedRow;}
+					});
+				}
 			}
 		}
+		else {
+			if (prevCol == null) piecePositions[value].push([clickedCol, clickedRow]);
+		//move the piece	
+			else {
+				if (moveMap[clickedCol][clickedRow] == 0) {
+					for(var i = 0; i < piecePositions[value].length; i++)
+					{
+						var coordinate = piecePositions[value][i];
+						if (coordinate[0] == prevCol && coordinate[1] == prevRow) { coordinate[0] = clickedCol; coordinate[1] = clickedRow; break;}
+					}
+				} else {
+					//when a piece takes down another
+					//update the position of that piece
+					//delete taken down piece's position
+					this.removePiece(moveMap[clickedCol][clickedRow], clickedCol, clickedRow);
+					//replace with the attack piece
+					piecePositions[value].forEach(function(coordinate) {
+						if (coordinate[0] == prevCol && coordinate[1] == prevRow) { coordinate[0] = clickedCol; coordinate[1] = clickedRow;}
+					});
+				}
+			}
+		}
+		//place the piece
 	}
-	this.updateMoveRecord = function(prevCol,prevRow,clickedCol,clickedRow) {
-		this.moveRecord.push([this.moveMap[clickedCol][clickedRow],prevCol*10+prevRow,clickedCol*10+clickedRow]);
+	this.removePiece = function(value, currentCol, currentRow, moveMap, piecePositions) {
+		if(moveMap == null && piecePositions == null) {
+			this.moveMap[currentCol][currentRow] = 0;
+			(value > 0) ? this.pieceCount[value][0]-- : this.pieceCount[-value][1]--;
+			for (var index in this.piecePositions[value])
+			if (this.piecePositions[value][index][0] == currentCol && this.piecePositions[value][index][1] == currentRow)
+				this.piecePositions[value].splice(index, 1);
+		}
+		else {
+			moveMap[currentCol][currentRow] = 0;
+			(value > 0) ? pieceCount[value][0]-- : pieceCount[-value][1]--;
+			for (var index in piecePositions[value])
+			if (piecePositions[value][index][0] == currentCol && piecePositions[value][index][1] == currentRow)
+				piecePositions[value].splice(index, 1);
+		}
+		
+	}
+	this.updateMoveRecord = function(prevCol, prevRow, clickedCol, clickedRow, moveRecord, record) {
+		if(moveRecord == null && record == null) 
+		{
+			this.moveRecord.push([this.moveMap[clickedCol][clickedRow],prevCol*10+prevRow,clickedCol*10+clickedRow]);
+		}
+		else 
+		{
+			moveRecord.push(record);
+		}	
+	}
+	this.findThePiece = function(value) {
+		return this.piecePositions[value];
 	}
 	//CHECKED
-	this.calculateAttackMapForRook = function(value, col, row, attackMap) {
+	this.calculateAttackMapForRook = function(value,col,row,attackMap, moveMap) {
 		//need to fix this one 
 		//only the attack range is limited at the first opponent piece it met 
-		if (col != 0) {
-			for (var i = col - 1; i >= 0 ; i--) {
+		if(col != 0) {
+			for(var i = col - 1; i >= 0 ; i--) {
+				if(attackMap[i][row].indexOf(value) == -1) {
+					if(moveMap[i][row] != 0) { attackMap[i][row].push(value); break; }
+					else attackMap[i][row].push(value);
+				}					
+			}
+		}
+<<<<<<< .mine
+		if(col != 7) {
+			for(var i = col + 1;i < 8;i++) {
+				if(attackMap[i][row].indexOf(value) == -1) {
+					if(moveMap[i][row] != 0) { attackMap[i][row].push(value); break;}
+||||||| .r49
+		if (col != 7) {
+			for (var i = col + 1;i < 8;i++) {
 				if (attackMap[i][row].indexOf(value) == -1) {
 					if (this.moveMap[i][row] != 0) {
 						attackMap[i][row].push(value);
 						break;
 					}
-					else attackMap[i][row].push(value);
-				}					
-			}
-		}
+=======
 		if (col != 7) {
 			for (var i = col + 1; i < 8; i++) {
 				if (attackMap[i][row].indexOf(value) == -1) {
@@ -150,17 +261,15 @@ function Recorder() {
 						attackMap[i][row].push(value);
 						break;
 					}
+>>>>>>> .r54
 					else attackMap[i][row].push(value);
 				}					
 			}
 		}
-		if (row != 0) {
-			for (var i = row - 1; i >= 0; i--) {
-				if (attackMap[col][i].indexOf(value) == -1) {
-					if (this.moveMap[col][i] != 0) {
-						attackMap[col][i].push(value);
-						break;
-					}
+		if(row != 0) {
+			for(var i = row - 1; i >= 0; i--) {
+				if(attackMap[col][i].indexOf(value) == -1) {
+					if(moveMap[col][i] != 0) { attackMap[col][i].push(value); break; }
 					else attackMap[col][i].push(value);
 				}					
 			}
@@ -168,13 +277,8 @@ function Recorder() {
 		if (row != 7) {
 			for (var i = row + 1; i < 8; i++)
 			{
-				if (attackMap[col][i].indexOf(value) == -1)
-				{
-					if (this.moveMap[col][i] != 0)
-					{
-						attackMap[col][i].push(value);
-						break;
-					}
+				if (attackMap[col][i].indexOf(value) == -1) {
+					if(moveMap[col][i] != 0) { attackMap[col][i].push(value); break;}
 					else attackMap[col][i].push(value);
 				}
 			}
@@ -203,33 +307,57 @@ function Recorder() {
 	}
 	//CHECKED
 
-	this.calculateAttackMapForBishop = function(value, col, row, attackMap)
-	{
+	this.calculateAttackMapForBishop = function(value,col,row,attackMap,moveMap) {
 		var tlbrValue = col - row;//top-left ->> bottom-right
 		var trblValue = col + row;//top-right ->> bottom-left
+<<<<<<< .mine
+		if (col != 0) {
+			for (var i = col - 1;i >= 0 && i - tlbrValue >= 0;i--) {
+||||||| .r49
+		if (col != 0)
+		{
+			for (var i = col - 1;i >= 0 && i - tlbrValue >= 0;i--)
+			{
+=======
 		if (col != 0) {
 			for (var i = col - 1; i >= 0 && i - tlbrValue >= 0; i--) {
+>>>>>>> .r54
 				//top-left
 				currentRow = i - tlbrValue;
+<<<<<<< .mine
+				if (attackMap[i][currentRow].indexOf(value) == -1) {
+					if(moveMap[i][currentRow] != 0) {attackMap[i][currentRow].push(value);break;}
+||||||| .r49
+				if (attackMap[i][currentRow].indexOf(value) == -1)
+				{
+					if (this.moveMap[i][currentRow] != 0)
+					{
+						attackMap[i][currentRow].push(value);	
+						break;
+					}
+=======
 				if (attackMap[i][currentRow].indexOf(value) == -1) {
 					if (this.moveMap[i][currentRow] != 0) {
 						attackMap[i][currentRow].push(value);	
 						break;
 					}
+>>>>>>> .r54
 					else attackMap[i][currentRow].push(value);	
 				}					
 			}
+<<<<<<< .mine
+			for (var i = col - 1;i >= 0 && trblValue - i <= 7;i--) {
+||||||| .r49
+			for (var i = col - 1;i >= 0 && trblValue - i <= 7;i--)
+			{
+=======
 			for (var i = col - 1; i >= 0 && trblValue - i <= 7; i--)
 			{
+>>>>>>> .r54
 				//bottom-left
 				currentRow = trblValue - i;
-				if (attackMap[i][currentRow].indexOf(value) == -1)
-				{
-					if (this.moveMap[i][currentRow] != 0)
-					{
-						attackMap[i][currentRow].push(value);
-						break;
-					}
+				if (attackMap[i][currentRow].indexOf(value) == -1) {
+					if(moveMap[i][currentRow] != 0) { attackMap[i][currentRow].push(value); break; }
 					else attackMap[i][currentRow].push(value);
 				}					
 			}
@@ -238,36 +366,66 @@ function Recorder() {
 			for (var i = col + 1; i < 8 && i - tlbrValue <= 7 ; i++) {
 				//bottom-right
 				currentRow = i - tlbrValue;
+<<<<<<< .mine
+				if (attackMap[i][currentRow].indexOf(value) == -1) {
+					if(moveMap[i][currentRow] != 0) { attackMap[i][currentRow].push(value); break;}
+||||||| .r49
+				if (attackMap[i][currentRow].indexOf(value) == -1)
+				{
+					if (this.moveMap[i][currentRow] != 0)
+					{
+						attackMap[i][currentRow].push(value);
+						break;
+					}
+=======
 				if (attackMap[i][currentRow].indexOf(value) == -1) {
 					if (this.moveMap[i][currentRow] != 0) {
 						attackMap[i][currentRow].push(value);
 						break;
 					}
+>>>>>>> .r54
 					else attackMap[i][currentRow].push(value);
 				}					
 			}
 			for (var i = col + 1; i < 8 && trblValue - i >= 0 ; i++) {
 				//top-left
 				currentRow = trblValue - i;
-				if (attackMap[i][currentRow].indexOf(value) == -1) {
-					if (this.moveMap[i][trblValue - i] != 0) {
-						attackMap[i][currentRow].push(value);
-						break;
-					}
+				if(attackMap[i][currentRow].indexOf(value) == -1) {
+					if(moveMap[i][trblValue - i] != 0) { attackMap[i][currentRow].push(value); break;}
 					else attackMap[i][currentRow].push(value);
 				}					
 			}
 		}
 	}
 	//CHECKED
-	this.calculateAttackMapForQueen = function(value, col, row, attackMap) {
-		this.calculateAttackMapForRook(value, col, row, attackMap);
-		this.calculateAttackMapForBishop(value, col, row, attackMap);
+	this.calculateAttackMapForQueen = function(value,col,row,attackMap, moveMap)
+	{
+		this.calculateAttackMapForRook(value,col,row,attackMap, moveMap);
+		this.calculateAttackMapForBishop(value,col,row,attackMap, moveMap);
 	}
 	//wrong at this one
 	//CHECKED
 	this.calculateAttackMapForKing = function(value, col, row, attackMap) {
 		//special case
+<<<<<<< .mine
+		if (col == 0) {
+			if (row == 0) {// right down bottom right 
+				attackMap[col + 1][row].push(value); //right
+				attackMap[col + 1][row + 1].push(value); //bottom right
+				attackMap[col][row + 1].push(value); //down
+||||||| .r49
+		if (col == 0)
+		{
+			if (row == 0)// right down bottom right
+			{
+				//right
+				attackMap[col + 1][row].push(value);
+				//bottom right
+				attackMap[col + 1][row + 1].push(value);
+				//down
+				attackMap[col][row + 1].push(value);
+				return;
+=======
 		if (col == 0) {
 			if (row == 0) { // right down bottom right
 				//right
@@ -277,7 +435,24 @@ function Recorder() {
 				//down
 				attackMap[col][row + 1].push(value);
 				return;
+>>>>>>> .r54
 			}
+<<<<<<< .mine
+			if (row == 7) {// up top right right 
+				attackMap[col][row - 1].push(value); //up
+				attackMap[col + 1][row - 1].push(value); //top right
+				attackMap[col + 1][row].push(value); //right
+||||||| .r49
+			if (row == 7)// up top right right
+			{
+				//up
+				attackMap[col][row - 1].push(value);
+				//top right
+				attackMap[col + 1][row - 1].push(value);
+				//right
+				attackMap[col + 1][row].push(value);
+				return;
+=======
 			if (row == 7) { // up top right right
 				//up
 				attackMap[col][row - 1].push(value);
@@ -286,7 +461,30 @@ function Recorder() {
 				//right
 				attackMap[col + 1][row].push(value);
 				return;
+>>>>>>> .r54
 			}
+<<<<<<< .mine
+			else {// up top-right right bottom-right down
+				attackMap[col][row - 1].push(value); //up
+				attackMap[col + 1][row - 1].push(value); //top right
+				attackMap[col + 1][row].push(value); //right
+				attackMap[col + 1][row + 1].push(value); //bottom right
+				attackMap[col][row + 1].push(value); //down
+||||||| .r49
+			else// up top-right right bottom-right down
+			{
+				//up
+				attackMap[col][row - 1].push(value);
+				//top right
+				attackMap[col + 1][row - 1].push(value);
+				//right
+				attackMap[col + 1][row].push(value);
+				//bottom right
+				attackMap[col + 1][row + 1].push(value);
+				//down
+				attackMap[col][row + 1].push(value);
+				return;
+=======
 			else { // up top-right right bottom-right down
 				//up
 				attackMap[col][row - 1].push(value);
@@ -299,8 +497,28 @@ function Recorder() {
 				//down
 				attackMap[col][row + 1].push(value);
 				return;
+>>>>>>> .r54
 			}
 		}
+<<<<<<< .mine
+		if (col == 7){
+			if (row == 0){// down bottom left left
+				attackMap[col][row + 1].push(value);//down
+				attackMap[col - 1][row + 1].push(value); //bottom left
+				attackMap[col - 1][row].push(value); //left 
+||||||| .r49
+		if (col == 7)
+		{
+			if (row == 0)// down bottom left left
+			{
+				//down
+				attackMap[col][row + 1].push(value);
+				//bottom left
+				attackMap[col - 1][row + 1].push(value);
+				//left 
+				attackMap[col - 1][row].push(value);
+				return;
+=======
 		if (col == 7) {
 			if (row == 0) { // down bottom left left
 				//down
@@ -310,7 +528,24 @@ function Recorder() {
 				//left 
 				attackMap[col - 1][row].push(value);
 				return;
+>>>>>>> .r54
 			}
+<<<<<<< .mine
+			if (row == 7){// up top left left
+				attackMap[col][row - 1].push(value); //up
+				attackMap[col - 1][row - 1].push(value); //top left
+				attackMap[col - 1][row].push(value); //left		
+||||||| .r49
+			if (row == 7)// up top left left
+			{
+				//up
+				attackMap[col][row - 1].push(value);
+				//top left
+				attackMap[col - 1][row - 1].push(value);
+				//left
+				attackMap[col - 1][row].push(value);
+				return;
+=======
 			if (row == 7) { // up top left left
 				//up
 				attackMap[col][row - 1].push(value);
@@ -319,72 +554,57 @@ function Recorder() {
 				//left
 				attackMap[col - 1][row].push(value);
 				return;
+>>>>>>> .r54
 			}
 			else { //up top left left bottom left down
-				//up
-				attackMap[col][row - 1].push(value);
-				//top left
-				attackMap[col - 1][row - 1].push(value);
-				//left
-				attackMap[col - 1][row].push(value);
-				//bottom left
-				attackMap[col - 1][row + 1].push(value);
-				//down
-				attackMap[col][row + 1].push(value);
-				return;
+				attackMap[col][row - 1].push(value); //up
+				attackMap[col - 1][row - 1].push(value); //top left
+				attackMap[col - 1][row].push(value); //left
+				attackMap[col - 1][row + 1].push(value); //bottom left
+				attackMap[col][row + 1].push(value);//down
 			}
 		} else {
 			if (row == 0) {
-				//left
-				attackMap[col - 1][row].push(value);
-				//bottom left
-				attackMap[col - 1][row + 1].push(value);
-				//down
-				attackMap[col][row + 1].push(value);
-				//bottom right
-				attackMap[col + 1][row + 1].push(value);
-				//right
-				attackMap[col + 1][row].push(value);
-				return;
+				attackMap[col - 1][row].push(value); //left
+				attackMap[col - 1][row + 1].push(value);//bottom left
+				attackMap[col][row + 1].push(value);//down
+				attackMap[col + 1][row + 1].push(value);//bottom right
+				attackMap[col + 1][row].push(value);//right
 			}
 			else if (row == 7) { // left top left up top right right
-				//left
-				attackMap[col - 1][row].push(value);
-				//top left
-				attackMap[col - 1][row - 1].push(value);
-				//up
-				attackMap[col][row - 1].push(value);
-				//top right
-				attackMap[col + 1][row - 1].push(value);
-				//right
-				attackMap[col + 1][row].push(value);
-				return;
+				attackMap[col - 1][row].push(value); //left
+				attackMap[col - 1][row - 1].push(value);//top left
+				attackMap[col][row - 1].push(value); //up
+				attackMap[col + 1][row - 1].push(value); //top right
+				attackMap[col + 1][row].push(value); //right
 			} else {
-				//up
-				attackMap[col][row - 1].push(value);
-				//down
-				attackMap[col][row + 1].push(value);
-				//right
-				attackMap[col + 1][row].push(value);
-				//left
-				attackMap[col - 1][row].push(value);
-				//bottom right
-				attackMap[col + 1][row + 1].push(value);
-				//top left
-				attackMap[col - 1][row - 1].push(value);
-				//top right
-				attackMap[col + 1][row - 1].push(value);	
-				//bottom left
-				attackMap[col - 1][row + 1].push(value);
-				return;
+				attackMap[col][row - 1].push(value); //up
+				attackMap[col][row + 1].push(value); //down
+				attackMap[col + 1][row].push(value); //right
+				attackMap[col - 1][row].push(value); //left
+				attackMap[col + 1][row + 1].push(value); //bottom right
+				attackMap[col - 1][row - 1].push(value); //top left
+				attackMap[col + 1][row - 1].push(value); //top right
+				attackMap[col - 1][row + 1].push(value); //bottom left
 			}
 		}
+		if(col == 4) {
+			attackMap[col + 2][row].push(value);
+			attackMap[col - 2][row].push(value);
+		}		
 	}
 	//need to fix this one too 
 	//CHECKED
-	this.calculateAttackMapForPawn = function(value, col, row, attackMap) {
+	this.calculateAttackMapForPawn = function(value, col, row, attackMap, moveMap) {
 		if (value * playerSide < 0) {
 			//computer
+			if(row == 1) {
+				if(moveMap[col][row + 1] == 0) attackMap[col][row + 1].push(value);
+				if(moveMap[col][row + 2] == 0) attackMap[col][row + 2].push(value);
+			}
+			else {
+				if(moveMap[col][row + 1] == 0) attackMap[col][row + 1].push(value);
+			}
 			if (col == 0) {
 				if (attackMap[col + 1][row + 1].indexOf(value) == -1 && this.moveMap[col + 1][row + 1]*playerSide <= 0)
 					attackMap[col + 1][row + 1].push(value);
@@ -405,6 +625,13 @@ function Recorder() {
 		}
 		else {
 			//player
+			if(row == 7) {
+				if(moveMap[col][row - 1] == 0) attackMap[col][row - 1].push(value);
+				if(moveMap[col][row - 2] == 0) attackMap[col][row - 2].push(value);
+			}
+			else {
+				if(moveMap[col][row - 1] == 0) attackMap[col][row - 1].push(value);
+			}
 			if (col == 0) {
 				if (attackMap[col + 1][row - 1].indexOf(value) == -1 && this.moveMap[col + 1][row - 1]*playerSide <= 0)
 					attackMap[col + 1][row - 1].push(value);
@@ -422,10 +649,9 @@ function Recorder() {
 					attackMap[col + 1][row - 1].push(value);
 				return;
 			}	
+			
 		}
 	}
 	//CHECKED
-	this.findThePiece = function(value) {
-		return this.piecePositions[value];
-	}
+	
 }

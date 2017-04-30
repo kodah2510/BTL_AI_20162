@@ -1,114 +1,253 @@
 //this will be the game tree
 //depth % 2 == 0 --> max
 //depth % 2 == 1 --> min
-//
-function Tree(currentState) {
-    this.rootNode;
-    //boardState contains piecePositions
-    this.boardState = currentState;
-    this.whiteMoveSet = [];
-    this.blackMoveSet = [];
-    // tạo ra tập các nước đi 
-    // hàm sẽ kiểm tra các quân cờ đang có và khả năng di chuyển của xong 
-    // để add vào trong mảng moveset ở trên
-    this.initializeMoveSet = function() {
-        var move = [];
-        //xét từng quân cờ 
-        for (var pieceValue in recorder.piecePositions) {
-            //move sẽ có định dạng [VALUE, prevPos, curPos]
-            //dưới đây là trường hợp cho bên trắng
-            (pieceValue > 0) ? this.addMove(pieceValue, this.whiteMoveSet, recorder.whiteAttackMap) : this.addMove(pieceValue, this.blackMoveSet, recorder.blackAttackMap);
+// tao tạo ra một lớp Depth thế này đọc xem 
+
+function Depth(moveMap, whiteAttackMap, blackAttackMap, pieceCount, piecePositions, moveRecord) {
+    this.moveMap = moveMap;
+    this.whiteAttackMap = whiteAttackMap;
+    this.blackAttackMap = blackAttackMap;
+    this.pieceCount = pieceCount;
+    this.piecePositions = piecePositions;
+    this.moveRecord = moveRecord;
+    this.generatedMoveSet = [];
+
+    this.update = function(prevRecord) {
+        var value = prevRecord[0];
+        var prevCol;
+        var prevRow;
+        var clickedCol = floor(prevRecord[2] / 10);
+        var clickedRow = prevRecord[2] % 10;
+        //những nước đi đặc biệt 
+        if(prevRecord[1] < 0) { 
+            var moveCode = Math.abs(prevRecord[1]);
+            if(moveCode == PROMOTE_MOVE) {
+               prevCol = null;
+               prevRow = null;
+            }
+            else if(moveCode == CASTLING_MOVE) {
+                if(clickedCol > 4 )
+                {
+                    recorder.updateMoveMap(value, clickedCol - 2, clickedRow, clickedCol, clickedRow, this.moveMap,this.piecePositions);
+                    recorder.updateMoveMap(ROOK_VALUE, clickedCol + 4, clickedRow, clickedCol + 1, clickedRow, this.moveMap, this.piecePositions);
+                    recorder.updateAttackMap(this.whiteAttackMap, this,blackAttackMap, this.piecePositions, this.moveMap);
+                    recorder.updateMoveRecord(null, null, null, null, this.moveRecord, prevRecord);
+                    return;
+                }
+                else 
+                {
+                    recorder.updateMoveMap(value, clickedCol + 2, clickedRow, clickedCol, clickedRow, this.moveMap,this.piecePositions);
+                    recorder.updateMoveMap(ROOK_VALUE, clickedCol - 4, clickedRow, clickedCol - 1, clickedRow, this.moveMap, this.piecePositions);
+                    recorder.updateAttackMap(this.whiteAttackMap, this,blackAttackMap, this.piecePositions, this.moveMap);
+                    recorder.updateMoveRecord(null, null, null, null, this.moveRecord, prevRecord);
+                    return;
+                }
+                    
+            }
         }
-        console.log(this.whiteMoveSet);
-        console.log(this.blackMoveSet);
-    }
-    this.addMove = function(pieceValue, moveSet, attackMap) {
-        //xét từng quân cờ 
-        //move sẽ có định dạng [VALUE, prevPos, curPos]
-        //dưới đây là trường hợp cho bên trắng
-        var value = parseInt(pieceValue);
-        // push [VALUE]
+        else {
+            var prevCol = floor(prevRecord[1] / 10);
+            var prevRow = prevRecord[1] % 10;
        
-        recorder.piecePositions[value].forEach(function(coordinate){
-            var prevCoordinate = coordinate[0]*10 + coordinate[1];
-            // move [VALUE, prevPos]
-          
-            for(var col = 0; col < 8; col++) {
-                for(var row = 0; row < 8; row++) {
-                    var move = [];
-                    move.push(value);
-                    move.push(prevCoordinate);
-                    if(attackMap[col][row].indexOf(value) != -1) {
-                        switch (Math.abs(value)) {
-                            //kiểm tra thêm các nước đi có thỏa mãn luật chơi không vì có trường hợp 2 quân cờ có cungf giá trị biểu diễn 
-                            //nhưng các nước đi lại không đúng luật 
-                            case ROOK_VALUE:
-                                if(col == coordinate[0] && row != coordinate[1] || 
-                                    col != coordinate[0] && row == coordinate[1]) move.push(col*10 + row);
+            //tìm xem trong cái mảng tempPiecePositions có thằng nào bị ăn ko 
+            recorder.updateMoveMap(value, prevCol, prevRow, clickedCol, clickedRow, this.moveMap, this.piecePositions);
+            recorder.updateAttackMap(this.whiteAttackMap, this.blackAttackMap, this.piecePositions, this.moveMap);
+            recorder.updateMoveRecord(null, null, null, null, this.moveRecord, prevRecord);
+            return;
+        }   
+       
+    }
+    this.generateMove = function(attackMap, piecePositions, depth) {
+        var move = [];
+        var clickedCol;
+        var clickedRow;
+        var pieceValue;
+        //lấy ra một nước đi random
+        while(pieceValue == null) {
+            var col = floor(random(7));
+            var row = floor(random(7));
+            if(attackMap[col][row].length != 0) {
+                pieceValue = attackMap[col][row][floor(random(attackMap[col][row].length))];
+                move.push(pieceValue);
+                clickedCol = col;
+                clickedRow = row;
+            }
+        }
+        console.log(clickedCol, clickedRow);
+        //kiểm tra quân nào phù hợp với nước đi đó
+        for(var i = 0; i < piecePositions[pieceValue].length && !stop ; i++)
+        {
+            var stop = false;
+            var coordinate = piecePositions[pieceValue][i];
+            var absValue = Math.abs(pieceValue);
+            switch(absValue) {
+                case ROOK_VALUE:
+                    if (coordinate[0] == clickedCol && coordinate[1] != clickedRow || coordinate[0] != clickedCol && coordinate[1] == clickedRow) {
+                        move.push(coordinate[0]*10 + coordinate[1]);
+                        stop = true;
+                    }
+                    break;
+                case BISHOP_VALUE:
+                    if(coordinate[0] - coordinate[1] == clickedCol - clickedRow || coordinate[0] + coordinate[1] == clickedCol + clickedRow) {
+                        move.push(coordinate[0]*10 + coordinate[1]);
+                        stop = true;
+                    }
+                    break;
+                case QUEEN_VALUE:
+                    if(coordinate[0] == clickedCol && coordinate[1] != clickedRow || coordinate[0] != clickedCol && coordinate[1] == clickedRow || 
+                    (coordinate[0] - coordinate[1] == clickedCol - clickedRow || coordinate[0] + coordinate[1] == clickedCol + clickedRow)) {
+                        move.push(coordinate[0]*10 + coordinate[1]);
+                        stop = true;
+                    }
+                    break;
+                case PAWN_VALUE:
+                    if(depth % 2 == 0) { // player
+                        if(clickedRow == 0) {
+                           return 
+                        } 
+                        if(clickedCol == coordinate[0] - 1 && clickedRow == coordinate[1] + 1 ||
+                            clickedCol == coordinate[0] + 1 && clickedRow == coordinate[1] + 1||
+                            clickedCol == coordinate[0] && clickedRow == coordinate[1] - 2 ||
+                            clickedCol == coordinate[0] && clickedRow == coordinate[1] - 1) {
+                                move.push(coordinate[0]*10 + coordinate[1]);
+                                stop = true;
                                 break;
-                            case BISHOP_VALUE:
-                                if(col - row == coordinate[0] - coordinate[1] || col + row == coordinate[0] + coordinate[1]) move.push(col*10 + row);
-                                break;
-                            case QUEEN_VALUE:
-                                if(col == coordinate[0] || row == coordinate[1] || 
-                                    col - row == coordinate[0] - coordinate[1] || col + row == coordinate[0] + coordinate[1])
-                                    move.push(col*10 + row);
-                                    break;
-                            case PAWN_VALUE:
-                            // chỗ này khá là phức tạp vì phải xét thêm trường hợp ăn quân hoặc di chuyển quân
-                                if(playerSide > 0) {
-                                    if( (col == coordinate[0] - 1 && row == coordinate[1] - 1) ||
-                                        (col == coordinate[0] + 1 && row == coordinate[1] - 1)) 
-                                            move.push(col * 10 + row);
-                                } else {
-                                    if( col == coordinate[0] - 1 && row == coordinate[1] + 1 ||
-                                        col == coordinate[0] + 1 && row == coordinate[1] + 1)
-                                            move.push(col * 10 + row);
-                                }
-                                break;
-                            default: 
-                                move.push(col*10 + row);
-                                break;
-                            } // end of switch cass
-                            if(move.length == 3) { 
-                                //var nextMove = move;
-                                moveSet.push(move);
                             }
-                    } // end of if(recorder.whiteAttackMap[col][row].indexOf(pieceValue) != -1)  
-                } // end of for loop row 
-            } // end of for loop col
-        });
+                    } else { //computer
+                        if(clickedCol == coordinate[0] - 1 && clickedRow == coordinate[1] - 1 ||
+                            clickedCol == coordinate[0] + 1 && clickedRow == coordinate[1] - 1 ||
+                            clickedCol == coordinate[0] && clickedRow == coordinate[1] + 2 ||
+                            clickedCol == coordinate[0] && clickedRow == coordinate[1] + 1)
+                            {
+                                move.push(coordinate[0]*10, coordinate[1]);
+                                stop = true;
+                                break;
+                            }   
+                    }
+                case KING_VALUE:
+                    if(clickedCol == coordinate[0] + 2 && clickedRow == coordinate[1] ||
+                        clickedCol == coordinate[0] - 2 && clickedRow == coordinate[1])
+                        {
+                            return this.generateCastleMove(coordinate[0], coordinate[1], clickedCol, clickedRow);
+                        }
+                    else {
+                        move.push(coordinate[0]*10 + coordinate[1]);
+                        stop = true;
+                    }
+                    break;
+                default:
+                    move.push(coordinate[0]*10 + coordinate[1]);
+                    stop = true;
+                    break;
+            }
+        }
+        move.push(clickedCol*10 + clickedRow);
+       
+        if(!this.isDuplicated(this.generatedMoveSet, move)) {
+            this.generatedMoveSet.push(move);
+            console.log(move);
+            console.log(piecePositions[pieceValue][0], piecePositions[pieceValue][1]);
+            return new Node(move);
+        } else { return null; }
     }
-    this.initialize = function() {
+    this.generatePromoteMove = function() {
+        var promoteMove = []; 
+        var rand = random(0,1);
+        if(rand < 0.2) { promoteMove.push(BISHOP_VALUE, -PROMOTE_MOVE, coordinate[0]*10 + coordinate[1]);}
+        if(rand < 0.25) { promoteMove.push(KNIGHT_VALUE, -PROMOTE_MOVE, coordinate[0]*10 + coordinate[1]);}
+        if(rand < 0.5) { promoteMove.push(KNIGHT_VALUE, -PROMOTE_MOVE, coordinate[0]*10 + coordinate[1]);}
+        if(rand < 0.75) { promoteMove.push(QUEEN_VALUE, -PROMOTE_MOVE , coordinate[0]*10 + coordinate[1]);}
+        if(!this.isDuplicated(this.generatedMoveSet, promoteMove))
+        {
+            this.generatedMoveSet.push(promoteMove);
+            return new Node(promoteMove);
+        } else { return null; }
+        
+    }
+    this.generateCastleMove = function(prevCol, prevRow, clickedCol, clickedRow) {
+        var castleMove = [];
+        if(validator.validate(prevCol, prevRow, clickedCol, clickedRow)) {
+            castleMove.push(KING_VALUE, -CASTLING_MOVE, clickedCol*10 + clickedRow);
+            if(!this.isDuplicated(this.generatedMoveSet, castleMove))
+            {
+                this.generatedMoveSet.push(castleMove);
+                return new Node(castleMove);
+            } else { return null; }
+        }
+    }
+    this.isDuplicated = function(generatedMove, record) {
+        for(var i = 0; i < this.generatedMoveSet.length; i ++) {
+            var prevRecord = this.generatedMoveSet[i];
+            if(prevRecord[0] == record[0] && prevRecord[1] == record[1] && prevRecord[2] == record[2])  
+                return true;
+        }
+        return false;
+    }
+    this.addNode = function(parentNode, depth) {
+        if(depth % 2 == 1) {
+            //min 
+            (playerSide > 0) ? newNode = this.generateMove(this.blackAttackMap , this.piecePositions, depth) : 
+            newNode = this.generateMove(this.whiteAttackMap , this.piecePositions, depth);
+        }
+        else {
+            //max
+            (playerSide > 0) ? newNode = this.generateMove(this.whiteAttackMap, this.piecePositions, depth) :
+            newNode = this.generateMove(this.blackAttackMap, this.piecePositions, depth);
+        }
+        if(newNode == null) return false;
+        else
+        {
+            parentNode.children.push(newNode);
+            newNode.parent = parentNode;
+            return true;
+        }
+    }
+}
+function Tree(moveMap, whiteAttackMap,blackAttackMap, pieceCount, piecePositions, moveRecord) {
+    this.rootNode = new Node();
+
+    this.moveMap = moveMap;
+    this.blackAttackMap = blackAttackMap;
+    this.whiteAttackMap = whiteAttackMap;
+    this.piecePositions = piecePositions;
+    this.pieceCount = pieceCount;
+    this.moveRecord = moveRecord;
+
+    this.search = function() {
         var depth = 1;
-        this.rootNode = new Node();
-        this.rootNode.leftMostChild = new Node();
-        if (depth % 2 == 0) { // người chơi MAX
-            //thưởng viết giúp tao phân này :)) 
-            //có this.whiteMoveSet với cả this.blackMoveSet gán làm sao cho đúng với playerSide nhé
-            //mỗi một phần tử của this.whiteMoveSet có dạng [PIECE_VALUE, prevCol * 10 + prevRow, clickedCol * 10 + clickedRow]
-            //nhiệm vụ bh là thử gán các cái giá trị vào từng node và xếp các node cho đúng vào trong hàm này 
+        var depth_1 = new Depth(this.moveMap, this.whiteAttackMap, this.blackAttackMap, this.pieceCount, this.piecePositions, this.moveRecord);
+        var depth_2;
+        var depth_3;
+        var depth_4;
+        var index_1 = 0, index_2 = 0; index_3 = 0; index_4 = 0;
+       // while(this.rootNode.alpha == Infinity) {
+            depth_1.addNode(this.rootNode, 1);
+            
+            depth_2 = new Depth(depth_1.moveMap, depth_1.whiteAttackMap, depth_1.blackAttackMap, depth_1.pieceCount, depth_1.piecePositions, depth1_moveRecord);
+            depth_2.update(this.rootNode.children[index_1].record);
+            depth_2.addNode(this.rootNode.children[index_1], 2);
+            
+            depth_3 = new Depth(depth_2.moveMap, depth_2.whiteAttackMap, depth_2.blackAttackMap, depth_2.pieceCount, depth_2.piecePositions);
+            depth_3.update(this.rootNode.children[index_1].children[index_2].record);
+            depth_3.addNode(this.rootNode.children[index_1].children[index_2], 3); 
+
+            depth_4 = new Depth(depth_3.moveMap, depth_3.whiteAttackMap, depth_3.blackAttackMap, depth_3.pieceCount, depth_3.piecePositions);
+            depth_4.update(this.rootNode.children[index_1].children[index_2].children[index_3].record);
+            while(depth_4.addNode(this.rootNode.children[index_1].children[index_2].children[index_3], 4)){
+                var depth = depth_3;
+                var children_4 = this.rootNode.children[index_1].children[index_2].children[index_3].children;
+                
+                depth.update(children_4[children_4.length - 1].record);
+                children_4[children_4.length - 1].point = evaluator.evaluate(depth.pieceCount, depth.piecePositions, depth.whiteAttackMap, depth.blackAttackMap, depth.moveMap, 4);
+                console.log(children_4[children_4.length - 1].point);
+                
+           // }
         }
-        this.rootNode.leftMostChild.rightSiblings.push(new Node());
     }
-    this.addNode = function(parentNode, childNode) {
-
-    }
-    this.removeNode = function(node) {
-
-    }
-    this.traverseDF = function(node) {
-        var currentNode = node;
-        var visitStack = [];
-        while(currentNode.children.length != 0) {
-            currentNode.children.forEach(function(child) {
-                visitStack.push(child);
-            }, this);
-            currentNode = currentNode.children[0];
+    this.test = function() {
+        var depth = new Depth(this.moveMap, this.whiteAttackMap, this.blackAttackMap, this.pieceCount, this.piecePositions);
+        for(var i = 0; i < 20; i++) {
+            depth.addNode(this.rootNode, 1);
         }
-        visitStack.forEach(function(node){console.log(node)});
-    }
-    this.traverseBF = function() {
-
     }
 }
