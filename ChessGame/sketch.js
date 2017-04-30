@@ -37,17 +37,17 @@ function setup() {
 	
 
 	// Choosing side
-	$('#choseSideModal').modal();
-	$('#choseSideModalBody').click(function(event) {
-		if ($(event.target).is('#choseWhiteSide') || $(event.target).is('#whiteSideImg'))
+	$('#ChooseSideModal').modal();
+	$('#ChooseSideModalBody').click(function(event) {
+		if ($(event.target).is('#ChooseWhiteSide') || $(event.target).is('#whiteSideImg'))
 			playerSide = WHITE_SIDE;
 		else
 			playerSide = BLACK_SIDE;
 		evaluator = new Evaluator();
-		$("#choseSideModal").modal('toggle');
+		$("#ChooseSideModal").modal('toggle');
 		recorder.updateAttackMap();
 		
-		//create board game after player chose a side
+		//create board game after player Choose a side
 	});	
 	
 	controller.placeTheChessman(whiteRookSprite, 0, 7, ROOK_VALUE);
@@ -89,7 +89,7 @@ function draw() {
 		//gameTree.initialize(currentState);
 		//step 2: prunning
 		//moveGenerator.calculateNextMove();
-		//step 3: chosen the next move
+		//step 3: Choosen the next move
 		//moveGenerator.makeAMove();
 		isPlayerTurn = true;
 	}*/
