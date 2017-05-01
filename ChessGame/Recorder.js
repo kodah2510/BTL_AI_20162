@@ -165,17 +165,10 @@ function Recorder() {
 			if (piecePositions[value][index][0] == currentCol && piecePositions[value][index][1] == currentRow)
 				piecePositions[value].splice(index, 1);
 		}
-		
 	}
 	this.updateMoveRecord = function(prevCol, prevRow, clickedCol, clickedRow, moveRecord, record) {
-		if(moveRecord == null && record == null) 
-		{
-			this.moveRecord.push([this.moveMap[clickedCol][clickedRow],prevCol*10+prevRow,clickedCol*10+clickedRow]);
-		}
-		else 
-		{
-			moveRecord.push(record);
-		}	
+		(moveRecord == null && record == null) ? this.moveRecord.push([this.moveMap[clickedCol][clickedRow],prevCol*10+prevRow,clickedCol*10+clickedRow]) :
+		moveRecord.push(record);
 	}
 	this.findThePiece = function(value) {
 		return this.piecePositions[value];
@@ -291,7 +284,6 @@ function Recorder() {
 	//CHECKED
 	this.calculateAttackMapForKing = function(value, col, row, attackMap) {
 		//special case
-
 		if (col == 0) {
 			if (row == 0) {// right down bottom right 
 				attackMap[col + 1][row].push(value); //right

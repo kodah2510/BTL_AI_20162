@@ -49,11 +49,11 @@ function setup() {
 		
 		//create board game after player Choose a side
 	});	
-	controller.placeTheChessman(whitePawnSprite, 0, 1, PAWN_VALUE);
-	controller.placeTheChessman(whitePawnSprite, 1, 1, PAWN_VALUE);
-	controller.placeTheChessman(whitePawnSprite, 2, 1, PAWN_VALUE);
+	controller.placeTheChessman(whitePawnSprite, 0, 6, PAWN_VALUE);
+	controller.placeTheChessman(whitePawnSprite, 1, 6, PAWN_VALUE);
+	controller.placeTheChessman(whitePawnSprite, 2, 6, PAWN_VALUE);
 	controller.placeTheChessman(whiteKingSprite, 4, 7, KING_VALUE);
-
+	controller.placeTheChessman(whiteRookSprite, 7, 7, ROOK_VALUE);
 	controller.placeTheChessman(blackKingSprite, 4, 0, -KING_VALUE);
 	controller.placeTheChessman(blackRookSprite, 7, 0, -ROOK_VALUE);
 	// controller.placeTheChessman(whiteRookSprite, 0, 7, ROOK_VALUE);
@@ -62,10 +62,10 @@ function setup() {
 	// controller.placeTheChessman(whiteBishopSprite, 7, 1, BISHOP_VALUE);
 	// controller.placeTheChessman(whiteQueenSprite, 4, 1, QUEEN_VALUE);
 	// controller.placeTheChessman(whitePawnSprite, 1, 1, PAWN_VALUE);
-	// controller.placeTheChessman(blackPawnSprite, 3, 4, -PAWN_VALUE);
+	controller.placeTheChessman(blackPawnSprite, 7, 1, -PAWN_VALUE);
 	// controller.placeTheChessman(whitePawnSprite, 3, 6, PAWN_VALUE);
 	// controller.placeTheChessman(whiteKnightSprite, 3, 2, KNIGHT_VALUE);
-	// controller.placeTheChessman(blackRookSprite, 4, 0, -ROOK_VALUE);
+	 controller.placeTheChessman(blackRookSprite, 1, 0, -ROOK_VALUE);
 	// controller.placeTheChessman(blackRookSprite, 0, 5, -ROOK_VALUE);
 	// controller.placeTheChessman(blackKnightSprite, 7, 4, -KNIGHT_VALUE);
 	// controller.placeTheChessman(blackKingSprite, 1, 0, -KING_VALUE);
@@ -135,7 +135,7 @@ function makeAMove() {
 					redraw();
 					break;
 				//special moves
-				case CAPTURE_MOVE: 
+				case PROMOTE_MOVE: 
 					//CHECKED
 					controller.capture(prevCol, prevRow, clickedCol, clickedRow);
 					//isPlayerTurn = false;
@@ -144,7 +144,7 @@ function makeAMove() {
 				//CHECKED
 					controller.castling(prevCol, prevRow, clickedCol, clickedRow);
 					prevCol = null; prevRow = null;
-					//isPlayerTurn = false;
+					isPlayerTurn = false;
 					redraw();
 					break;
 			}
@@ -167,7 +167,7 @@ function makeAMove() {
 					}
 					redraw();
 					break;
-				case CAPTURE_MOVE:
+				case PROMOTE_MOVE:
 					controller.capture(prevCol, prevRow, clickedCol, clickedRow);
 					//isPlayerTurn = false;
 					break;

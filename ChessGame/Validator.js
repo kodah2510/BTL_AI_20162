@@ -175,11 +175,18 @@ function Validator() {
 			if (clickedCol == prevCol - 2) {
 				//queen-side castling
 				for (var i = prevCol; i >= 0; i--)
-					if (attackMap[i][prevRow].length != 0 || recorder.moveMap[i][prevRow] != 0) return false;
+				{
+					if (attackMap[i][prevRow].length != 0) return false;
+					if (i < 7 && i > 4 && recorder.moveMap[i][prevRow] != 0) return false;
+				}
+					
 			} else if (clickedCol == prevCol + 2) {
 				//king-side castling
 				for (var i = prevCol; i < 8 ; i++)
-					if (attackMap[i][prevRow].length != 0 || recorder.moveMap[i][prevRow] != 0) return false;
+				{
+					if (attackMap[i][prevRow].length != 0 ) return false;
+					if(i < 7 && i > 4 && recorder.moveMap[i][prevRow] != 0) return false;
+				}
 			}
 			return true;
 		}
@@ -194,17 +201,18 @@ function Validator() {
 			if (clickedCol == prevCol - 2) {
 				//queen-side castling
 				for (var i = prevCol; i >= 0; i--)
-					if (attackMap[i][prevRow].length != 0 || moveMap[i][prevRow] != 0) return false;
+					if (attackMap[i][prevRow].length != 0) return false; 
+					if( i < 7 && moveMap[i][prevRow] != 0) return false;
 			} else if (clickedCol == prevCol + 2) {
 				//king-side castling
 				for (var i = prevCol; i < 8 ; i++)
-					if (attackMap[i][prevRow].length != 0 || moveMap[i][prevRow] != 0) return false;
+					if (attackMap[i][prevRow].length != 0 ) return false;
+					if(i < 7 && moveMap[i][prevRow] != 0) return false;
 			}
 			return true;
 		}
-		
 	}
-	//call only when the king is checked
+	//có thể chỉ gọi khi mà vua bị chiếu
 	this.validateCheckmate = function()
 	{
 		

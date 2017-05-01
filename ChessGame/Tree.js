@@ -102,9 +102,7 @@ function Depth(moveMap, whiteAttackMap, blackAttackMap, pieceCount, piecePositio
                     break;
                 case PAWN_VALUE:
                     if(depth % 2 == 0) { // player
-                        if(clickedRow == 0) {
-                           return 
-                        } 
+                        if(clickedRow == 0)  return this.generatePromoteMove(depth, clickedCol, clickedRow);
                         if(clickedCol == coordinate[0] - 1 && clickedRow == coordinate[1] + 1 ||
                             clickedCol == coordinate[0] + 1 && clickedRow == coordinate[1] + 1||
                             clickedCol == coordinate[0] && clickedRow == coordinate[1] - 2 ||
@@ -114,6 +112,7 @@ function Depth(moveMap, whiteAttackMap, blackAttackMap, pieceCount, piecePositio
                                 break;
                             }
                     } else { //computer
+                        if(clickedRow == 7) return this.generatePromoteMove(depth, clickedCol, clickedRow);
                         if(clickedCol == coordinate[0] - 1 && clickedRow == coordinate[1] - 1 ||
                             clickedCol == coordinate[0] + 1 && clickedRow == coordinate[1] - 1 ||
                             clickedCol == coordinate[0] && clickedRow == coordinate[1] + 2 ||
@@ -128,7 +127,7 @@ function Depth(moveMap, whiteAttackMap, blackAttackMap, pieceCount, piecePositio
                     if(clickedCol == coordinate[0] + 2 && clickedRow == coordinate[1] ||
                         clickedCol == coordinate[0] - 2 && clickedRow == coordinate[1])
                         {
-                            return this.generateCastleMove(coordinate[0], coordinate[1], clickedCol, clickedRow);
+                            return this.generateCastleMove(coordinate[0], coordinate[1], clickedCol, clickedRow, depth, playerSide);
                         }
                     else {
                         move.push(coordinate[0]*10 + coordinate[1]);
@@ -150,26 +149,29 @@ function Depth(moveMap, whiteAttackMap, blackAttackMap, pieceCount, piecePositio
             return new Node(move);
         } else { return null; }
     }
-    this.generatePromoteMove = function() {
+    this.generatePromoteMove = function(depth, clickedCol, clickedRow) {
         var promoteMove = []; 
         var rand = random(0,1);
-        if(rand < 0.2) { promoteMove.push(BISHOP_VALUE, -PROMOTE_MOVE, coordinate[0]*10 + coordinate[1]);}
-        if(rand < 0.25) { promoteMove.push(KNIGHT_VALUE, -PROMOTE_MOVE, coordinate[0]*10 + coordinate[1]);}
-        if(rand < 0.5) { promoteMove.push(KNIGHT_VALUE, -PROMOTE_MOVE, coordinate[0]*10 + coordinate[1]);}
-        if(rand < 0.75) { promoteMove.push(QUEEN_VALUE, -PROMOTE_MOVE , coordinate[0]*10 + coordinate[1]);}
+        (depth % 2 == 0) ?  this.promote(rand , promoteMove, playerSide, clickedCol, clickedRow) : this.promote(rand, promoteMove, - playerSide, clickedCol, clickedRow);
         if(!this.isDuplicated(this.generatedMoveSet, promoteMove))
         {
+            console.log(promoteMove);
             this.generatedMoveSet.push(promoteMove);
             return new Node(promoteMove);
         } else { return null; }
-        
     }
-    this.generateCastleMove = function(prevCol, prevRow, clickedCol, clickedRow) {
+    this.promote = function(rand, promoteMove, playerSide, clickedCol, clickedRow) {
+        if(rand < 0.01) { promoteMove.push(KNIGHT_VALUE*playerSide, -PROMOTE_MOVE, clickedCol*10 + clickedRow);}
+        else { promoteMove.push(QUEEN_VALUE*playerSide, -PROMOTE_MOVE , clickedCol*10 + clickedRow);}
+    }
+    this.generateCastleMove = function(prevCol, prevRow, clickedCol, clickedRow, depth, playerSide) {
         var castleMove = [];
-        if(validator.validate(prevCol, prevRow, clickedCol, clickedRow)) {
-            castleMove.push(KING_VALUE, -CASTLING_MOVE, clickedCol*10 + clickedRow);
+        if(validator.validateCastling(prevCol, prevRow, clickedCol, clickedRow)) {
+            (depth % 2 == 0) ? castleMove.push(KING_VALUE*playerSide, -CASTLING_MOVE, clickedCol*10 + clickedRow) : 
+            castleMove.push(KING_VALUE*playerSide, -CASTLING_MOVE, clickedCol*10 + clickedRow) ;
             if(!this.isDuplicated(this.generatedMoveSet, castleMove))
             {
+                console.log(castleMove);
                 this.generatedMoveSet.push(castleMove);
                 return new Node(castleMove);
             } else { return null; }
@@ -220,18 +222,18 @@ function Tree(moveMap, whiteAttackMap,blackAttackMap, pieceCount, piecePositions
         var depth_3;
         var depth_4;
         var index_1 = 0, index_2 = 0; index_3 = 0; index_4 = 0;
-       // while(this.rootNode.alpha == Infinity) {
+        while(this.rootNode.alpha == Infinity) {
             depth_1.addNode(this.rootNode, 1);
             
-            depth_2 = new Depth(depth_1.moveMap, depth_1.whiteAttackMap, depth_1.blackAttackMap, depth_1.pieceCount, depth_1.piecePositions, depth1_moveRecord);
+            depth_2 = new Depth(depth_1.moveMap, depth_1.whiteAttackMap, depth_1.blackAttackMap, depth_1.pieceCount, depth_1.piecePositions, depth_1.moveRecord);
             depth_2.update(this.rootNode.children[index_1].record);
             depth_2.addNode(this.rootNode.children[index_1], 2);
             
-            depth_3 = new Depth(depth_2.moveMap, depth_2.whiteAttackMap, depth_2.blackAttackMap, depth_2.pieceCount, depth_2.piecePositions);
+            depth_3 = new Depth(depth_2.moveMap, depth_2.whiteAttackMap, depth_2.blackAttackMap, depth_2.pieceCount, depth_2.piecePositions, depth_2.moveRecord);
             depth_3.update(this.rootNode.children[index_1].children[index_2].record);
             depth_3.addNode(this.rootNode.children[index_1].children[index_2], 3); 
 
-            depth_4 = new Depth(depth_3.moveMap, depth_3.whiteAttackMap, depth_3.blackAttackMap, depth_3.pieceCount, depth_3.piecePositions);
+            depth_4 = new Depth(depth_3.moveMap, depth_3.whiteAttackMap, depth_3.blackAttackMap, depth_3.pieceCount, depth_3.piecePositions, depth_3.moveRecord);
             depth_4.update(this.rootNode.children[index_1].children[index_2].children[index_3].record);
             while(depth_4.addNode(this.rootNode.children[index_1].children[index_2].children[index_3], 4)){
                 var depth = depth_3;
@@ -240,8 +242,7 @@ function Tree(moveMap, whiteAttackMap,blackAttackMap, pieceCount, piecePositions
                 depth.update(children_4[children_4.length - 1].record);
                 children_4[children_4.length - 1].point = evaluator.evaluate(depth.pieceCount, depth.piecePositions, depth.whiteAttackMap, depth.blackAttackMap, depth.moveMap, 4);
                 console.log(children_4[children_4.length - 1].point);
-                
-           // }
+            }
         }
     }
     this.test = function() {

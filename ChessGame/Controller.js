@@ -85,39 +85,33 @@ function Controller() {
 	}
 
 	// Method that moves a chessman
-	this.moveTheChessman = function(prevCol, prevRow, clickedCol, clickedRow) {
+	this.moveTheChessman = function(prevCol, prevRow, clickedCol, clickedRow, specialMove) {
 		//swap the sprite 
 		var prevChessmanSprite = this.grid[prevCol][prevRow].sprite;
 		this.grid[clickedCol][clickedRow].sprite = prevChessmanSprite;
 		this.grid[prevCol][prevRow].sprite = null;
-
 		//update game state
 		recorder.updateMoveMap(recorder.moveMap[prevCol][prevRow], prevCol, prevRow, clickedCol, clickedRow);
-		recorder.updateMoveRecord(prevCol, prevRow, clickedCol, clickedRow);
 		recorder.updateAttackMap();		
+		if(specialMove == null) recorder.updateMoveRecord(prevCol, prevRow, clickedCol, clickedRow);
 	}
 
 	// Method that proceeds castling if the move is valid
 	// CHECKED
 	this.castling = function(prevCol, prevRow, clickedCol, clickedRow) {
 		var rookCol;
+		recorder.updateMoveRecord(null, null, null, null, recorder.moveRecord, 
+			[recorder.moveMap[prevCol][prevRow], -CASTLING_MOVE, clickedCol*10 + clickedRow]);
 		//move the king to ...
-		this.moveTheChessman(prevCol, prevRow, clickedCol, clickedRow);
-		recorder.updateMoveMap(recorder.moveMap[prevCol][prevRow], prevCol, prevRow, clickedCol, clickedRow);
-		recorder.updateMoveRecord(prevCol, prevRow, clickedCol, clickedRow);
-
+		this.moveTheChessman(prevCol, prevRow, clickedCol, clickedRow, CASTLING_MOVE);
 		//move the rook...
 		//update the game state
 		if (clickedCol == prevCol - 2) {
 			rookCol = 0
 			this.moveTheChessman(rookCol, prevRow, rookCol + 3, prevRow);
-			recorder.updateMoveMap(recorder.moveMap[rookCol][prevRow], rookCol, prevRow, rookCol + 3, prevRow);
-			recorder.updateMoveRecord(rookCol, prevRow, rookCol + 2, prevRow);
 		} else if (clickedCol == prevCol + 2) {
 			rookCol = 7;
-			this.moveTheChessman(rookCol, prevRow, rookCol - 2, prevRow);
-			recorder.updateMoveMap(recorder.moveMap[rookCol][prevRow], rookCol, prevRow, rookCol - 2, prevRow);
-			recorder.updateMoveRecord(rookCol, prevRow, rookCol - 2, prevRow);
+			this.moveTheChessman(rookCol, prevRow, rookCol - 2, prevRow, CASTLING_MOVE);
 		}
 		recorder.updateAttackMap();		
 	}
@@ -132,49 +126,25 @@ function Controller() {
 		(playerSide == WHITE_SIDE) ? $('#blackSide').toggle() : $('#whiteSide').toggle();
 		$('#modalBody').click(function(event) {
 			var pieceValue
-			if ($(event.target).is('#whiteRook') || $(event.target).is("#whiteRookImg"))
-				pieceValue = ROOK_VALUE;
-			else if ($(event.target).is('#whiteKnight') || $(event.target).is("#whiteKnightImg"))
-				pieceValue = KNIGHT_VALUE;
-			else if ($(event.target).is('#whiteBishop') || $(event.target).is("#whiteBishopImg"))
-				pieceValue = BISHOP_VALUE;
-			else if ($(event.target).is('#whiteQueen') || $(event.target).is("#whiteQueenImg"))
-				pieceValue = QUEEN_VALUE;
-			else if ($(event.target).is('#blackRook') || $(event.target).is("#blackRookImg"))
-			pieceValue = -ROOK_VALUE;
-			else if ($(event.target).is('#blackKnight') || $(event.target).is("#blackKnightImg"))
-				pieceValue = -KNIGHT_VALUE;
-			else if ($(event.target).is('#blackBishop') || $(event.target).is("#blackBishopImg"))
-				pieceValue = -BISHOP_VALUE;
-			else if ($(event.target).is('#blackQueen') || $(event.target).is("#blackQueenImg"))
-				pieceValue = -QUEEN_VALUE;
+			if ($(event.target).is('#whiteRook') || $(event.target).is("#whiteRookImg")) pieceValue = ROOK_VALUE;
+			else if ($(event.target).is('#whiteKnight') || $(event.target).is("#whiteKnightImg")) pieceValue = KNIGHT_VALUE;
+			else if ($(event.target).is('#whiteBishop') || $(event.target).is("#whiteBishopImg")) pieceValue = BISHOP_VALUE;
+			else if ($(event.target).is('#whiteQueen') || $(event.target).is("#whiteQueenImg")) pieceValue = QUEEN_VALUE;
+			else if ($(event.target).is('#blackRook') || $(event.target).is("#blackRookImg")) pieceValue = -ROOK_VALUE;
+			else if ($(event.target).is('#blackKnight') || $(event.target).is("#blackKnightImg"))pieceValue = -KNIGHT_VALUE;
+			else if ($(event.target).is('#blackBishop') || $(event.target).is("#blackBishopImg")) pieceValue = -BISHOP_VALUE;
+			else if ($(event.target).is('#blackQueen') || $(event.target).is("#blackQueenImg")) pieceValue = -QUEEN_VALUE;
 			$("#myModal").modal('toggle');
 			var newSprite;
 			switch (pieceValue) {
-				case ROOK_VALUE: 
-					newSprite = whiteRookSprite;
-					break;
-				case KNIGHT_VALUE:
-					newSprite = whiteKnightSprite;
-					break;
-				case BISHOP_VALUE:
-					newSprite = whiteBishopSprite;
-					break;
-				case QUEEN_VALUE:
-					newSprite = whiteQueenSprite;
-					break;
-				case -ROOK_VALUE: 
-					newSprite = blackRookSprite;
-					break;
-				case -KNIGHT_VALUE:
-					newSprite = blackKnightSprite;
-					break;
-				case -BISHOP_VALUE:
-					newSprite = blackBishopSprite;
-					break;
-				case -QUEEN_VALUE:
-					newSprite = blackQueenSprite;
-					break;
+				case ROOK_VALUE: newSprite = whiteRookSprite; break;
+				case KNIGHT_VALUE:newSprite = whiteKnightSprite;break;
+				case BISHOP_VALUE:newSprite = whiteBishopSprite;break;
+				case QUEEN_VALUE:newSprite = whiteQueenSprite;break;
+				case -ROOK_VALUE: newSprite = blackRookSprite;break;
+				case -KNIGHT_VALUE:newSprite = blackKnightSprite;break;
+				case -BISHOP_VALUE:newSprite = blackBishopSprite;break;
+				case -QUEEN_VALUE:newSprite = blackQueenSprite;break;
 			}
 			controller.grid[prevCol][prevRow].sprite = null;
 			recorder.removePiece(recorder.moveMap[prevCol][prevRow], prevCol, prevRow);
