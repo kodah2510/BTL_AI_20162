@@ -49,23 +49,22 @@ function setup() {
 		
 		//create board game after player Choose a side
 	});	
-	controller.placeTheChessman(whitePawnSprite, 0, 6, PAWN_VALUE);
-	controller.placeTheChessman(whitePawnSprite, 1, 6, PAWN_VALUE);
-	controller.placeTheChessman(whitePawnSprite, 2, 6, PAWN_VALUE);
-	controller.placeTheChessman(whiteKingSprite, 4, 7, KING_VALUE);
+	
 	controller.placeTheChessman(whiteRookSprite, 7, 7, ROOK_VALUE);
-	controller.placeTheChessman(blackKingSprite, 4, 0, -KING_VALUE);
-	controller.placeTheChessman(blackRookSprite, 7, 0, -ROOK_VALUE);
-	// controller.placeTheChessman(whiteRookSprite, 0, 7, ROOK_VALUE);
-	// controller.placeTheChessman(whiteRookSprite, 7, 7, ROOK_VALUE);
-	// controller.placeTheChessman(whiteKingSprite, 4, 7, KING_VALUE);
-	// controller.placeTheChessman(whiteBishopSprite, 7, 1, BISHOP_VALUE);
-	// controller.placeTheChessman(whiteQueenSprite, 4, 1, QUEEN_VALUE);
-	// controller.placeTheChessman(whitePawnSprite, 1, 1, PAWN_VALUE);
-	controller.placeTheChessman(blackPawnSprite, 7, 1, -PAWN_VALUE);
+	controller.placeTheChessman(blackKingSprite, 0, 2, -KING_VALUE);
+	controller.placeTheChessman(blackRookSprite, 0, 6, -ROOK_VALUE);
+	controller.placeTheChessman(whiteRookSprite, 0, 7, ROOK_VALUE);
+	controller.placeTheChessman(whiteRookSprite, 7, 7, ROOK_VALUE);
+	controller.placeTheChessman(whiteKingSprite, 4, 7, KING_VALUE);
+	controller.placeTheChessman(whiteBishopSprite, 7, 1, BISHOP_VALUE);
+	controller.placeTheChessman(whiteQueenSprite, 4, 1, QUEEN_VALUE);
+	controller.placeTheChessman(whitePawnSprite, 1, 1, PAWN_VALUE);
+	controller.placeTheChessman(blackPawnSprite, 1, 1, -PAWN_VALUE);
+	controller.placeTheChessman(blackPawnSprite, 2, 2, -PAWN_VALUE);
+	
 	// controller.placeTheChessman(whitePawnSprite, 3, 6, PAWN_VALUE);
 	// controller.placeTheChessman(whiteKnightSprite, 3, 2, KNIGHT_VALUE);
-	 controller.placeTheChessman(blackRookSprite, 1, 0, -ROOK_VALUE);
+	 controller.placeTheChessman(blackRookSprite, 0, 6, -ROOK_VALUE);
 	// controller.placeTheChessman(blackRookSprite, 0, 5, -ROOK_VALUE);
 	// controller.placeTheChessman(blackKnightSprite, 7, 4, -KNIGHT_VALUE);
 	// controller.placeTheChessman(blackKingSprite, 1, 0, -KING_VALUE);
@@ -88,8 +87,9 @@ function draw() {
 							recorder.whiteAttackMap, recorder.blackAttackMap, 
 							recorder.pieceCount, recorder.piecePositions,
 							recorder.moveRecord);
-		//tree.search();
-		tree.test();
+		tree.search();
+		console.log("search done");
+		//tree.test();
 		// var depth = new Depth(this.moveMap, this.whiteAttackMap,
 		// 						this.blackAttackMap, this.pieceCount, this.piecePositions,
 		// 						this.moveRecord);
@@ -138,7 +138,6 @@ function makeAMove() {
 				case PROMOTE_MOVE: 
 					//CHECKED
 					controller.capture(prevCol, prevRow, clickedCol, clickedRow);
-					//isPlayerTurn = false;
 					break;
 				case CASTLING_MOVE:
 				//CHECKED

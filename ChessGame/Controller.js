@@ -161,6 +161,7 @@ function Controller() {
 			//update piecePosition
 			//update pieceCount
 			//update the record too
+			isPlayerTurn = false;
 			redraw();
 		});
 	}

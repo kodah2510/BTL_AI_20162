@@ -76,13 +76,13 @@ function Validator() {
 				return INVALID_MOVE;
 		}
 		else if (Math.abs(value) == BISHOP_VALUE) {
-			if (prevCol - prevRow != clickedCol - clickedRow || prevCol + prevRow != clickedCol + clickedRow)
+			if (prevCol - prevRow != clickedCol - clickedRow && prevCol + prevRow != clickedCol + clickedRow)
 				return INVALID_MOVE;
 		}
 		else if (Math.abs(value) == QUEEN_VALUE) {
 			if (prevCol != clickedCol || prevRow != clickedRow || 
 				prevCol - prevRow != clickedCol - clickedRow || prevCol + prevRow != clickedCol + clickedRow )
-				return INVALiD_MOVE;
+				return INVALID_MOVE;
 		}
 			
 		// CHECKED

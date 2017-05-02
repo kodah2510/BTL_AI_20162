@@ -289,32 +289,36 @@ function Recorder() {
 				attackMap[col + 1][row].push(value); //right
 				attackMap[col + 1][row + 1].push(value); //bottom right
 				attackMap[col][row + 1].push(value); //down
+				return;
 			}
 			if (row == 7) {// up top right right 
 				attackMap[col][row - 1].push(value); //up
 				attackMap[col + 1][row - 1].push(value); //top right
-				attackMap[col + 1][row].push(value); //right
+				attackMap[col + 1][row].push(value); //
+				return;
 			}
 			else {// up top-right right bottom-right down
 				attackMap[col][row - 1].push(value); //up
 				attackMap[col + 1][row - 1].push(value); //top right
 				attackMap[col + 1][row].push(value); //right
 				attackMap[col + 1][row + 1].push(value); //bottom right
-				attackMap[col][row + 1].push(value); //down
+				attackMap[col][row + 1].push(value); //
+				return;
 			}
 		}
-		if (col == 7){
+		if (col == 7) {
 			if (row == 0){// down bottom left left
 				attackMap[col][row + 1].push(value);//down
 				attackMap[col - 1][row + 1].push(value); //bottom left
 				attackMap[col - 1][row].push(value); //left 
+				return;
 			}
 			if (row == 7)
 			{// up top left left
 				attackMap[col][row - 1].push(value); //up
 				attackMap[col - 1][row - 1].push(value); //top left
 				attackMap[col - 1][row].push(value); //left		
-
+				return;
 			}
 			else { //up top left left bottom left down
 				attackMap[col][row - 1].push(value); //up
@@ -322,14 +326,20 @@ function Recorder() {
 				attackMap[col - 1][row].push(value); //left
 				attackMap[col - 1][row + 1].push(value); //bottom left
 				attackMap[col][row + 1].push(value);//down
+				return;
 			}
 		} else {
+			if(col == 4) {
+				attackMap[col + 2][row].push(value);
+				attackMap[col - 2][row].push(value);
+			}
 			if (row == 0) {
 				attackMap[col - 1][row].push(value); //left
 				attackMap[col - 1][row + 1].push(value);//bottom left
 				attackMap[col][row + 1].push(value);//down
 				attackMap[col + 1][row + 1].push(value);//bottom right
 				attackMap[col + 1][row].push(value);//right
+				return;
 			}
 			else if (row == 7) { // left top left up top right right
 				attackMap[col - 1][row].push(value); //left
@@ -337,6 +347,7 @@ function Recorder() {
 				attackMap[col][row - 1].push(value); //up
 				attackMap[col + 1][row - 1].push(value); //top right
 				attackMap[col + 1][row].push(value); //right
+				return;
 			} else {
 				attackMap[col][row - 1].push(value); //up
 				attackMap[col][row + 1].push(value); //down
@@ -346,12 +357,10 @@ function Recorder() {
 				attackMap[col - 1][row - 1].push(value); //top left
 				attackMap[col + 1][row - 1].push(value); //top right
 				attackMap[col - 1][row + 1].push(value); //bottom left
+				return;
 			}
 		}
-		if(col == 4) {
-			attackMap[col + 2][row].push(value);
-			attackMap[col - 2][row].push(value);
-		}		
+				
 	}
 	//need to fix this one too 
 	//CHECKED
