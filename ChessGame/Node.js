@@ -5,7 +5,7 @@ function Node(record) {
     this.point = 0;
     this.parent;
     this.children = [];
-    this.alpha = -Infinity;
-    this.beta = Infinity;
+    this.alpha = -960;
+    this.beta = 960;
     if(record != null) this.record = record;
 }

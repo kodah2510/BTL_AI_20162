@@ -6,14 +6,12 @@ function Controller() {
 	for (var i = 0; i < 8; i++)
 		for(var j = 0;j < 8; j++)
 			this.grid[i][j] = new Grid(i, j); //[col, row]
-
 	// Method to show the game board in browser
 	this.render = function() {
 		for(var i = 0 ; i < 8; i++)
 			for(var j = 0; j < 8; j++)
 				this.grid[i][j].show();
 	}
-
 	// Method to place the chessmen on the board
 	this.placeTheChessman = function(sprite, col, row, value) {
 		if (recorder.moveMap[col][row] == 0) {
@@ -23,92 +21,86 @@ function Controller() {
 			recorder.updateMoveMap(value, null, null, col, row);
 		}
 	}
-
 	// Method to initilise a new game
 	this.createGameBoard = function() {
-		/*
 		// Choose black or white
-		var playersConfirmation = confirm("White or Black (OK/CANCEL)");
-		if (!playersConfirmation) { // if player chose Black side
-			this.placeTheChessman(blackRookSprite, 1, 3, BLACK_ROOK_VALUE);
-			this.placeTheChessman(blackKnightSprite, 1, 7, BLACK_KNIGHT_VALUE);
-			this.placeTheChessman(blackBishopSprite, 2, 7, BLACK_BISHOP_VALUE);
-			this.placeTheChessman(blackQueenSprite, 3, 7, BLACK_QUEEN_VALUE);
-			this.placeTheChessman(blackKingSprite, 4, 7 ,BLACK_KING_VALUE);
-			this.placeTheChessman(blackBishopSprite, 5, 7, BLACK_BISHOP_VALUE);
-			this.placeTheChessman(blackKnightSprite, 6, 7, BLACK_KNIGHT_VALUE);
-			this.placeTheChessman(blackRookSprite, 7, 7, BLACK_ROOK_VALUE);
+		if (playerSide == BLACK_SIDE) { 
+			this.placeTheChessman(blackRookSprite, 1, 3, -ROOK_VALUE);
+			this.placeTheChessman(blackKnightSprite, 1, 7, -KNIGHT_VALUE);
+			this.placeTheChessman(blackBishopSprite, 2, 7, -BISHOP_VALUE);
+			this.placeTheChessman(blackQueenSprite, 3, 7, -QUEEN_VALUE);
+			this.placeTheChessman(blackKingSprite, 4, 7 ,-KING_VALUE);
+			this.placeTheChessman(blackBishopSprite, 5, 7, -BISHOP_VALUE);
+			this.placeTheChessman(blackKnightSprite, 6, 7, -KNIGHT_VALUE);
+			this.placeTheChessman(blackRookSprite, 7, 7, -ROOK_VALUE);
 			// Place 8 Pawns
 			for(var i = 0; i < 8; i++)
-				this.placeTheChessman(blackPawnSprite, i, 6, BLACK_PAWN_VALUE);
+				this.placeTheChessman(blackPawnSprite, i, 6, -PAWN_VALUE);
 
-			this.placeTheChessman(whiteRookSprite, 6, 3, WHITE_KNIGHT_VALUE);
-			this.placeTheChessman(whiteKnightSprite, 1, 0, WHITE_KNIGHT_VALUE);
-			this.placeTheChessman(whiteBishopSprite, 2, 0, WHITE_BISHOP_VALUE);
-			this.placeTheChessman(whiteQueenSprite, 3, 0, WHITE_QUEEN_VALUE);
-			this.placeTheChessman(whiteKingSprite, 4, 0, WHITE_KING_VALUE);
-			this.placeTheChessman(whiteBishopSprite, 5, 0, WHITE_BISHOP_VALUE);
-			this.placeTheChessman(whiteKnightSprite, 6, 0, WHITE_KNIGHT_VALUE);
-			this.placeTheChessman(whiteRookSprite, 7, 0, WHITE_ROOK_VALUE);
+			this.placeTheChessman(whiteRookSprite, 6, 3, KNIGHT_VALUE);
+			this.placeTheChessman(whiteKnightSprite, 1, 0, KNIGHT_VALUE);
+			this.placeTheChessman(whiteBishopSprite, 2, 0, BISHOP_VALUE);
+			this.placeTheChessman(whiteQueenSprite, 3, 0, QUEEN_VALUE);
+			this.placeTheChessman(whiteKingSprite, 4, 0, KING_VALUE);
+			this.placeTheChessman(whiteBishopSprite, 5, 0, BISHOP_VALUE);
+			this.placeTheChessman(whiteKnightSprite, 6, 0, KNIGHT_VALUE);
+			this.placeTheChessman(whiteRookSprite, 7, 0, ROOK_VALUE);
 			// Place 8 Pawns
 			for(var i = 0; i < 8; i++)
-				this.placeTheChessman(whitePawnSprite, i, 1, WHITE_PAWN_VALUE);
-
-			return -1;  
+				this.placeTheChessman(whitePawnSprite, i, 1, PAWN_VALUE);
 		} else { // otherwise
-			this.placeTheChessman(whiteRookSprite, 0, 7, WHITE_ROOK_VALUE);
-			this.placeTheChessman(whiteKnightSprite, 1, 7, WHITE_ROOK_VALUE);
-			this.placeTheChessman(whiteBishopSprite, 2, 7, WHITE_ROOK_VALUE);
-			this.placeTheChessman(whiteQueenSprite, 3, 7, WHITE_ROOK_VALUE);
-			this.placeTheChessman(whiteKingSprite, 4, 7, WHITE_ROOK_VALUE);
-			this.placeTheChessman(whiteBishopSprite, 5, 7, WHITE_ROOK_VALUE);
-			this.placeTheChessman(whiteKnightSprite, 6, 7, WHITE_ROOK_VALUE);
-			this.placeTheChessman(whiteRookSprite, 7, 7, WHITE_ROOK_VALUE);
+			this.placeTheChessman(whiteRookSprite, 0, 7, ROOK_VALUE);
+			this.placeTheChessman(whiteKnightSprite, 1, 7, KNIGHT_VALUE);
+			this.placeTheChessman(whiteBishopSprite, 2, 7, BISHOP_VALUE);
+			this.placeTheChessman(whiteQueenSprite, 3, 7, QUEEN_VALUE);
+			this.placeTheChessman(whiteKingSprite, 4, 7, KING_VALUE);
+			this.placeTheChessman(whiteBishopSprite, 5, 7, BISHOP_VALUE);
+			this.placeTheChessman(whiteKnightSprite, 6, 7, KNIGHT_VALUE);
+			this.placeTheChessman(whiteRookSprite, 7, 7, ROOK_VALUE);
 			// Place 8 Pawns
 			for(var i = 0; i < 8; i++)
-				this.placeTheChessman(whitePawnSprite, i, 6, WHITE_PAWN_VALUE);
+				this.placeTheChessman(whitePawnSprite, i, 6, PAWN_VALUE);
 			
-			this.placeTheChessman(blackRookSprite, 0, 0, BLACK_ROOK_VALUE);
-			this.placeTheChessman(blackKnightSprite, 1, 0, BLACK_KNIGHT_VALUE);
-			this.placeTheChessman(blackBishopSprite,2,0,BLACK_BISHOP_VALUE);
-			this.placeTheChessman(blackQueenSprite, 3, 0, BLACK_QUEEN_VALUE);
-			this.placeTheChessman(blackKingSprite, 4, 0, BLACK_KING_VALUE);
-			this.placeTheChessman(blackBishopSprite, 5, 0, BLACK_BISHOP_VALUE);
-			this.placeTheChessman(blackKnightSprite, 6, 0, BLACK_KNIGHT_VALUE);
-			this.placeTheChessman(blackRookSprite, 7, 0, BLACK_ROOK_VALUE);
+			this.placeTheChessman(blackRookSprite, 0, 0, -ROOK_VALUE);
+			this.placeTheChessman(blackKnightSprite, 1, 0, -KNIGHT_VALUE);
+			this.placeTheChessman(blackBishopSprite, 2, 0,-BISHOP_VALUE);
+			this.placeTheChessman(blackQueenSprite, 3, 0, -QUEEN_VALUE);
+			this.placeTheChessman(blackKingSprite, 4, 0, -KING_VALUE);
+			this.placeTheChessman(blackBishopSprite, 5, 0, -BISHOP_VALUE);
+			this.placeTheChessman(blackKnightSprite, 6, 0, -KNIGHT_VALUE);
+			this.placeTheChessman(blackRookSprite, 7, 0, -ROOK_VALUE);
 			// Place 8 Pawns
 			for(var i = 0; i < 8; i++)
-				this.placeTheChessman(blackPawnSprite, i, 1, BLACK_PAWN_VALUE);
-
-			return 1;
-		}*/
+				this.placeTheChessman(blackPawnSprite, i, 1, -PAWN_VALUE);  
+		}
 	}
-
-	// Method that moves a chessman
+	//Di chuyển quân cờ
 	this.moveTheChessman = function(prevCol, prevRow, clickedCol, clickedRow, specialMove) {
-		//swap the sprite 
+		//đổi sprite của ô cờ 
 		var prevChessmanSprite = this.grid[prevCol][prevRow].sprite;
 		this.grid[clickedCol][clickedRow].sprite = prevChessmanSprite;
 		this.grid[prevCol][prevRow].sprite = null;
-		//update game state
+		//cập nhật recorder
 		recorder.updateMoveMap(recorder.moveMap[prevCol][prevRow], prevCol, prevRow, clickedCol, clickedRow);
 		recorder.updateAttackMap();		
 		if(specialMove == null) recorder.updateMoveRecord(prevCol, prevRow, clickedCol, clickedRow);
+		else if(specialMove == CASTLING_MOVE) {
+			if(Math.abs(recorder.moveMap[clickedCol][clickedRow]) == ROOK_VALUE) return;
+			recorder.updateMoveRecord(null, null, null, null, recorder.moveRecord, 
+			[recorder.moveMap[prevCol][prevRow], -CASTLING_MOVE, clickedCol*10 + clickedRow]);
+		}
 	}
-
 	// Method that proceeds castling if the move is valid
 	// CHECKED
 	this.castling = function(prevCol, prevRow, clickedCol, clickedRow) {
 		var rookCol;
-		recorder.updateMoveRecord(null, null, null, null, recorder.moveRecord, 
-			[recorder.moveMap[prevCol][prevRow], -CASTLING_MOVE, clickedCol*10 + clickedRow]);
 		//move the king to ...
 		this.moveTheChessman(prevCol, prevRow, clickedCol, clickedRow, CASTLING_MOVE);
 		//move the rook...
 		//update the game state
 		if (clickedCol == prevCol - 2) {
 			rookCol = 0
-			this.moveTheChessman(rookCol, prevRow, rookCol + 3, prevRow);
+			this.moveTheChessman(rookCol, prevRow, rookCol + 3, prevRow, CASTLING_MOVE);
 		} else if (clickedCol == prevCol + 2) {
 			rookCol = 7;
 			this.moveTheChessman(rookCol, prevRow, rookCol - 2, prevRow, CASTLING_MOVE);

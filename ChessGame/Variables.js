@@ -4,19 +4,8 @@ const PROMOTE_MOVE = 1,CASTLING_MOVE = 2, VALID_MOVE = 0, INVALID_MOVE = -1;
 const TREE_DEPTH = 4;
 var w,h;
 
-var blackRookSprite
-var blackKnightSprite;
-var blackBishopSprite;
-var blackQueenSprite;
-var blackKingSprite;
-var whitePawnSprite;
-var blackKingSprite;
-var blackPawnSprite;
-var whiteRookSprite;
-var whiteKnightSprite;
-var whiteBishopSprite;
-var whiteQueenSprite;
-var whiteKingSprite;
+var blackRookSprite, blackKnightSprite, blackBishopSprite, blackQueenSprite, blackKingSprite, blackPawnSprite;
+var whiteRookSprite, whiteKnightSprite, whiteBishopSprite, whiteQueenSprite, whiteKingSprite, whitePawnSprite;
 
 var clickedCol = null;
 var clickedRow = null;
@@ -34,4 +23,4 @@ var evaluator;
 //player chose the piece after the pawn has reach the end of the board
 var isChecked;
 //game tree
-var tree;
+//var tree;

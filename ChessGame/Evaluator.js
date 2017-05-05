@@ -6,23 +6,24 @@ function Evaluator() {
     this.queenWeight = 9;
     this.pawnWeight = 1;
 	this.kingWeight = 1000;
-	
+	// 8 + 10 + 12 + 9 = 39 
 	this.getWhoToMove = function(depth) {
 		(depth % 2 == 0) ? this.whoToMove = playerSide : this.whoToMove = -playerSide;
 	}
 	this.evaluate = function(pieceCount,piecePositions, whiteAttackMap, blackAttackMap, moveMap, depth) {        
 		this.getWhoToMove(depth);
 		var evaluateMaterial = this.evaluateMaterial(pieceCount);
-		var evaluateAttackMap = this.evaluateAttackMap(piecePositions, whiteAttackMap, blackAttackMap);
-		var checkEnemySide = this.checkEnemySide(moveMap);
-		var calculatePieceMove = this.calculatePieceMove(piecePositions);
-		console.log("materialEvaluate:",evaluateMaterial);
-		console.log("evaluateAttackMap:", evaluateAttackMap );
-		console.log("checkEnemySide:", checkEnemySide);
-		console.log("calculatePieceMove", calculatePieceMove);
+		//var evaluateAttackMap = this.evaluateAttackMap(piecePositions, whiteAttackMap, blackAttackMap);
+		//var checkEnemySide = this.checkEnemySide(moveMap);
+		//var calculatePieceMove = this.calculatePieceMove(piecePositions);
+		// console.log("materialEvaluate:",evaluateMaterial);
+		// console.log("evaluateAttackMap:", evaluateAttackMap );
+		// console.log("checkEnemySide:", checkEnemySide);
+		// console.log("calculatePieceMove", calculatePieceMove);
+		console.log("eval:", evaluateMaterial);
 		//return this.evaluateMaterial(pieceCount) + this.evaluateAttackMap(piecePositions, whiteAttackMap, blackAttackMap) 
 				//+ this.checkEnemySide(moveMap) + this.calculatePieceMove(piecePositions);
-		return evaluateMaterial + evaluateAttackMap + checkEnemySide + calculatePieceMove;
+		return evaluateMaterial*this.whoToMove;
     }
 	//tính toán sự chênh lệch về đội hình dựa trên trọng số và số lượng của từng quân
     this.evaluateMaterial = function(pieceCount) {
