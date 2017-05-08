@@ -200,26 +200,26 @@ Recorder.prototype.calculateAttackMapForPawn = function(value, col, row, attackM
             if(moveMap[col][row + 1] == 0) attackMap[col][row + 1].push(value);
         }
         if (col == 0) {
-            if (attackMap[col + 1][row + 1].indexOf(value) == -1 && this.moveMap[col + 1][row + 1]*playerSide > 0)
+            if (attackMap[col + 1][row + 1].indexOf(value) == -1 && this.moveMap[col + 1][row + 1]*playerSide >= 0)
                 attackMap[col + 1][row + 1].push(value);
             return;
         }
         else if (col == 7) {
-            if (attackMap[col - 1][row + 1].indexOf(value) == -1 && this.moveMap[col - 1][row + 1]*playerSide > 0)
+            if (attackMap[col - 1][row + 1].indexOf(value) == -1 && this.moveMap[col - 1][row + 1]*playerSide >= 0)
                 attackMap[col - 1][row + 1].push(value);
             return;
         }
         else {
-            if (attackMap[col - 1][row + 1].indexOf(value) == -1 && this.moveMap[col - 1][row + 1]*playerSide > 0)
+            if (attackMap[col - 1][row + 1].indexOf(value) == -1 && this.moveMap[col - 1][row + 1]*playerSide >= 0)
                 attackMap[col - 1][row + 1].push(value);
-            if (attackMap[col + 1][row + 1].indexOf(value) == -1 && this.moveMap[col - 1][row + 1]*playerSide > 0)
+            if (attackMap[col + 1][row + 1].indexOf(value) == -1 && this.moveMap[col - 1][row + 1]*playerSide >= 0)
                 attackMap[col + 1][row + 1].push(value);
             return;
         }
     }
     else {
         //player
-        if(row == 7) {
+        if(row == 6) {
             if(moveMap[col][row - 1] == 0) attackMap[col][row - 1].push(value);
             if(moveMap[col][row - 2] == 0) attackMap[col][row - 2].push(value);
         }

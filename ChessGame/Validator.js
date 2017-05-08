@@ -1,59 +1,44 @@
 //xem lại và rút gọn validator
-
 function Validator() {
-	this.validateMove = function(prevCol, prevRow, clickedCol, clickedRow) {
-		// First constraint is that the move follows the rule
+	this.validateMove = function(prevCol, prevRow, clickedCol, clickedRow, moveMap, whiteAttackMap, blackAttackMap) {
 		// CHECKED
 		var value = recorder.moveMap[prevCol][prevRow];
 		// Pawn is a little bit different, for it moves straight but attacks diagonally
 		if (Math.abs(value) == PAWN_VALUE) {
 			//đoạn này cần xem lại viết code bừa quá
-
-			//opponent
-			if (prevCol == clickedCol) {
-				if (value * playerSide < 0) {
-					if (clickedRow == 7) return PROMOTE_MOVE;
-					if (prevRow == 1 && clickedRow == prevRow + 2) return VALID_MOVE;
-					else if (clickedRow == prevRow + 1 ) return VALID_MOVE;
-				} else {
-					if (clickedRow == 0) return PROMOTE_MOVE;
-					if (prevRow == 6 && clickedRow == prevRow - 2) return VALID_MOVE;
-					else if (clickedRow == prevRow - 1) return VALID_MOVE;
-				}
-			} else {
-				// Opponent's pawn
-				if (value * playerSide < 0) {
-					if (value > 0) {
-						if (recorder.whiteAttackMap[clickedCol][clickedRow].indexOf(value) != -1) {
-							if (clickedRow == 7) return PROMOTE_MOVE;
-							else return VALID_MOVE;
-						}
-					} else {
-						if (recorder.blackAttackMap[clickedCol][clickedRow].indexOf(value) != -1) {
-							if (clickedRow == 7)
-								return PROMOTE_MOVE;
-							else
-								return VALID_MOVE;
-						}	
+			//phong tốt
+			if(value*playerSide < 0) 
+			{
+		 		if(clickedRow == 7 && (prevCol == clickedCol || prevCol == clickedCol - 1 || prevCol == clickedCol + 1))
+				{
+					if(value > 0) 
+					{
+						if(recorder.whiteAttackMap[clickedRow][clickedCol].indexOf(value) != -1 ) return PROMOTE_MOVE;
 					}
-				} else {
-				// Player's pawn
-					if (value > 0) {
-						if (recorder.whiteAttackMap[clickedCol][clickedRow].indexOf(value) != -1) {
-							if (clickedRow == 0)
-								return PROMOTE_MOVE;
-							else
-								return VALID_MOVE;
-						}
-					} else {
-						if (recorder.blackAttackMap[clickedCol][clickedRow].indexOf(value) != -1) {
-							if (clickedRow == 0)
-								return PROMOTE_MOVE;
-							else
-								return VALID_MOVE;
-						}
+					else 
+					{
+						if(recorder.blackAttackMap[clickedCol][clickedRow].indexOf(value)!= -1) return PROMOTE_MOVE;
 					}
 				}
+			}
+			else
+			{
+		 		if(clickedRow == 0 && (prevCol == clickedCol || prevCol == clickedCol - 1 || prevCol == clickedCol + 1))
+				{
+					if(value > 0) 
+					{
+						if(recorder.whiteAttackMap[clickedRow][clickedCol].indexOf(value) != -1 ) return PROMOTE_MOVE;
+					}
+					else 
+					{
+						if(recorder.blackAttackMap[clickedCol][clickedRow].indexOf(value) != -1) return PROMOTE_MOVE;
+					}
+				}				
+			}
+			if(!(prevCol == clickedCol && (prevRow == clickedRow + 2 || prevRow == clickedRow + 1))) return INVALID_MOVE;
+			if(prevCol != clickedCol && prevRow != clickedRow) 
+			{
+				if(!(Math.abs(prevRow - clickedRow) == 1 && Math.abs(prevCol - clickedCol) == 1)) return INVALID_MOVE;	
 			}
 		}
 		// CHECKED
@@ -80,7 +65,6 @@ function Validator() {
 				prevCol - prevRow != clickedCol - clickedRow && prevCol + prevRow != clickedCol + clickedRow )
 				return INVALID_MOVE;
 		}
-			
 		// CHECKED
 		if (value < 0) {
 			if (recorder.blackAttackMap[clickedCol][clickedRow].indexOf(value) != -1)
@@ -94,10 +78,17 @@ function Validator() {
 		return INVALID_MOVE;
 	}
 	//CHECKED ! 
-	this.detectCheck = function(prevCol, prevRow, clickedCol, clickedRow) {
+	this.detectCheck = function(prevCol, prevRow, clickedCol, clickedRow, moveMap, whiteAttackMap, blackAttackMap, piecePositions) {
 		//each move made does put the king in checked situation ?
-		var pieceValue = recorder.moveMap[prevCol][prevRow];
-		var previousValueOfDestination = recorder.moveMap[clickedCol][clickedRow];
+		var pieceValue = moveMap[prevCol][prevRow];
+		if (Math.abs(pieceValue) == KING_VALUE) {
+			if (pieceValue > 0)
+				return (blackAttackMap[clickedCol][clickedRow].length == 0); 
+			else
+				return (whiteAttackMap[clickedCol][clickedRow].length == 0);
+		}
+
+		var previousValueOfDestination = moveMap[clickedCol][clickedRow];
 		var kingPostion; 
 		var tempAttackMap = new Array(8);
 		var isValid;
@@ -108,46 +99,41 @@ function Validator() {
 			for (var j = 0; j < 8; j++)
 				tempAttackMap[i][j] = [];
 				
-		if (Math.abs(pieceValue) == KING_VALUE) {
-			if (pieceValue > 0)
-				return (recorder.blackAttackMap[clickedCol][clickedRow].length == 0); 
-			else
-				return (recorder.whiteAttackMap[clickedCol][clickedRow].length == 0);
-		}
-		recorder.moveMap[prevCol][prevRow] = 0;
-		recorder.moveMap[clickedCol][clickedRow] = pieceValue;
+		
+		moveMap[prevCol][prevRow] = 0;
+		moveMap[clickedCol][clickedRow] = pieceValue;
 		if (pieceValue > 0) {
 			//find the king position 
-			kingPostion = recorder.findThePiece(KING_VALUE);
+			kingPostion = recorder.findThePiece(KING_VALUE, piecePositions);
 			//console.log(kingPostion);
 			//update the attack map
-			recorder.piecePositions[-ROOK_VALUE].forEach(function(coordinate) {
-				recorder.calculateAttackMapForRook(-ROOK_VALUE, coordinate[0], coordinate[1], tempAttackMap, recorder.moveMap);
+			piecePositions[-ROOK_VALUE].forEach(function(coordinate) {
+				recorder.calculateAttackMapForRook(-ROOK_VALUE, coordinate[0], coordinate[1], tempAttackMap, moveMap);
 			});
 			recorder.piecePositions[-BISHOP_VALUE].forEach(function(coordinate) {
-				recorder.calculateAttackMapForBishop(-BISHOP_VALUE, coordinate[0], coordinate[1], tempAttackMap, recorder.moveMap);
+				recorder.calculateAttackMapForBishop(-BISHOP_VALUE, coordinate[0], coordinate[1], tempAttackMap, moveMap);
 			});
 			recorder.piecePositions[-QUEEN_VALUE].forEach(function(coordinate) {
-				recorder.calculateAttackMapForQueen(-QUEEN_VALUE, coordinate[0], coordinate[1], tempAttackMap, recorder.moveMap);
+				recorder.calculateAttackMapForQueen(-QUEEN_VALUE, coordinate[0], coordinate[1], tempAttackMap, moveMap);
 			});
 
 		} else {
-			kingPostion = recorder.findThePiece(-KING_VALUE);
+			kingPostion = recorder.findThePiece(-KING_VALUE, piecePositions);
 			recorder.piecePositions[ROOK_VALUE].forEach(function(coordinate) {
-				recorder.calculateAttackMapForRook(ROOK_VALUE, coordinate[0], coordinate[1], tempAttackMap, recorder.moveMap);
+				recorder.calculateAttackMapForRook(ROOK_VALUE, coordinate[0], coordinate[1], tempAttackMap, moveMap);
 			});
 			recorder.piecePositions[BISHOP_VALUE].forEach(function(coordinate) {
-				recorder.calculateAttackMapForBishop(BISHOP_VALUE, coordinate[0], coordinate[1], tempAttackMap, recorder.moveMap);
+				recorder.calculateAttackMapForBishop(BISHOP_VALUE, coordinate[0], coordinate[1], tempAttackMap, moveMap);
 			});
 			recorder.piecePositions[QUEEN_VALUE].forEach(function(coordinate) {
-				recorder.calculateAttackMapForQueen(QUEEN_VALUE, coordinate[0], coordinate[1], tempAttackMap, recorder.moveMap);
+				recorder.calculateAttackMapForQueen(QUEEN_VALUE, coordinate[0], coordinate[1], tempAttackMap, moveMap);
 			});
 		}
 		//console.log(kingPostion[0][0], kingPostion[0][1]);
 		//console.log(tempAttackMap);
 		//fix the value back to the previous one
-		recorder.moveMap[prevCol][prevRow] = pieceValue;
-		recorder.moveMap[clickedCol][clickedRow] = previousValueOfDestination;
+		moveMap[prevCol][prevRow] = pieceValue;
+		moveMap[clickedCol][clickedRow] = previousValueOfDestination;
 		//if the king is stay on the enemy attack map --> invalid
 		return (tempAttackMap[kingPostion[0][0]][kingPostion[0][1]].length == 0);
 	}
@@ -207,14 +193,18 @@ function Validator() {
 			//Các ô giữa vua và xe có bị tấn công bới quân nào ko 
 			if (clickedCol == prevCol - 2) {
 				//queen-side castling
-				for (var i = prevCol; i >= 0; i--)
+				for (var i = prevCol - 1; i > 0; i--)
+				{
 					if (attackMap[i][prevRow].length != 0) return false; 
 					if( i < 7 && moveMap[i][prevRow] != 0) return false;
+				}
 			} else if (clickedCol == prevCol + 2) {
 				//king-side castling
-				for (var i = prevCol; i < 8 ; i++)
+				for (var i = prevCol + 1; i < 8 ; i++)
+				{
 					if (attackMap[i][prevRow].length != 0 ) return false;
 					if(i < 7 && moveMap[i][prevRow] != 0) return false;
+				}
 			}
 			return true;
 		}

@@ -15,6 +15,7 @@ function Recorder() {
 	this.pieceCount = {1:[0, 0], 2:[0, 0], 3:[0, 0], 4:[0, 0], 5:[0, 0], 6:[0, 0]};
 	this.piecePositions = {"1":[], "2":[], "3":[], "4":[], "5":[], "6":[], "-1":[], "-2":[], "-3":[], "-4":[], "-5":[], "-6":[] };
 	//khởi tạo attackMap
+	
 	for (var i = 0; i < 8; i++) {
 		this.moveMap[i] = new Array(8);
 		this.whiteAttackMap[i] = new Array(8);
@@ -118,7 +119,8 @@ Recorder.prototype.updateMoveRecord = function(prevCol, prevRow, clickedCol, cli
 	(moveRecord == null && record == null) ? this.moveRecord.push([this.moveMap[clickedCol][clickedRow],prevCol*10+prevRow,clickedCol*10+clickedRow]) :
 	moveRecord.push(record);
 }
-Recorder.prototype.findThePiece = function(value) {
-	return this.piecePositions[value];
+Recorder.prototype.findThePiece = function(value, piecePositions) {
+	if(piecePositions == null) return this.piecePositions[value];
+	else return piecePositions[value];
 }
 

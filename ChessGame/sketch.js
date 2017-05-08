@@ -2,7 +2,8 @@
 //		 1	  2      3      4     5    6
 //whiteSide 1
 //blackSide -1
-//Example blackRook = -1 whiteQueen = 4 blackKing = -5
+//Example blackRook = -1 whiteQueen = 4 blackKing = -
+//check promote
 function preload() {
 	// load an external image into each variable
 	blackRookSprite 	= loadImage("ChessSprite/blackRook.png");
@@ -39,10 +40,9 @@ function setup() {
 	$('#ChooseSideModalBody').click(function(event) {
 		if ($(event.target).is('#ChooseWhiteSide') || $(event.target).is('#whiteSideImg'))
 			playerSide = WHITE_SIDE;
-		else
-			playerSide = BLACK_SIDE;
+		else {playerSide = BLACK_SIDE; isPlayerTurn = false;}
 		evaluator = new Evaluator();
-		controller.createGameBoard(playerSide);
+		//controller.createGameBoard(playerSide);
 		$("#ChooseSideModal").modal('toggle');
 
 		recorder.updateAttackMap();
@@ -50,24 +50,23 @@ function setup() {
 		//create board game after player Choose a side
 	});	
 	
-	// controller.placeTheChessman(whiteKingSprite, 4, 7, KING_VALUE);
-	// controller.placeTheChessman(whiteBishopSprite, 7, 1, BISHOP_VALUE);
-	// controller.placeTheChessman(whiteQueenSprite, 4, 1, QUEEN_VALUE);
-	// controller.placeTheChessman(whitePawnSprite, 4, 6, PAWN_VALUE);
-	// controller.placeTheChessman(whitePawnSprite, 5, 6, PAWN_VALUE);
-	// controller.placeTheChessman(whitePawnSprite, 6, 6, PAWN_VALUE);
-	// controller.placeTheChessman(whitePawnSprite, 3, 6, PAWN_VALUE);
-	// controller.placeTheChessman(whiteKnightSprite, 3, 2, KNIGHT_VALUE);
-	// controller.placeTheChessman(blackPawnSprite, 1, 1, -PAWN_VALUE);
-	// controller.placeTheChessman(blackPawnSprite, 2, 2, -PAWN_VALUE);
-	// controller.placeTheChessman(blackKingSprite, 0, 2, -KING_VALUE);
-	// controller.placeTheChessman(blackRookSprite, 0, 6, -ROOK_VALUE);
-	// controller.placeTheChessman(blackRookSprite, 0, 6, -ROOK_VALUE);
-	// controller.placeTheChessman(blackRookSprite, 0, 5, -ROOK_VALUE);
-	// controller.placeTheChessman(blackKnightSprite, 7, 4, -KNIGHT_VALUE);
-	// controller.placeTheChessman(blackKingSprite, 1, 0, -KING_VALUE);
-	// controller.placeTheChessman(blackBishopSprite, 0, 1, -BISHOP_VALUE);
-	// controller.placeTheChessman(blackQueenSprite, 6, 1, -QUEEN_VALUE);
+	controller.placeTheChessman(whiteKingSprite, 4, 7, KING_VALUE);
+	//controller.placeTheChessman(whiteBishopSprite, 7, 1, BISHOP_VALUE);
+	//controller.placeTheChessman(whiteQueenSprite, 4, 1, QUEEN_VALUE);
+	controller.placeTheChessman(whitePawnSprite, 4, 6, PAWN_VALUE);
+	controller.placeTheChessman(whitePawnSprite, 5, 6, PAWN_VALUE);
+	controller.placeTheChessman(whitePawnSprite, 6, 6, PAWN_VALUE);
+	controller.placeTheChessman(whitePawnSprite, 3, 6, PAWN_VALUE);
+	//controller.placeTheChessman(whiteKnightSprite, 3, 2, KNIGHT_VALUE);
+	controller.placeTheChessman(blackPawnSprite, 1, 6, -PAWN_VALUE);
+	//controller.placeTheChessman(blackPawnSprite, 2, 6, -PAWN_VALUE);
+	controller.placeTheChessman(blackKingSprite, 4, 0, -KING_VALUE);
+	//controller.placeTheChessman(blackRookSprite, 0, 0, -ROOK_VALUE);
+	//controller.placeTheChessman(blackRookSprite, 7, 0, -ROOK_VALUE);
+	//controller.placeTheChessman(blackKnightSprite, 7, 4, -KNIGHT_VALUE);
+	//controller.placeTheChessman(blackKingSprite, 1, 0, -KING_VALUE);
+	//controller.placeTheChessman(blackBishopSprite, 0, 1, -BISHOP_VALUE);
+	//controller.placeTheChessman(blackQueenSprite, 6, 1, -QUEEN_VALUE);
 	
 	myCanvas.mouseClicked(makeAMove);
 	noLoop();
@@ -81,13 +80,16 @@ function draw() {
 		//TESTING 
 		//copy data from recorder
 		var tempRecorder = JSON.parse(JSON.stringify(recorder));
-
+		// var ply = new Ply(tempRecorder.moveMap, tempRecorder.whiteAttackMap, tempRecorder.blackAttackMap,
+		// 					tempRecorder.pieceCount, tempRecorder.piecePositions, tempRecorder.moveRecord);
+		// var moveArray = ply.makeMove(0);
+		// console.log(moveArray);
+		// console.log(ply.makeCaptureMove(moveArray, 0));
 		var tree = new Tree(tempRecorder.moveMap, tempRecorder.whiteAttackMap, tempRecorder.blackAttackMap, 
 						tempRecorder.pieceCount, tempRecorder.piecePositions, tempRecorder.moveRecord);
 		var nextMove;
 		nextMove = tree.search();
 		moveGenerator.makeAMove(nextMove);
-		console.log(tempRecorder);
 		isPlayerTurn = true;
 		redraw();
 	}
@@ -112,7 +114,8 @@ function makeAMove() {
 					break;
 				case VALID_MOVE:
 				//CHECKED
-					if (validator.detectCheck(prevCol, prevRow, clickedCol, clickedRow)) {
+					if (validator.detectCheck(prevCol, prevRow, clickedCol, clickedRow, 
+							recorder.moveMap, recorder.whiteAttackMap, recorder.blackAttackMap, recorder.piecePositions)) {
 						controller.moveTheChessman(prevCol, prevRow, clickedCol, clickedRow);
 						prevCol = null;
 						prevRow = null;
@@ -144,7 +147,8 @@ function makeAMove() {
 				case VALID_MOVE:
 					//player take down opponent piece
 					//pieceCount need to update 
-					if (validator.detectCheck(prevCol, prevRow, clickedCol, clickedRow)) {
+					if (validator.detectCheck(prevCol, prevRow, clickedCol, clickedRow, 
+							recorder.moveMap, recorder.whiteAttackMap, recorder.blackAttackMap, recorder.piecePositions)) {
 						var opponentPieceValue = Math.abs(recorder.moveMap[clickedCol][clickedRow]);
 						controller.moveTheChessman(prevCol, prevRow, clickedCol, clickedRow);
 						isPlayerTurn = false;

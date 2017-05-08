@@ -1,3 +1,6 @@
+/*
+
+*/
 function Tree(moveMap, whiteAttackMap,blackAttackMap, pieceCount, piecePositions, moveRecord) {
     this.rootNode = new Node();
     this.moveMap = moveMap;
@@ -18,7 +21,7 @@ function Tree(moveMap, whiteAttackMap,blackAttackMap, pieceCount, piecePositions
         //tìm nút tiếp theo 
         try {
             var min = this.rootNode.children[0].beta;
-            var index; 
+            var index = 0; 
             for(var i = 1; i < this.rootNode.children.length; i++) {
                 if(this.rootNode.children[i].beta < min){
                     index = i;
@@ -28,6 +31,7 @@ function Tree(moveMap, whiteAttackMap,blackAttackMap, pieceCount, piecePositions
             return this.rootNode.children[index].record;
         }
         catch(err) {
+            console.log(err);
             console.log("error: childrenlen ", this.rootNode.children.length);
             for(var i = 0; i < this.rootNode.children.length; i++) 
                 console.log(this.rootNode.children[i].beta, this.rootNode.children[i].record);
@@ -38,7 +42,8 @@ function Tree(moveMap, whiteAttackMap,blackAttackMap, pieceCount, piecePositions
     this.maxValue = function(state, ply, depth) {
         //kiểm tra 1 nút cần đượcu cắt tỉa đi 
         //nếu bị cắt tỉa thì đánh giá bàn cờ tại độ sau hiện tại 
-        if(this.cutOffTest(state, depth)) return this.eval(state, ply, depth);
+        var cutOff = this.cutOffTest(state, ply, depth);
+        if(cutOff > 0) return cutOff;
         //tạo ra các nút con mới cho nút state
         this.successors(state, ply, depth); 
         for(var i = 0 ; i < state.children.length; i++) {
@@ -57,7 +62,8 @@ function Tree(moveMap, whiteAttackMap,blackAttackMap, pieceCount, piecePositions
         return state.alpha;
     }
     this.minValue = function(state, ply, depth) {
-        if(this.cutOffTest(state, depth)) return this.eval(state, ply);
+        var cutOff = this.cutOffTest(state, ply, depth);
+        if(cutOff > 0) return cutOff;
         this.successors(state, ply, depth);
         for(var i = 0; i < state.children.length; i++) {
             var s = state.children[i];
@@ -72,28 +78,58 @@ function Tree(moveMap, whiteAttackMap,blackAttackMap, pieceCount, piecePositions
         return state.beta;
     }
     //kiểm tra xem có nên cắt tỉa ko 
-    this.cutOffTest = function(state ,depth) {
-        if(state.alpha >= state.beta || Math.abs(state.alpha) > 960 || Math.abs(state.beta) > 960 ) return true;
+    this.cutOffTest = function(state, ply, depth) {
+        if(state.alpha >= state.beta) return this.eval(ply, depth);
         if(depth == TREE_DEPTH) {
-            //if(this.isQuiesence(state)) return false;
-            return true;
+            return this.quiesence(state.alpha, state.beta, ply, depth);
         }
-        else return false;
+        else return -1;
     }
     //tạo ra các nước đi mới 
     this.successors = function(state, ply, depth) {
-        var branching = 5;
+        var branching = 20;
         for(var i = 0; i < branching; i++)
             ply.addNode(state, depth);
     }
     // đánh giá tại độ sâu hiện tại 
-    this.eval = function(state, ply, depth) {
+    this.eval = function(ply, depth) {
         return evaluator.evaluate( ply.pieceCount, ply.piecePositions, 
                             ply.whiteAttackMap, ply.blackAttackMap,
                             ply.moveMap, depth);
     }
-    this.isQuiesence = function(state, ply) {
-        
+    this.quiesence = function(alpha, beta, ply, depth) {
+        var stand_pat = this.eval(ply, depth);
+        if(stand_pat >= beta) return beta;
+        if(alpha < stand_pat) alpha = stand_pat;
+        var attackMap;
+        if(depth % 2 == 0)
+        {
+            if(playerSide == WHITE_SIDE) attackMap = ply.whiteAttackMap;
+            else attackMap = ply.blackAttackMap;
+        } 
+        else
+        {
+            if(playerSide == WHITE_SIDE) attackMap = ply.blackAttackMap;
+            else attackMap = ply.whiteAttackMap;
+        }
+        var moveArr = ply.makeMove(attackMap, depth);
+        var capArr = ply.makeCaptureMove(moveArr, depth);
+        if(capArr.length == 0) return alpha;
+        else 
+        {
+            for(var index in capArr)
+            {
+                var nextply = new Ply(ply.moveMap, 
+                                    ply.whiteAttackMap, ply.blackAttackMap,
+                                    ply.pieceCount, ply.piecePositions, ply.moveRecord);
+                nextply.update(capArr[index]);
+                var score = 0;
+                score = -this.quiesence(-beta, -alpha, nextply, depth+1);
+                if(score >= beta) return beta;
+                if(score > alpha) return alpha = score;
+            }
+            return alpha;
+        }
     }
     this.test = function() {
         var ply = new Ply(this.moveMap, this.whiteAttackMap, this.blackAttackMap, this.pieceCount, this.piecePositions);

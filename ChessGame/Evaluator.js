@@ -21,9 +21,9 @@ function Evaluator() {
 		// console.log("checkEnemySide:", checkEnemySide);
 		// console.log("calculatePieceMove", calculatePieceMove);
 		console.log("eval:", evaluateMaterial);
-		//return this.evaluateMaterial(pieceCount) + this.evaluateAttackMap(piecePositions, whiteAttackMap, blackAttackMap) 
-				//+ this.checkEnemySide(moveMap) + this.calculatePieceMove(piecePositions);
-		return evaluateMaterial*this.whoToMove;
+		return this.evaluateMaterial(pieceCount) + this.evaluateAttackMap(piecePositions, whiteAttackMap, blackAttackMap) 
+				+ this.checkEnemySide(moveMap) + this.calculatePieceMove(piecePositions);
+		//return evaluateMaterial * this.whoToMove;
     }
 	//tính toán sự chênh lệch về đội hình dựa trên trọng số và số lượng của từng quân
     this.evaluateMaterial = function(pieceCount) {
@@ -47,19 +47,19 @@ function Evaluator() {
 					(pieceValue == -5) ? attackPoint += whiteAttackMap[col][row].length * pieceWeight : attackPoint += pieceWeight;
             } else {
 				if(blackAttackMap[col][row].length != 0) 
-					(pieceValue == 5) ? attackPoint += blackAttackMap[col][row].length * pieceWeight : attackPoint += pieceWeight;
+					(pieceValue == 5) ? attackPoint -= blackAttackMap[col][row].length * pieceWeight : attackPoint += pieceWeight;
             }
 		}
 		return attackPoint;
 	}
     this.getPieceWeight = function(pieceVal) {
 		switch (pieceVal) {
-			case ROOK_VALUE: return this.rookWeight; break;
-			case KNIGHT_VALUE: return this.knightAndBishopWeight; break;
-			case BISHOP_VALUE: return this.knightAndBishopWeight; break;
-			case QUEEN_VALUE: return this.queenWeight; break;
-			case KING_VALUE: return this.kingWeight; break;
-			case PAWN_VALUE: return this.pawnWeight; break;
+			case ROOK_VALUE: return this.rookWeight;
+			case KNIGHT_VALUE: return this.knightAndBishopWeight;
+			case BISHOP_VALUE: return this.knightAndBishopWeight; 
+			case QUEEN_VALUE: return this.queenWeight; 
+			case KING_VALUE: return this.kingWeight; 
+			case PAWN_VALUE: return this.pawnWeight;
 		}
 	}
 	//những quân cờ nào có số nước đi dc < 2 thì bị trừ điểm 
@@ -132,5 +132,47 @@ function Evaluator() {
 			}
 		}
 		return point;
+	}
+	this.evaluateCenterControl = function(piecePositions, whiteAttackMap, blackAttackMap) {
+		//kiểm tra vị trí các quân trong trung tâm 
+		var pieceCount = 0;
+		for(var pieceValue in piecePositions) {
+			piecePositions[pieceValue].forEach(function(coordinate) {
+				if(parseInt(pieceValue) > 0)
+					if(coordinate[0] <=5 && coordinate[0] >= 2 && coordinate[1] <= 5 && coordinate[1] >= 2) 
+						pieceCount+= this.getPieceWeight(pieceValue);
+				else
+					if(coordinate[0] <=5 && coordinate[0] >= 2 && coordinate[1] <= 5 && coordinate[1] >= 2) 
+						pieceCount-= this.getPieceWeight(pieceValue);
+			})
+		}
+		//kiểm tra attackMap
+		var attackCount = 0;
+		for(var col = 2; col <= 5; col++)
+			for(var row = 2; row <= 5; row++)
+			{
+				if(whiteAttackMap[col][row].length != 0)
+					for(var i in whiteAttackMap[col][row])
+						attackCount += this.getPieceWeight(whiteAttackMap[col][row][i]);
+				if(blackAttackMap[col][row].length != 0)
+					for(var i in whiteAttackMap[col][row])
+						attackCount -= this.getPieceWeight(whiteAttackMap[col][row][i]);
+			}
+		return pieceCount + attackCount;
+	}
+	this.evaluatePawn = function() {
+
+	}
+	this.evaluateKnight = function() {
+
+	}
+	this.evaluateBishop = function() {
+	
+	}
+	this.evaluateQueen = function() {
+
+	}
+	this.evaluateKing = function() {
+		
 	}
 }

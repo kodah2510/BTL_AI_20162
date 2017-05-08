@@ -25,7 +25,7 @@ function Controller() {
 	this.createGameBoard = function() {
 		// Choose black or white
 		if (playerSide == BLACK_SIDE) { 
-			this.placeTheChessman(blackRookSprite, 1, 3, -ROOK_VALUE);
+			this.placeTheChessman(blackRookSprite, 0, 7, -ROOK_VALUE);
 			this.placeTheChessman(blackKnightSprite, 1, 7, -KNIGHT_VALUE);
 			this.placeTheChessman(blackBishopSprite, 2, 7, -BISHOP_VALUE);
 			this.placeTheChessman(blackQueenSprite, 3, 7, -QUEEN_VALUE);
@@ -37,7 +37,7 @@ function Controller() {
 			for(var i = 0; i < 8; i++)
 				this.placeTheChessman(blackPawnSprite, i, 6, -PAWN_VALUE);
 
-			this.placeTheChessman(whiteRookSprite, 6, 3, KNIGHT_VALUE);
+			this.placeTheChessman(whiteRookSprite, 0, 0, KNIGHT_VALUE);
 			this.placeTheChessman(whiteKnightSprite, 1, 0, KNIGHT_VALUE);
 			this.placeTheChessman(whiteBishopSprite, 2, 0, BISHOP_VALUE);
 			this.placeTheChessman(whiteQueenSprite, 3, 0, QUEEN_VALUE);
@@ -82,12 +82,15 @@ function Controller() {
 		this.grid[prevCol][prevRow].sprite = null;
 		//cập nhật recorder
 		recorder.updateMoveMap(recorder.moveMap[prevCol][prevRow], prevCol, prevRow, clickedCol, clickedRow);
-		recorder.updateAttackMap();		
-		if(specialMove == null) recorder.updateMoveRecord(prevCol, prevRow, clickedCol, clickedRow);
+		if(specialMove == null) 
+		{
+			recorder.updateMoveRecord(prevCol, prevRow, clickedCol, clickedRow);
+			recorder.updateAttackMap();		
+		}
 		else if(specialMove == CASTLING_MOVE) {
 			if(Math.abs(recorder.moveMap[clickedCol][clickedRow]) == ROOK_VALUE) return;
 			recorder.updateMoveRecord(null, null, null, null, recorder.moveRecord, 
-			[recorder.moveMap[prevCol][prevRow], -CASTLING_MOVE, clickedCol*10 + clickedRow]);
+			[recorder.moveMap[clickedCol][clickedRow], -CASTLING_MOVE, clickedCol*10 + clickedRow]);
 		}
 	}
 	// Method that proceeds castling if the move is valid
